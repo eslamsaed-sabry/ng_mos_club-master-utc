@@ -1,0 +1,68 @@
+<app-reports-page-header [permissions]="['fixedTrainerCommissionReport','tsb_Print', 'Export']"
+  [reportName]="'reports.fixedTrainerCommission' | translate" [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-fixed-trainer-commission-report-filter [filters]="filters"></app-fixed-trainer-commission-report-filter>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.phone' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'members.package' | translate}}</th>
+                  <th>{{'members.paymentDate' | translate}}</th>
+                  <th>{{'members.startDate' | translate}}</th>
+                  <th>{{'members.expDate' | translate}}</th>
+                  <th>{{'reports.table.totalPrice' | translate}}</th>
+                  <th>{{'reports.table.status' | translate}}</th>
+                  <th>{{'members.trainer' | translate}}</th>
+                  <th>{{'reports.table.percentage' | translate}}</th>
+                  <th>{{'reports.table.dueAmount' | translate}}</th>
+                  <th>{{'reports.table.attendance' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr>
+                    <td>{{el.contractNo}}</td>
+                    <td>{{el.phoneNo}}</td>
+                    <td>{{el.memberEnglishName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.packageName}}</td>
+                    <td>{{el.paymentDate | date : 'mediumDate'}}</td>
+                    <td>{{el.startDate | date : 'mediumDate'}}</td>
+                    <td>{{el.expirationDate | date : 'mediumDate'}}</td>
+                    <td>{{el.price}}</td>
+                    <td>{{el.statusName}}</td>
+                    <td>{{el.coachName}}</td>
+                    <td>{{el.trainerFixedPercentage}}</td>
+                    <td>{{el.trainerDueAmountForFixedPercentage}}</td>
+                    <td>{{el.attendance}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="12"></td>
+                  <td>{{calcTotal(reports, 'trainerDueAmountForFixedPercentage') | number:'1.0'}}</td>
+                  <td colspan="1"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

@@ -1,0 +1,136 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  <form>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+      <input [disabled]="'hasNo' | permission : 'profitReport':'dtp_Date'" matInput type="datetime-local"
+        [(ngModel)]="filters.fromDate" name="fromDate" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+        <input [disabled]="'hasNo' | permission : 'profitReport':'dtp_Date'" matInput type="datetime-local"
+          [(ngModel)]="filters.toDate" name="toDate" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'reports.table.paymentType' | translate}}</mat-label>
+          <mat-select  [(ngModel)]="filters.paymentTypeId" name="paymentTypeId">
+            <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+            @for (type of paymentType$ | async; track type) {
+              <mat-option [value]="type.id">{{type.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.branches' | translate}}</mat-label>
+          <mat-select [(ngModel)]="filters.branchesIds" name="branchesIds" multiple>
+            <mat-option [value]="0" (click)="onSelect()">{{'common.selectAll' | translate}}</mat-option>
+            @for (el of branches; track el) {
+              <mat-option [value]="el.id">
+                {{el.name}}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full mo-mb-2">
+          <mat-label>{{'reports.table.selectUser' | translate}}</mat-label>
+          <mat-select [disabled]="'hasNo' | permission : 'profitReport':'ShowAllData'" [(ngModel)]="filters.userId"
+            name="userId">
+            <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+            @for (user of users; track user) {
+              <mat-option [value]="user.id">{{user.userName}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <div class="mo-w-full mo-mb-3">
+          <mat-radio-group [(ngModel)]="filters.isGroupByCat" name="isGroupByCat" class="d-inline"
+            aria-label="Select an option">
+            <mat-radio-button class="mo-m-0" [value]="true">{{'reports.groupByCategory' | translate}}</mat-radio-button>
+            <mat-radio-button class="mo-m-0" [value]="false">{{'reports.orderByReceiptNo' | translate}}</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <ul>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.finalApprovedOnly" name="finalApprovedOnly">
+            {{'reports.finalApprovedOnly' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeMemberships" name="includeMemberships">
+            {{'reports.includeMemberships' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeMonitoringMemberships" name="includeMonitoringMemberships">
+            {{'reports.includePT' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeMedicalMemberships" name="includeMedicalMemberships">
+            {{'reports.includeMedicalMemberships' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeOtherMemberships" name="includeOtherMemberships">
+            {{'reports.includeOtherMemberships' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeSessions" name="includeSessions">
+            {{'reports.includeSessions' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeCafeteria" name="includeCafeteria">
+            {{'reports.includeCafeteria' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeDebts" name="includeDebts">{{'reports.includeDebts' | translate}}
+            </mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeUpgrade" name="includeUpgrade">
+              {{'reports.includeUpgrade' | translate}}
+            </mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeDowngrade" name="includeDowngrade">
+            {{'reports.includeDowngrade' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeTransfer" name="includeTransfer">
+            {{'reports.includeTransfer' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeFreeze" name="includeFreeze">{{'reports.includeFreeze' | translate}}
+            </mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeReservations" name="includeReservations">
+            {{'reports.includeReservations' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeOtherRevenue" name="includeOtherRevenue">
+            {{'reports.includeOtherRevenue' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeExpenses" name="includeExpenses">
+            {{'reports.includeExpenses' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeRefunds" name="includeRefunds">
+              {{'reports.includeRefunds' | translate}}
+            </mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeStaffFinancial" name="includeStaffFinancial">
+            {{'reports.includeStaffFinancial' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeMembersFinancialTransactions" name="includeMembersFinancials">
+            {{'reports.includeMembersFinancials' | translate}}</mat-checkbox>
+          </li>
+        </ul>
+      </form>
+
+    </div>

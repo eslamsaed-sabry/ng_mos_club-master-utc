@@ -1,0 +1,43 @@
+<app-reports-page-header [permissions]="['salesPersonClosingRatioReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.salesPersonClosingRatio' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-sales-person-closing-ratio-report-filter [filters]="filters"></app-sales-person-closing-ratio-report-filter>
+  </div>
+
+  @if (isResult) {
+    <div class="col-xl-9 col-md-8 col-12">
+      <div class="reports-tabs-container mo-mt-4">
+        <div class="table-responsive" id="receipts">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.salesPerson' | translate}}</th>
+                <th>{{'reports.table.successfulSales' | translate}}</th>
+                <th>{{'reports.table.totalOpportunities' | translate}}</th>
+                <th>{{'reports.table.ratio' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports; track el) {
+                <tr matTooltipPosition="left">
+                  <td class="mo-text-center">{{el.salesPersonName}}</td>
+                  <td class="mo-text-center">{{el.successfulSales}}</td>
+                  <td class="mo-text-center">{{el.totalOpportunities}}</td>
+                  <td class="mo-text-center">{{el.ratio}}</td>
+                </tr>
+              }
+              @if (reports&&reports.length === 0) {
+                <tr>
+                  <td colspan="10">{{'members.noData' | translate}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>

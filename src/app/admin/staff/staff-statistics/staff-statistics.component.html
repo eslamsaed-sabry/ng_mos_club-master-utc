@@ -1,0 +1,14 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'staff.staffStatistics' | translate}} </h4>
+
+  <div class="mo-flex mo-flex-wrap mo-items-center">
+    <button (click)="onChangeSales()" color="primary" mat-raised-button>
+      <mat-icon>insert_chart_outlined</mat-icon> {{'staff.changeSalesPerson' | translate}}
+    </button>
+  </div>
+</div>
+@if (staffStatistics) {
+  <div>
+    <app-bar-chart [config]="staffStatistics"></app-bar-chart>
+  </div>
+}

@@ -1,0 +1,61 @@
+<app-reports-page-header [permissions]="['membershipsDiscountReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.membershipsDiscount' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-memberships-discount-report-filters [filters]="filters"></app-memberships-discount-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.phone' | translate}}</th>
+                  <th>{{'reports.table.memberName' | translate}}</th>
+                  <th>{{'reports.table.packageName' | translate}}</th>
+                  <th>{{'reports.table.paymentDate' | translate}}</th>
+                  <th>{{'reports.table.priceBeforeDiscount' | translate}}</th>
+                  <th>{{'reports.table.priceAfterDiscount' | translate}}</th>
+                  <th>{{'reports.table.discountByAmount' | translate}}</th>
+                  <th>{{'reports.table.notes' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.contractNo}}</td>
+                    <td>{{el.phoneNo}}</td>
+                    <td>{{el.memberEnglishName}}</td>
+                    <td>{{el.packageName}}</td>
+                    <td>{{el.paymentDate| date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.priceBeforeDiscount}}</td>
+                    <td>{{el.price}}</td>
+                    <td>{{el.discountByAmount}}</td>
+                    <td>{{el.notes}}</td>
+                  </tr>
+                }
+                @if (reports&&reports.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="7"></td>
+                  <td>{{calcTotal(reports, 'discountByAmount') | number}}</td>
+                  <td colspan="1"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

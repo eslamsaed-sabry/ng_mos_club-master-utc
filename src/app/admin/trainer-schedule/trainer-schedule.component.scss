@@ -1,0 +1,37 @@
+mat-drawer-container {
+  min-height: 100vh;
+}
+
+mat-drawer {
+  width: 310px;
+  overflow: hidden;
+  padding: 10px;
+
+  @media (max-width:600px) {
+    width: 200px;
+  }
+}
+
+.filters-drawer {
+  overflow-x: hidden;
+}
+
+::ng-deep {
+  .mat-drawer-opened+.mat-drawer-content {
+    padding: 0 20px !important;
+  }
+  .e-appointment-details {
+    .e-time{
+      display: none !important;
+    }
+  }
+
+  .e-header-row .e-text-ellipsis{
+    white-space: break-spaces;
+  }
+}
+.btns {
+  background: none;
+  border: none;
+  color: #FFF;
+}

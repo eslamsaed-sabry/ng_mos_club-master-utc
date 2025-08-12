@@ -1,0 +1,9 @@
+<div class="counter">
+  <button mat-icon-button type="button" color="primary" [disabled]="'hasNo' | permission : 'membershipsBasic':'Edit'" (click)="onClick('minus')" class="minus">
+    <mat-icon>remove</mat-icon>
+  </button>
+  <input type="text" [formControl]="counterValue" (keydown)="validate($event)" (blur)="onTouched()" (input)="onTouched()" />
+  <button [disabled]="'hasNo' | permission : 'membershipsBasic':'Edit'" type="button" mat-icon-button color="primary" class="plus" (click)="onClick('plus')">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

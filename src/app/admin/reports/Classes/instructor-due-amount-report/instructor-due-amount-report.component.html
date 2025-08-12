@@ -1,0 +1,48 @@
+<div class="printable-report print:!mo-bg-white">
+  @if(reports){
+    <div class="table-responsive mo-overflow-y-hidden">
+      <table class="table table-striped">
+        <thead class="mo-bg-blue-500 mo-text-white">
+          <tr>
+            <th class="mo-max-w-28">{{'reports.table.memberContractNo' | translate}}</th>
+            <th class="mo-max-w-28">{{'reports.table.memberName' | translate}}</th>
+            <th class="mo-max-w-28">{{'reports.table.bookingStatusName' | translate}}</th>
+            <th class="mo-max-w-28">{{'members.package' | translate}}</th>
+            <th class="mo-max-w-28">{{'reports.table.membershipPrice' | translate}}</th>
+            <th class="mo-max-w-28">{{'reports.table.membershipPriceAfterTax' | translate}}</th>
+            <th class="mo-max-w-28">{{'reports.table.sessionsCount' | translate}}</th>
+            <th class="mo-max-w-28">{{'reports.table.sessionPrice' | translate}}</th>
+            <th class="mo-max-w-28">{{'reports.table.instructorDueAmount' | translate}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (el of reports; track el) {
+            <tr class="mo-text-center">
+              <td [ngStyle]="{'background': el.isWithoutMembership ? '#d77878' : ''}">{{el.memberContractNo }}</td>
+              <td [ngStyle]="{'background': el.isWithoutMembership ? '#d77878' : ''}">
+                <a class="mo-text-blue-500" [routerLink]="['/admin/member-profile', el.memberId]" target="_blank">{{el.memberName}}</a>
+              </td>
+              <td [ngStyle]="{'background': el.isWithoutMembership ? '#d77878' : ''}">{{el.bookingStatusName}}</td>
+              <td [ngStyle]="{'background': el.isWithoutMembership ? '#d77878' : ''}">{{el.package}}</td>
+              <td [ngStyle]="{'background': el.isWithoutMembership ? '#d77878' : ''}">{{el.membershipPrice | number:'1.0'}}</td>
+              <td [ngStyle]="{'background': el.isWithoutMembership ? '#d77878' : ''}">{{el.membershipPriceAfterTax | number:'1.0'}}</td>
+              <td [ngStyle]="{'background': el.isWithoutMembership ? '#d77878' : ''}">{{el.sessionsCount | number:'1.0'}}</td>
+              <td [ngStyle]="{'background': el.isWithoutMembership ? '#d77878' : ''}">{{el.sessionPrice | number:'1.0'}}</td>
+              <td [ngStyle]="{'background': el.isWithoutMembership ? '#d77878' : ''}">{{el.instructorDueAmount | number:'1.0'}}</td>
+            </tr>
+          }
+          @if (reports&&reports.length === 0) {
+            <tr>
+              <td colspan="9">{{'members.noData' | translate}}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot class="mo-bg-neutral-300">
+          <tr class="mo-text-center">
+            <td colspan="8"></td>
+            <td>{{calcTotal(reports, 'instructorDueAmount') | number:'1.0'}}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>}
+  </div>

@@ -1,0 +1,217 @@
+<app-reports-page-header [permissions]="['trainerReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.trainerCommissionRep'|translate" [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-trainer-commission-report-filters [filters]="filters"
+      (onFilterChange)="onFilterChange()"></app-trainer-commission-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+    <div>
+      <div class="reports-tabs-container">
+        @if (filters.type === 'membership') {
+        <!-- <div id="summary" class="reports-summary-list table-responsive">
+          <h5 class="mo-font-bold">
+            {{'members.summary' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td>{{'reports.table.totalIncome' | translate}}</td>
+                <td>{{commission.summary.dueAmountOnHeldSessions | number : '1.2'}}</td>
+              </tr>
+              <tr>
+                <td>{{'reports.table.totalCashIncome' | translate}}</td>
+                <td>{{commission.summary.dueAmountOnExpiredSessions | number : '1.2'}}</td>
+              </tr>
+              <tr>
+                <td>{{'reports.table.totalVisaIncome' | translate}}</td>
+                <td>{{commission.summary.dueAmountOnTotal | number : '1.2'}}</td>
+              </tr>
+              <tr>
+                <td>{{'reports.table.totalOtherRevCash' | translate}}</td>
+                <td>{{commission.summary.dueAmountOnSelling | number : '1.2'}}</td>
+              </tr>
+              <tr>
+                <td>{{'reports.table.totalOtherRevVisa' | translate}}</td>
+                <td>{{commission.summary.totalDueAmount | number : '1.2'}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div> -->
+
+        <div class="table-responsive">
+          <h5 class="mo-font-bold">
+            {{'members.summary' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'reports.table.dueAmountHeldSessions' | translate}}</th>
+                <th>{{'reports.table.dueAmountExpiredSessions' | translate}}</th>
+                <th>{{'reports.table.dueAmountTotalAchieved' | translate}}</th>
+                <th>{{'reports.table.dueAmountSellingPerc' | translate}}</th>
+                <th>{{'reports.table.totalDueAmount' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{commission.summary.dueAmountOnHeldSessions | number : '1.2'}}</td>
+                <td>{{commission.summary.dueAmountOnExpiredSessions | number : '1.2'}}</td>
+                <td>{{commission.summary.dueAmountOnTotal | number : '1.2'}}</td>
+                <td>{{commission.summary.dueAmountOnSelling | number : '1.2'}}</td>
+                <td>{{commission.summary.totalDueAmount | number : '1.2'}}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+          </table>
+        </div>
+        }
+
+        <div class="table-responsive">
+          <h5 class="mo-font-bold">
+            {{filters.type === 'session' ? ('reports.perSession' | translate) : filters.type === 'membership' ?
+            ('reports.perMembership' | translate) : ('reports.commissionVersion3' | translate)}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'reports.table.month' | translate}}</th>
+                <th>{{'reports.table.year' | translate}}</th>
+                <th>{{'reports.table.rules' | translate}}</th>
+                <th>{{'reports.table.actual' | translate}}</th>
+                <th>{{'reports.table.target' | translate}}</th>
+                <th>{{'reports.table.actualTarget' | translate}}</th>
+                <th>{{'reports.table.duePercentage' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of commission.comessionPercentages; track el) {
+              <tr>
+                <td>{{el.month}}</td>
+                <td>{{el.year}}</td>
+                <td>{{el.rangesPercentages}}</td>
+                <td>{{el.actual | number:'1.2'}}</td>
+                <td>{{el.target | number:'1.2'}}</td>
+                <td>{{el.achivedPercentage | number}}</td>
+                <td>{{el.duePercentage}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        @if (commission.sessions) {
+        <div class="table-responsive">
+          @if (commission.sessions) {
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'reports.table.sessionDate' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.membershipPaymentDate' | translate}}</th>
+                <th>{{'reports.table.membershipPrice' | translate}}</th>
+                <th>{{'reports.table.memSessCount' | translate}}</th>
+                <th>{{'reports.table.sessionPrice' | translate}}</th>
+                <th>{{'reports.table.duePercentage' | translate}}</th>
+                <th>{{'reports.table.dueAmount' | translate}}</th>
+                <th>{{'reports.table.status' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of commission.sessions; track el) {
+              <tr>
+                <td>{{el.sessionDate | date:'MMM d, y, h:mm a'}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.membershipPaymentDate | date: 'mediumDate'}}</td>
+                <td>{{el.membershipPrice | number:'1.2'}}</td>
+                <td>{{el.membershipSessionsCount}}</td>
+                <td>{{(el.membershipPrice / el.membershipSessionsCount) | number:'1.2'}}</td>
+                <td>{{el.duePercentage}}</td>
+                <td>{{el.dueAmount | number:'1.2'}}</td>
+                <td>{{el.status}}</td>
+              </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="7"></td>
+                <td>{{calcTotal(commission.sessions, 'dueAmount') | number : '1.2-2'}}</td>
+                <td colspan="1"></td>
+              </tr>
+            </tfoot>
+          </table>
+          }
+        </div>
+        }
+
+        @if (commission.memberships) {
+        <div class="table-responsive">
+          @if (commission.memberships) {
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.paymentDate' | translate}}</th>
+                <th>{{'members.packageName' | translate}}</th>
+                <th>{{'members.price' | translate}}</th>
+                <th>{{'reports.table.sessCount' | translate}}</th>
+                <th class="row">
+                  <div>{{ 'reports.table.sessionConsumed' | translate }}</div>
+                  <div>({{ 'reports.table.currentMonth' | translate }})</div>
+                </th>
+                <th>{{'reports.table.expiredSessions' | translate}}</th>
+                <th>{{'reports.table.duePercentage' | translate}}</th>
+                <th class="row">
+                  <div>{{ 'reports.table.duePercentage' | translate }}</div>
+                  <div>({{ 'reports.table.expired' | translate }})</div>
+                </th>
+                <th>{{'reports.table.dueAmount' | translate}}</th>
+                <th class="row">
+                  <div>{{ 'reports.table.dueAmount' | translate }}</div>
+                  <div>({{ 'reports.table.expired' | translate }})</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of commission.memberships; track el) {
+              <tr>
+                <td>{{el.contractNo}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.membershipPaymentDate | date: 'mediumDate'}}</td>
+                <td>{{el.package}}</td>
+                <td>{{el.membershipPrice | number:'1.2'}}</td>
+                <td>{{el.membershipSessionsCount}}</td>
+                <td>{{el.membershipConsumedCount}}</td>
+                <td>{{el.membershipExpiredSessionsCount}}</td>
+                <td>{{el.duePercentage}}</td>
+                <td>{{el.expiredDuePercentage}}</td>
+                <td>{{el.dueAmount | number:'1.2'}}</td>
+                <td>{{el.expiredDueAmount | number:'1.2'}}</td>
+              </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6"></td>
+                <td>{{calcTotal(commission.memberships, 'membershipConsumedCount') | number : '1.2'}}</td>
+                <td>{{calcTotal(commission.memberships, 'membershipExpiredSessionsCount') | number : '1.2'}}</td>
+                <td colspan="2"></td>
+                <td>{{calcTotal(commission.memberships, 'dueAmount') | number : '1.2'}}</td>
+                <td>{{calcTotal(commission.memberships, 'expiredDueAmount') | number : '1.2'}}</td>
+              </tr>
+            </tfoot>
+          </table>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+</div>

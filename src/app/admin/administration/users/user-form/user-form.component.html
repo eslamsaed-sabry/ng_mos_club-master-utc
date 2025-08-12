@@ -1,0 +1,62 @@
+<h5 mat-dialog-title>{{'administration.userForm' | translate}}</h5>
+
+<form (ngSubmit)="submit(roleForm)" #roleForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field class="mo-w-full d-none" appearance="outline">
+      <mat-label>{{'administration.id' | translate}}</mat-label>
+      <input matInput [(ngModel)]="user.id" name="id" disabled />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.username' | translate}}</mat-label>
+      <input matInput [(ngModel)]="user.userName" name="userName" required />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.arabicName' | translate}}</mat-label>
+      <input matInput [(ngModel)]="user.nameAR" name="nameAr" required />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.englishName' | translate}}</mat-label>
+      <input matInput [(ngModel)]="user.nameEng" name="nameEng" required />
+    </mat-form-field>
+
+    <!-- <mat-form-field class="mo-w-full" appearance="outline">
+    <mat-label>{{'administration.password' | translate}}</mat-label>
+    <input matInput [(ngModel)]="user.password" autocomplete="disableitPlease" name="password" [type]="pwType" />
+    <mat-icon matSuffix (click)="toggleType()">{{pwType === 'password' ? 'visibility' : 'visibility_off'}}</mat-icon>
+  </mat-form-field> -->
+
+  <mat-form-field appearance="outline" class="mo-w-full">
+    <mat-label>{{'administration.role' | translate}}</mat-label>
+    <mat-select [(ngModel)]="user.roleId" name="roleId" required>
+      @for (r of roles; track r) {
+        <mat-option [value]="r.id">{{r.nameEng + ' (' + r.nameAr + ')'}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="mo-w-full">
+    <mat-label>{{'members.branches' | translate}}</mat-label>
+    <mat-select [(ngModel)]="user.branchesIds" name="branchesIds" multiple [required]="branches.length>0">
+      <mat-option [value]="0" (click)="onSelect()">{{'common.selectAll' | translate}}</mat-option>
+      @for (el of branches; track el) {
+        <mat-option [value]="el.id">
+          {{el.name}}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions class="mo-justify-end">
+  <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+  <button mat-raised-button color="primary" type="submit">
+    {{'members.save' | translate}}
+  </button>
+</div>
+
+</form>

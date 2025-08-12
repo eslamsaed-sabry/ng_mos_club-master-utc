@@ -1,0 +1,349 @@
+<app-reports-page-header [reportName]="reportName" [permissions]="['salesReport', 'tsb_Print', 'Export']"
+[isResult]="isResult" (onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-sales-commission-report-filters [filters]="filters"></app-sales-commission-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <app-report-tabs [tabs]="tabs"></app-report-tabs>
+        <div class="reports-tabs-container">
+          @if (!hideSalesSummary) {
+            <div id="salesSummary" class="table-responsive">
+              <h5 class="mo-font-bold">
+                {{'reports.table.salesSummary' | translate}}
+              </h5>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>{{'members.salesPerson' | translate}}</th>
+                    <th>{{'reports.table.rules' | translate}}</th>
+                    <th>{{'reports.table.actual' | translate}}</th>
+                    <th>{{'reports.table.target' | translate}}</th>
+                    <th>{{'reports.table.actualTarget' | translate}}</th>
+                    <th>{{'reports.table.dueAmount' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (el of commissions.salesSummary; track el) {
+                    <tr>
+                      <td>{{el.salesPersonName}}</td>
+                      <td>{{el.fullPercentages}}</td>
+                      <td>{{el.actualValue}}</td>
+                      <td>{{el.target}}</td>
+                      <td>{{el.reachedPercentage | number}}</td>
+                      <td>{{el.dueValue}}</td>
+                    </tr>
+                  }
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colspan="2"></td>
+                    <td>{{calcTotal(commissions.salesSummary, 'actualValue') | number}}</td>
+                    <td colspan="2"></td>
+                    <td>{{calcTotal(commissions.salesSummary, 'dueValue') | number}}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          }
+          <div id="memberships" class="table-responsive">
+            <h5 class="mo-font-bold">
+              <th>{{'members.memberships' | translate}}</th>
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.paymentDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'members.packageName' | translate}}</th>
+                  <th>{{'reports.table.totalPrice' | translate}}</th>
+                  <th>{{'reports.table.amountPaid' | translate}}</th>
+                  <th>{{'reports.table.percentage' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of commissions.memberships; track el) {
+                  <tr>
+                    <td>{{el.paymentDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.memberApplicationNo}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.periodName}}</td>
+                    <td>{{el.price}}</td>
+                    <td>{{el.totalAmountPaid}}</td>
+                    <td>{{el.isHeigherPackage ? 'High' : ''}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5"></td>
+                  <td>{{calcTotal(commissions.memberships, 'price') | number}}</td>
+                  <td>{{calcTotal(commissions.memberships, 'totalAmountPaid') | number}}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div id="studioMemberships" class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{'reports.table.privateMemberships' | translate}}
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.paymentDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'members.package' | translate}}</th>
+                  <th>{{'reports.table.totalPrice' | translate}}</th>
+                  <th>{{'reports.table.amountPaid' | translate}}</th>
+                  <th>{{'reports.table.percentage' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of commissions.studioMemberships; track el) {
+                  <tr>
+                    <td>{{el.paymentDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.memberContractNo}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.packageName}}</td>
+                    <td>{{el.price}}</td>
+                    <td>{{el.amountPaid}}</td>
+                    <td>{{el.isHeigherPackage ? 'High' : ''}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5"></td>
+                  <td>{{calcTotal(commissions.studioMemberships, 'price') | number}}</td>
+                  <td>{{calcTotal(commissions.studioMemberships, 'totalAmountPaid') | number}}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div id="debts" class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{'members.debts' | translate}}
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.paymentDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'reports.table.amount' | translate}}</th>
+                  <th>{{'reports.table.percentage' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of commissions.debts; track el) {
+                  <tr>
+                    <td>{{el.paymentDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.memberApplicationNo}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.amount}}</td>
+                    <td>{{el.isHeigherPackage ? 'High' : ''}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4"></td>
+                  <td>{{calcTotal(commissions.debts, 'amount') | number}}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div id="upgrade" class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{'members.membership' | translate}} {{'members.upgrade' | translate}}
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.paymentDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'reports.table.amount' | translate}}</th>
+                  <th>{{'reports.table.percentage' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of commissions.upgrade; track el) {
+                  <tr>
+                    <td>{{el.paymentDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.memberContractNo}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.totalAmountPaid}}</td>
+                    <td>{{el.isHeigherPackage ? 'High' : ''}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4"></td>
+                  <td>{{calcTotal(commissions.upgrade, 'totalAmountPaid') | number}}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div id="downgrade" class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{'members.membership' | translate}} {{'members.downgrade' | translate}}
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.paymentDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'reports.table.amount' | translate}}</th>
+                  <th>{{'reports.table.percentage' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of commissions.downgrade; track el) {
+                  <tr>
+                    <td>{{el.paymentDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.memberContractNo}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.amount}}</td>
+                    <td>{{el.isHeigherPackage ? 'High' : ''}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4"></td>
+                  <td>{{calcTotal(commissions.downgrade, 'amount') | number}}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div id="sessions" class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{'reports.table.sessions' | translate}}
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.paymentDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'reports.table.sessionType' | translate}}</th>
+                  <th>{{'members.price' | translate}}</th>
+                  <th>{{'reports.table.percentage' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of commissions.sessions; track el) {
+                  <tr>
+                    <td>{{el.sessionDate | date :'medium'}}</td>
+                    <td>{{el.memberContractNo}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.type}}</td>
+                    <td>{{el.price}}</td>
+                    <td>{{el.isHeigherPackage ? 'High' : ''}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="5"></td>
+                  <td>{{calcTotal(commissions.sessions, 'price') | number}}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div id="refund" class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{'reports.table.refund' | translate}}
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.paymentDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'reports.table.amount' | translate}}</th>
+                  <th>{{'reports.table.percentage' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of commissions.refund; track el) {
+                  <tr>
+                    <td>{{el.refundDate | date :'medium'}}</td>
+                    <td>{{el.memberContractNo}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.amount}}</td>
+                    <td>{{el.isHeigherPackage ? 'High' : ''}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="4"></td>
+                  <td>{{calcTotal(commissions.refund, 'amount') | number}}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div id="wholeTarget" class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{'dashboard.wholeTarget' | translate}}
+            </h5>
+            <table class="table table-striped">
+              <tbody>
+                @for (el of commissions.wholeTarget | keyvalue; track el) {
+                  <tr>
+                    <td>{{'reports.table.'+el.key | translate}}</td>
+                    <td>{{el.value}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

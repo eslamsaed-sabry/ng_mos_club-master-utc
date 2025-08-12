@@ -1,0 +1,106 @@
+<h5 mat-dialog-title>{{'staff.changeSalesPerson' | translate}}</h5>
+
+<form (ngSubmit)="submit(roleForm)" #roleForm="ngForm">
+
+  <div mat-dialog-content>
+    <div class="mo-mb-2 mo-text-end">
+      <mat-checkbox [(ngModel)]="isActive" (change)="getSales()" name="isActive">{{'staff.activeSalesOnly' | translate}}
+      </mat-checkbox>
+    </div>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'staff.currentSalesPerson' | translate}}</mat-label>
+      <mat-select [(ngModel)]="salesPersonData.salesId" name="salesId" required>
+        @for (s of sales; track s) {
+          <mat-option [value]="s.id">{{s.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'staff.newSalesPerson' | translate}}</mat-label>
+      <mat-select [(ngModel)]="salesPersonData.newSalesId" name="newSalesId" required>
+        @for (s of sales; track s) {
+          <mat-option [value]="s.id">{{s.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="mo-my-2">
+      <h6 class="mo-font-bold" id="change-type-label">{{'staff.changeType' | translate}}</h6>
+      <mat-radio-group aria-labelledby="change-type-label" [(ngModel)]="salesPersonData.isPotential" name="isPotential">
+        <mat-radio-button class="d-block mo-m-0" [value]="false">{{'staff.changeMembersSalesPerson' | translate}}
+        </mat-radio-button>
+        <mat-radio-button class="d-block mo-m-0" [value]="true">{{'staff.changePotMemSalesPerson' | translate}}
+        </mat-radio-button>
+      </mat-radio-group>
+      <mat-checkbox [disabled]="salesPersonData.isPotential" [(ngModel)]="salesPersonData.changeLatestMembership"
+        name="changeLatestMembership">{{'staff.changeAlso' | translate}}
+      </mat-checkbox>
+    </div>
+    <hr>
+      <div class="mo-my-2">
+        <h6 id="data-size-label" class="mo-font-bold">{{'staff.dataSize' | translate}}</h6>
+        <mat-radio-group aria-labelledby="data-size-label" [(ngModel)]="onDataSize" name="onDataSize">
+          <mat-radio-button class="d-block mo-m-0" [value]="false">{{'staff.changeAllMatchingData' | translate}}
+          </mat-radio-button>
+          <mat-radio-button class="d-block mo-m-0" [value]="true">
+            {{'staff.spicPersonsCount' | translate}}
+            @if (onDataSize) {
+              <mat-form-field>
+                <input type="number" placeholder="{{'staff.count' | translate}}" matInput [required]="onDataSize"
+                  [(ngModel)]="salesPersonData.count" name="count">
+                </mat-form-field>
+              }
+            </mat-radio-button>
+          </mat-radio-group>
+          <mat-checkbox [(ngModel)]="salesPersonData.isRandom" name="randomSelection">
+            {{'staff.randomSelection' | translate}}
+          </mat-checkbox>
+        </div>
+
+        <hr>
+
+          <div class="mo-flex mo-items-center">
+            <mat-checkbox [(ngModel)]="salesPersonData!!.joiningDateFrom" name="joiningDateFrom" (change)="onChange('joiningDateFrom', $event)"
+            class="mo-me-1"></mat-checkbox>
+            <mat-form-field appearance="outline" class="mo-w-full" (click)="dateFromSelector.open()">
+              <mat-label>{{'staff.joiningDateFrom' | translate}}</mat-label>
+              <input matInput [matDatepicker]="dateFromSelector" [(ngModel)]="salesPersonData.joiningDateFrom" name="joiningDateFrom" />
+              <mat-datepicker-toggle matSuffix [for]="dateFromSelector"></mat-datepicker-toggle>
+              <mat-datepicker #dateFromSelector></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="mo-flex mo-items-center">
+            <mat-checkbox [(ngModel)]="salesPersonData!!.joiningDateTo" name="joiningDateTo" (change)="onChange('joiningDateTo', $event)"
+            class="mo-me-1"></mat-checkbox>
+            <mat-form-field appearance="outline" class="mo-w-full" (click)="dateToSelector.open()">
+              <mat-label>{{'staff.joiningDateTo' | translate}}</mat-label>
+              <input matInput [matDatepicker]="dateToSelector" [(ngModel)]="salesPersonData.joiningDateTo" name="joiningDateTo" />
+              <mat-datepicker-toggle matSuffix [for]="dateToSelector"></mat-datepicker-toggle>
+              <mat-datepicker #dateToSelector></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.gender' | translate}}</mat-label>
+            <mat-select [(ngModel)]="salesPersonData.gender" name="gender">
+              <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+              <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+              <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </div>
+
+
+        <div mat-dialog-actions class="mo-justify-end">
+          <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+          <button mat-raised-button color="primary" type="submit">
+            {{'members.save' | translate}}
+          </button>
+        </div>
+
+      </form>

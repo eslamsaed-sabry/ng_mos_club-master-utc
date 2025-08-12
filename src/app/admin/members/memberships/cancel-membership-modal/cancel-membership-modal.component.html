@@ -1,0 +1,63 @@
+<h5 mat-dialog-title class="mo-font-bold mo-capitalize">{{'reports.table.cancelRefund' | translate}}
+  <div class="mo-font-bold mo-text-center">
+    <label class="fs-6">{{'common.yourCurrentBranch' | translate}}{{branchName}}</label>
+  </div>
+
+</h5>
+
+<form #cancelForm="ngForm" (ngSubmit)="submit(cancelForm)">
+  <div mat-dialog-content>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.refundDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="cancelMembershipForm.refundDate" name="refundDate" required>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.refundAmount' | translate}}</mat-label>
+      <input matInput type="number" [(ngModel)]="cancelMembershipForm.amount" name="amount" required />
+    </mat-form-field>
+
+    <div class="mo-w-full mo-py-2">
+      <label>{{'reports.table.refundMethod' | translate}}</label>
+      <mat-radio-group class="mo-mx-3" aria-label="Select Payment method" [(ngModel)]="cancelMembershipForm.isCash"
+        name="isCash" required>
+        <mat-radio-button [value]="true" selected>Cash</mat-radio-button>
+        <mat-radio-button [value]="false" selected>Visa</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    @if (!cancelMembershipForm.isCash) {
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.visaType' | translate}}</mat-label>
+        <mat-select [(ngModel)]="cancelMembershipForm.visaTypeId" name="visaTypeId" required>
+          @for (v of visaTypes; track v) {
+            <mat-option [value]="v.id">{{v.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'classSchedule.cancellationReason' | translate}}</mat-label>
+      <mat-select [(ngModel)]="cancelMembershipForm.reasonId" name="reasonId" required>
+        @for (r of reasons; track r) {
+          <mat-option [value]="r.id">{{r.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.refundReason' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="cancelMembershipForm.comment" name="comment" required></textarea>
+    </mat-form-field>
+
+  </div>
+  <div mat-dialog-actions class="mo-text-end mo-mt-3">
+    <button type="button" (click)="dismiss()" mat-button>{{'members.cancel' | translate}}</button>
+    <button type="submit" class="mo-capitalize" mat-raised-button color="primary">{{'members.save' |
+    translate}}</button>
+  </div>
+
+
+</form>

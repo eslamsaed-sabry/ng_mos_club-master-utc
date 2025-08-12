@@ -1,0 +1,19 @@
+.logged-in-username {
+
+    line-height: 17px;
+    font-size: 14px;
+    @media (max-width:800px) {
+        display: none;
+    }
+}
+
+@media (max-width:800px) {
+    .menu-trigger{
+        position: absolute;
+        background: #fff;
+        border-radius: 100%;
+        bottom: 0;
+        right: 4px;
+        box-shadow: 0 0 2px #444;
+    }
+}

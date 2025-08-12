@@ -1,0 +1,97 @@
+<div class="block" [id]="'data-id-'+classSchedule.id">
+  <div class="block-header" [ngStyle]="{'background-color':classSchedule.colorHex}">
+    <div class="start">
+      <h5 class="mo-font-bold mo-flex mo-items-center">
+        <span>{{classSchedule.classTypeName}}</span>
+        @if (classSchedule.isPublished) {
+          <button matTooltip="Published" mat-icon-button>
+            <mat-icon>published_with_changes</mat-icon>
+          </button>
+        }
+        @if (!classSchedule.isPublished) {
+          <button matTooltip="Not Published, click publish" (click)="publishClass()"
+            mat-icon-button>
+            <mat-icon>unpublished</mat-icon>
+          </button>
+        }
+        <button matTooltip="Notify Members" (click)="sendNotification()" mat-icon-button>
+          <mat-icon>notifications_active</mat-icon>
+        </button>
+      </h5>
+      <h6 class="mo-font-bold">{{classSchedule.instructorName}}</h6>
+      <small>{{classSchedule.startDate | date:'MMM d, y, h:mm a'}}</small>
+    </div>
+    <div class="middle mo-flex mo-items-center">
+      <mat-icon>supervisor_account</mat-icon><small class="mo-font-bold">{{classSchedule.capacity}}</small>
+    </div>
+    <div class="mo-flex mo-justify-between mo-border-t mo-border-white mo-mt-1">
+      <button mat-button (click)="addMember()" class="!mo-text-white">{{'members.addMember' | translate}}</button>
+      <button mat-button (click)="editClass()" class="!mo-text-white">{{'classSchedule.editClass' | translate}}</button>
+      <button mat-button (click)="deleteClass()" class="!mo-text-white">{{'classSchedule.deleteClass' |
+      translate}}</button>
+    </div>
+  </div>
+  <div class="block-content">
+    <ul class="members-list mo-pt-3 mo-px-2">
+      @for (member of classSchedule.bookingList; track member) {
+        <li>
+          <div class="member-info mo-flex align-items-start mo-justify-between">
+            <div>
+              <h6 class="mo-font-bold mo-flex mo-items-center mo-m-0">
+                <span class="member-name">{{member.memberName}}</span>
+                @if (member.statusId === memberStatus.Attended) {
+                  <mat-icon class="fs-16 mo-ms-1 text-success"
+                    [matTooltip]="'classSchedule.attended' | translate">
+                    check_circle
+                  </mat-icon>
+                }
+                @if (member.statusId === memberStatus.Booked) {
+                  <mat-icon class="fs-16 mo-ms-1 mo-text-info-500"
+                    [matTooltip]="'classSchedule.booked' | translate">
+                    playlist_add_check_circle
+                  </mat-icon>
+                }
+                @if (member.statusId === memberStatus.WaitingList) {
+                  <mat-icon class="fs-16 mo-ms-1 mo-text-warning-500"
+                    [matTooltip]="'classSchedule.waitingList' | translate">
+                    pending_actions
+                  </mat-icon>
+                }
+              </h6>
+              <div class="sub-content mo-flex align-item-center">
+                <small class="mo-flex mo-items-center">
+                  <mat-icon>grid_3x3</mat-icon>
+                  <span>{{member.memberContractNo}}</span>
+                </small>
+                <span class="dot mo-mx-2">-</span>
+                <small class="mo-flex mo-items-center">
+                  <mat-icon>smartphone</mat-icon>
+                  <span>{{member.memberPhone}}</span>
+                </small>
+              </div>
+            </div>
+            <button class="menu-btn" [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              @if (!member.isAttended) {
+                <button mat-menu-item
+                (click)="attendMe(member.memberId)">{{'classSchedule.attendMe' | translate}}</button>
+              }
+              @if (member.isAttended) {
+                <button mat-menu-item
+                (click)="unAttendMe(member.memberId)">{{'classSchedule.unAttendMe' | translate}}</button>
+              }
+              <button mat-menu-item (click)="removeMemberFromClass(member.memberId)">{{'classSchedule.remove' |
+              translate}}</button>
+            </mat-menu>
+          </div>
+        </li>
+      }
+      @if (classSchedule.bookingList.length === 0) {
+        <li class="mo-text-center"><small
+        class="mo-text-muted">{{'classSchedule.noMembersAdded' | translate}}</small></li>
+      }
+    </ul>
+  </div>
+</div>

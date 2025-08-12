@@ -1,0 +1,19 @@
+<h4 class="mo-font-bold mo-my-3">{{'navigation.requiredFields' | translate}} ({{pageTitle}}) </h4>
+
+<ul class="mo-p-0 fields-list">
+  @for (field of fields; track field) {
+    <li class="m-3 p-3 card mo-shadow-md cursor-pointer" [ngClass]="{'border border-danger':field.isMandatory}">
+      <div class="inner"
+        (click)="field.isMandatory = !field.isMandatory;updateStatus(field)">
+        <div class="details mo-mb-2">
+          {{field.fieldEnglishName}} ({{field.fieldArabicName}})
+        </div>
+        <div class="status mo-text-end">
+          <mat-slide-toggle color="warn" (click)="$event.stopPropagation()" (toggleChange)="updateStatus(field)" [(ngModel)]="field.isMandatory" [name]="field.fieldDevName">
+            {{'reports.table.required' | translate}}
+          </mat-slide-toggle>
+        </div>
+      </div>
+    </li>
+  }
+</ul>

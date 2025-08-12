@@ -1,0 +1,41 @@
+<h5 mat-dialog-title class="mo-font-bold">{{'management.exerciseDetails' | translate}}</h5>
+<form (ngSubmit)="submit(exerciseForm)" #exerciseForm="ngForm">
+
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.exerciseName' | translate}}</mat-label>
+      <input matInput [(ngModel)]="exercise.exerciseName" name="exerciseName" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.workOutType' | translate}}</mat-label>
+      <mat-select [(ngModel)]="exercise.workoutTypeId" name="workoutTypeId" required>
+        @for (w of workOuts; track w) {
+          <mat-option [value]="w.id">{{w.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.videoLink' | translate}}</mat-label>
+      <input matInput [(ngModel)]="exercise.videoLink" name="videoLink" required>
+    </mat-form-field>
+
+    <div class="mo-w-full">
+      <div>
+        <img class="img-fluid" [src]="proxyUrl +exercise.imagePath" alt="">
+      </div>
+      <div>
+        <input type="file" hidden #photo (change)="uploadImage($event)">
+        <button mat-button type="button" color="primary" (click)="photo.click()">
+          <mat-icon>upload</mat-icon> {{'members.upload' | translate}}</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mo-text-end mo-mt-2" mat-dialog-actions>
+      <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+    </div>
+  </form>

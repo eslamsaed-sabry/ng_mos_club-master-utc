@@ -1,0 +1,55 @@
+<form class="filters-container" #callFiltersForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+  <div class="row">
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'management.machineName' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.machineName" name="machineName" type="text" />
+      </mat-form-field>
+    </div>
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'classSchedule.location' | translate}}</mat-label>
+        <mat-select [(ngModel)]="filters.locationId" name="locationId">
+          <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+          @for (l of locations; track l) {
+            <mat-option [value]="l.id">{{l.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'management.model' | translate}}</mat-label>
+        <mat-select [(ngModel)]="filters.modelId" name="modelId">
+          <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+          @for (m of machinesModels; track m) {
+            <mat-option [value]="m.id">{{m.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'extra.maintenanceType' | translate}}</mat-label>
+        <mat-select [(ngModel)]="filters.typeId" name="typeId">
+          <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+          @for (t of types; track t) {
+            <mat-option [value]="t.id">{{t.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+  </div>
+
+  <div class="mo-my-3">
+    <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilter.emit()" mat-raised-button color="primary"
+    type="button">{{'members.search' | translate}}</button>
+    <button class="mo-font-bold mo-w-full" (click)="callFiltersForm.reset();onFilter.emit()" mat-button
+    type="button">{{'members.clearAll' | translate}}</button>
+  </div>
+</form>

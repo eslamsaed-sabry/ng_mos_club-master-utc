@@ -1,0 +1,79 @@
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  flex-direction: column;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 280px;
+  border-right: 1px solid var(--border-color);
+  background-color: #fff;
+  transition: all 0.3s ease 0s;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  &.isClosed {
+    width: 66px;
+
+    @media (max-width:800px) {
+      width: 0;
+    }
+  }
+
+  &.onHover {
+    position: absolute;
+    z-index: 999;
+  }
+}
+
+.mos-logo {
+  padding: 10px;
+  text-align: center;
+  border-top: 1px solid #eee;
+
+  .mos-dark-sm {
+    display: none;
+  }
+}
+
+.main {
+  margin-left: 280px;
+  transition: all 0.5s ease 0s;
+  width: calc(100% - 280px);
+  @media (max-width:800px) {
+    width: 100%;
+  }
+  // background-image: url('../../assets/images/header-bg.png');
+  // background-repeat: no-repeat;
+  // background-position: top center;
+}
+
+.isClosed+.main {
+  margin-left: 66px;
+  width: calc(100% - 66px);
+
+  @media (max-width:800px) {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+.onHover+.main {
+  margin-left: 66px;
+  width: calc(100% - 66px);
+  @media (max-width:800px) {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+header {
+  z-index: 20;
+  position: relative;
+}

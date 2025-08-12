@@ -1,0 +1,92 @@
+<app-reports-page-header [permissions]="['freePrivateTrainingReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.freePrivateTraining' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-free-private-training-report-filter [filters]="filters"></app-free-private-training-report-filter>
+  </div>
+
+  @if (isResult) {
+    <div class="col-xl-9 col-md-8 col-12">
+      <div class="reports-tabs-container mo-mt-4">
+        <div class="table-responsive" id="receipts">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'extra.trainerName' | translate}}</th>
+                <th>{{'extra.totalAssigned' | translate}}</th>
+                <th>{{'extra.newCount' | translate}}</th>
+                <th>{{'extra.renewCount' | translate}}</th>
+                <th>{{'extra.referralCount' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.freePrivateTrainingSummary; track el; let i = $index) {
+                <tr matTooltipPosition="left">
+                  <td>{{el.trainerName }}</td>
+                  <td>{{el.totalAssigned}}</td>
+                  <td>{{el.newCount}}</td>
+                  <td>{{el.renewCount}}</td>
+                  <td>{{el.referralCount}}</td>
+                </tr>
+              }
+              @if (reports && reports.freePrivateTrainingSummary.length === 0) {
+                <tr>
+                  <td colspan="10">{{'members.noData' | translate}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="reports-tabs-container mo-mt-4">
+        <div class="table-responsive" id="receipts">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.phone' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <!-- <th>{{'members.gender' | translate}}</th> -->
+                <th>{{'members.trainerName' | translate}}</th>
+                <th>{{'reports.table.membershipStartDate' | translate}}</th>
+                <th>{{'members.package' | translate}}</th>
+                <th>{{'members.status' | translate}}</th>
+                <th>{{'members.notes' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+                <th>{{'reports.table.PTSessionsCount' | translate}}</th>
+                <th>{{'reports.table.ptSessionsConsumedCount' | translate}}</th>
+                <th>{{'extra.trainerComment' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.freePrivateTraining; track el; let i = $index) {
+                <tr matTooltipPosition="left">
+                  <td>{{el.contractNo}}</td>
+                  <td>{{el.phoneNumber}}</td>
+                  <td>{{el.memberName}}</td>
+                  <!-- <td>{{el.gender| gender}}</td> -->
+                  <td>{{el.trainerName}}</td>
+                  <td>{{el.startDate | date:"mediumDate"}}</td>
+                  <td>{{el.packageName}}</td>
+                  <td>{{el.status}}</td>
+                  <td>{{el.notes}}</td>
+                  <td>{{el.salesPerson}}</td>
+                  <td>{{el.ptSessionsCount}}</td>
+                  <td>{{el.ptSessionsConsumedCount}}</td>
+                  <td>{{el.trainerComment}}</td>
+                </tr>
+              }
+              @if (reports && reports.freePrivateTraining.length === 0) {
+                <tr>
+                  <td colspan="10">{{'members.noData' | translate}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>

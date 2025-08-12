@@ -1,0 +1,90 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.machines' | translate}} </h4>
+
+  <div class="mo-flex mo-items-center">
+    <div>
+      <mat-form-field class="mo-w-full">
+        <mat-label>{{'classSchedule.location' | translate}}</mat-label>
+        <mat-select (selectionChange)="applyFilter()" [(ngModel)]="filters.locationId" name="locationId">
+          <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+          @for (l of locations; track l) {
+            <mat-option [value]="l.id">{{l.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="mo-mx-3">
+      <mat-form-field class="mo-w-full">
+        <mat-label>{{'management.model' | translate}}</mat-label>
+        <mat-select (selectionChange)="applyFilter()" [(ngModel)]="filters.modelId" name="modelId">
+          <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+          @for (m of machinesModels; track m) {
+            <mat-option [value]="m.id">{{m.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="openMachineModal('add')"><mat-icon class="mo-m-0">add</mat-icon>
+  {{'members.add' | translate}}</button>
+
+</div>
+</div>
+
+<div class="table-responsive card p-3">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="machineName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.machineName' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.machineName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="modelName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.model' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.modelName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="locationName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'classSchedule.location' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.locationName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="purchaseDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.purchaseDate' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.purchaseDate | date:'MMM d, y, h:mm a' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="purchasePrice">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.purchasePrice' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.purchasePrice | number:'1.0' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.edit' | translate}}</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button color="accent" (click)="openMachineModal('edit',row)"><mat-icon
+        class="mo-m-0">edit</mat-icon></button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.delete' | translate}}</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button color="warn" (click)="onDelete(row)">
+          <mat-icon class="mo-m-0">delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+    </tr>
+  </table>
+
+  <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+    [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+  </mat-paginator>
+</div>

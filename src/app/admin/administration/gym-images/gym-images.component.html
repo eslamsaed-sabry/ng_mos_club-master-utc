@@ -1,0 +1,82 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{('navigation.'+imageTypeName) | translate}} </h4>
+
+
+  <div class="actions">
+    <button *appRole="['gymImages', 'tsb_Add']" color="primary" (click)="onAddLink()" mat-raised-button>
+      <mat-icon>add</mat-icon> {{'members.add' | translate}}
+    </button>
+  </div>
+</div>
+
+<div>
+  <ul class="gallery row">
+    @for (image of images; track image) {
+      <li class="col-lg-3 col-md-4 col-12 hover">
+        <div class="gal-item">
+          <div class="gal-img-wrapper" (click)="pictureZoom(image)"
+            [ngStyle]="{'background-image':'url('+proxyUrl +image.imagePath+')'}">
+          </div>
+          <div class="image-info">
+            <!-- <caption class="mo-w-full">{{image.displayName}}</caption> -->
+            <div>
+              <small class="mo-text-muted mo-pe-3">{{'administration.redirectURL' | translate}}</small>
+              <span>{{image.redirectUrl || '-'}}</span>
+            </div>
+            <ul class="gal-controls">
+              <li>{{image.symobl}}</li>
+              <li class="mo-ms-auto">
+                <button [cdkCopyToClipboard]="proxyUrl +image.imagePath" (click)="copyToClipboard()" mat-icon-button>
+                  <mat-icon>share</mat-icon>
+                </button>
+              </li>
+              <li><button (click)="onDeleteImage(image)" *appRole="['gymImages', 'tsb_Remove']" class="mo-text-error-500"
+                mat-icon-button>
+                <mat-icon>delete_outline</mat-icon>
+              </button></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+    }
+    @if (totalElements > images.length) {
+      <li class="mo-w-full mo-text-center mo-mt-5"><button (click)="loadMore()"
+      mat-flat-button>{{'common.loadMore' | translate}}</button></li>
+    }
+  </ul>
+</div>
+
+
+<ng-template #addImgModal>
+  <h5 mat-dialog-title>{{'administration.addLink' | translate}}</h5>
+  <form (ngSubmit)="addLink(addImgForm)" #addImgForm="ngForm">
+    <div mat-dialog-content>
+      <div class="mo-text-center mo-my-2">
+        <div class="mo-w-full">
+          <img [src]="imgPath" class="img-fluid" alt="">
+        </div>
+        <input #uploadField type="file" hidden (change)="uploadImage($event)" />
+        <button class="mo-px-5 mo-mt-2" type="button" (click)="uploadField.click()" mat-raised-button color="primary">
+          <mat-icon>file_upload</mat-icon> {{'members.upload' | translate}}
+        </button>
+      </div>
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'administration.redirectURL' | translate}}</mat-label>
+        <input type="text" matInput [(ngModel)]="redirectUrl" name="redirectUrl">
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button color="primary" type="submit">{{'members.save' | translate}}</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<ng-template #photoModal>
+  <div class="mo-relative">
+    <button class="modal-close-btn" type="button" mat-icon-button (click)="dialog.closeAll()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <img class="img-fluid" [src]="proxyUrl + selectedImg.imagePath">
+  </div>
+</ng-template>

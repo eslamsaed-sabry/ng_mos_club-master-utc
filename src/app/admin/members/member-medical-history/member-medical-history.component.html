@@ -1,0 +1,28 @@
+<form (ngSubmit)="update(historyForm)" #historyForm="ngForm">
+  <h5 class="mo-font-bold mo-my-2" mat-dialog-title>{{'members.medicalHistory' | translate}}</h5>
+  <div mat-dialog-content>
+    @if (medicalHistory$ | async) {
+      <h4 class="mo-font-bold mo-my-3">{{'medicalHistory.sufferedFrom' | translate}}</h4>
+      <ul>
+        @for (p of medicalHistoryForm.medicalHistory; track p; let i = $index) {
+          <li class="mo-flex mo-justify-between">
+            <label [for]="'problem-'+i">{{p.problemName | translate}}</label>
+            <mat-radio-group [(ngModel)]="p.isMemberHaveThisProblem" [name]="'problem-'+p.problemId"
+              aria-label="Select an option" required>
+              <mat-radio-button [value]="true">{{'classSchedule.yes' | translate}}</mat-radio-button>
+              <mat-radio-button [value]="false">{{'classSchedule.no' | translate}}</mat-radio-button>
+            </mat-radio-group>
+          </li>
+        }
+      </ul>
+      <mat-form-field appearance="outline" class="mo-w-full mo-mt-3">
+        <mat-label>{{'members.notes' | translate}}</mat-label>
+        <textarea [(ngModel)]="medicalHistoryForm.notes" matInput name="notes"></textarea>
+      </mat-form-field>
+    }
+  </div>
+  <div mat-dialog-actions>
+    <button (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+    <button *appRole="['profile','UpdateMedicalHistory']" mat-flat-button type="submit" color="primary">{{'members.save' | translate}}</button>
+  </div>
+</form>

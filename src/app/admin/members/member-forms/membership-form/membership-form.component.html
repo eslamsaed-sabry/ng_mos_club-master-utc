@@ -1,0 +1,263 @@
+@if (_helper.membership) {
+  <app-form-stepper [isStepper]="!_helper.isMembershipOnly" [formType]="_helper.formType"
+  [activeStep]="1"></app-form-stepper>
+  <form (ngSubmit)="submit(membershipForm)" class="membership-form" #membershipForm="ngForm">
+    <div class="card">
+      @if (expMessage) {
+        <p class="mo-text-error-500 mo-py-2">{{expMessage}}</p>
+      }
+      @if (_helper.formType === _helper.formTypes.EDIT_MEMBERSHIP || _helper.isMembershipOnly) {
+        <h5 class="mo-font-bold mo-mb-2">{{'members.member' | translate}}</h5>
+        <div class="main-section">
+          <mat-form-field appearance="outline">
+            <mat-label>{{'reports.table.memberContractNo' | translate}}</mat-label>
+            <input matInput readonly [(ngModel)]="_helper.membership.contractNo" name="contractNo" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>{{'reports.table.memberCode' | translate}}</mat-label>
+            <input matInput readonly [(ngModel)]="_helper.membership.accessCode" name="accessCode" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>{{'reports.table.memberPhone' | translate}}</mat-label>
+            <input matInput readonly [(ngModel)]="_helper.membership.phoneNo" name="phoneNo" required />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>{{'reports.table.memberName' | translate}}</mat-label>
+            <input matInput readonly [(ngModel)]="_helper.membership.memberEnglishName" name="memberEnglishName"
+              required />
+            </mat-form-field>
+          </div>
+        }
+        <div class="package-section">
+          <h5 class="mo-font-bold mo-mb-2">{{'members.membership' | translate}}</h5>
+          <div class="mo-grid mo-grid-cols-3 mo-gap-x-4">
+            <!-- <mat-form-field appearance="outline">
+            <mat-label>{{'members.branch' | translate}}</mat-label>
+            <mat-select [(ngModel)]="_helper.membership.branchId" name="branchId"
+              (selectionChange)="onSelectPackageType()" required
+              [disabled]="_helper.formType === _helper.formTypes.EDIT_MEMBERSHIP">
+              <mat-option *ngFor="let branch of BRANCHES"
+              [value]="branch.id">{{branch.name}}</mat-option>
+            </mat-select>
+          </mat-form-field> -->
+          <mat-form-field appearance="outline">
+            <mat-label>{{'members.packageType' | translate}}</mat-label>
+            <mat-select [(ngModel)]="_helper.membership.packageTypeId" name="packageTypeId"
+              (selectionChange)="onSelectPackageType()" required
+              [disabled]="_helper.formType === _helper.formTypes.EDIT_MEMBERSHIP">
+              @for (type of _helper.packageTypes; track type) {
+                <mat-option [value]="type.id">{{type.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>{{'members.package' | translate}}</mat-label>
+            <mat-select [(ngModel)]="_helper.membership.packageId" name="packageId"
+              (selectionChange)="onSelectPackage()" [required]="_helper.packages && !!_helper.packages.length"
+              [disabled]="_helper.formType === _helper.formTypes.EDIT_MEMBERSHIP">
+              @for (pack of _helper.packages; track pack) {
+                <mat-option [value]="pack.id">{{pack.nameEng}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="mo-grid mo-grid-cols-3 mo-gap-x-4">
+          <!-- <div class="mo-mb-3">
+          <label class="mo-font-bold" for="Select Package type">{{'members.packageType' | translate}}</label>
+          <mat-radio-group class="mo-mx-3" aria-label="Select Package type" (change)="onSelectPackageType()"
+            [(ngModel)]="_helper.membership.packageCategory" name="packageType" required>
+            <mat-radio-button *ngFor="let el of packageTypes" [value]="el.value" selected>{{el.label}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div> -->
+        <!-- <mat-form-field appearance="outline" (click)="paymentDatePicker.open()">
+        <mat-label>{{'members.paymentDate' | translate}}</mat-label>
+        <input matInput [matDatepicker]="paymentDatePicker"
+          [disabled]="'hasNo'|permission:'membershipsBasic':'dtpPaymentDate'"
+          [(ngModel)]="_helper.membership.paymentDate" name="paymentDate" [max]="today" required />
+          <mat-datepicker-toggle matSuffix [for]="paymentDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #paymentDatePicker></mat-datepicker>
+        </mat-form-field> -->
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.paymentDate' | translate}}</mat-label>
+          <input [disabled]="'hasNo'|permission:'membershipsBasic':'dtpPaymentDate'" [max]="today" matInput
+            type="datetime-local" [(ngModel)]="_helper.membership.paymentDate" name="paymentDate" required>
+          </mat-form-field>
+          <mat-form-field appearance="outline" (click)="startDatepicker.open()">
+            <mat-label>{{'members.startDate' | translate}}</mat-label>
+            <input (dateChange)="calcExpDate()" matInput [disabled]="'hasNo'|permission:'membershipsBasic':'dtp_Date'"
+              [matDatepicker]="startDatepicker" [(ngModel)]="_helper.membership.startDate" name="startDate" required />
+              <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+              <mat-datepicker #startDatepicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>{{'members.endDate' | translate}}</mat-label>
+              <input matInput disabled [matDatepicker]="expirationDatepicker"
+                [(ngModel)]="_helper.membership.expirationDate" name="expirationDate" required />
+                <mat-datepicker-toggle matSuffix [for]="expirationDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #expirationDatepicker></mat-datepicker>
+              </mat-form-field>
+              <!-- [ngClass]="{'d-none': packageCategory != packageTypesEnum.GYM && ('hasNo'|permission:'membershipsBasic':'ChooseSalesForPrivate')}" -->
+              <mat-form-field appearance="outline">
+                <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+            <mat-select [disabled]="('hasNo'|permission:'membershipsBasic':'EditSalesPerson') ||
+            ('hasNo'|permission:'membershipsBasic':'ChooseSalesForPrivate')"
+                  [(ngModel)]="_helper.membership.salesPersonId" name="salesPersonId"
+                  [required]="_helper.membership.packageCategory === packageTypesEnum.GYM">
+                  <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                  @for (el of _helper.sales; track el) {
+                    <mat-option [value]="el.id">{{el.name}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{'reports.table.coach' | translate}}</mat-label>
+                <mat-select [(ngModel)]="_helper.membership.coachId" name="coachId"
+                  [required]="_helper.membership.packageCategory === packageTypesEnum.PRIVATE">
+                  <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                  @for (el of _helper.coaches; track el) {
+                    <mat-option [value]="el.id">{{el.name}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{'members.doctor' | translate}}</mat-label>
+                <mat-select [(ngModel)]="_helper.membership.doctorId" name="doctorId"
+                  [required]="_helper.membership.packageCategory === packageTypesEnum.MEDICAL">
+                  <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                  @for (doctor of _helper.doctors; track doctor) {
+                    <mat-option [value]="doctor.id">{{doctor.name}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>{{'members.sessionsCount' | translate}}</mat-label>
+                <input matInput [disabled]="'hasNo'|permission:'membershipsBasic':'Edit'" type="number"
+                  [(ngModel)]="_helper.membership.sessionsCount" name="sessionsCount">
+                </mat-form-field>
+                <mat-form-field class="textarea-width" appearance="outline">
+                  <mat-label>{{'members.notes' | translate}}</mat-label>
+                  <textarea matInput [(ngModel)]="_helper.membership.notes" name="Notes"></textarea>
+                </mat-form-field>
+              </div>
+              <div class="mo-mb-3">
+                <h5 class="mo-font-bold mo-mb-2">{{'members.benefits' | translate}}</h5>
+                <ul class="mo-flex mo-gap-4 mo-flex-wrap">
+                  @for (ben of allBenefits; track ben) {
+                    <li>
+                      <div>
+                        <label>{{ben.name}}</label>
+                        <app-counter-input [disabled]="'hasNo' | permission : 'membershipsBasic':'Edit'" [(ngModel)]="ben.count"
+                          (ngModelChange)="onChangeBenefit(ben)" (change)="onChangeBenefit(ben)" [name]="ben.symbol">
+                        </app-counter-input>
+                      </div>
+                    </li>
+                  }
+                </ul>
+              </div>
+            </div>
+            <section class="mo-mb-3 mo-pt-2 mo-border-b mo-border-t mo-border-neutral-200">
+              <button type="button" (click)="weekPlanerToggler = !weekPlanerToggler" class="mo-flex">
+                <h5 class="mo-font-bold mo-mb-2">{{'members.weekPlanner' | translate}}</h5>
+                <mat-icon>{{weekPlanerToggler ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}}</mat-icon>
+              </button>
+              <div [ngClass]="{'mo-hidden':!weekPlanerToggler}">
+                <app-week-planner [data]="packagePlannerSelected" #planner></app-week-planner>
+              </div>
+            </section>
+            <div class="mo-grid mo-grid-cols-4 mo-gap-x-4">
+              <h5 class="mo-font-bold mo-col-span-4 mo-mb-2">{{'members.paymentDetails' | translate}}</h5>
+              <mat-form-field appearance="outline">
+                <mat-label>{{'reports.table.total' | translate}}</mat-label>
+                <input matInput
+                  [disabled]="('hasNo' | permission : 'membershipsBasic':'Edit') || _helper.formType === _helper.formTypes.EDIT_MEMBERSHIP"
+                  (blur)="onManualChangeTotal()" [(ngModel)]="_helper.membership.priceBeforeDiscount"
+                  name="priceBeforeDiscount" />
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>{{'reports.table.required' | translate}}</mat-label>
+                  <input matInput disabled [(ngModel)]="_helper.membership.price" name="price" />
+                </mat-form-field>
+                <!--
+                <mat-form-field appearance="outline">
+                  <mat-label>Reservation Amount</mat-label>
+                  <input matInput [(ngModel)]="_helper.membership.totalAmountRemaining" name="totalAmountRemaining" />
+                </mat-form-field>
+                -->
+                <mat-form-field appearance="outline">
+                  <mat-label>{{'members.discount' | translate}}</mat-label>
+                  <input matInput (keyup)="calcPayment()" [disabled]="_helper.formType === _helper.formTypes.EDIT_MEMBERSHIP"
+                    [(ngModel)]="_helper.membership.discount" name="discount" />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{'members.discountType' | translate}}</mat-label>
+                    <mat-select (selectionChange)="calcPayment()"
+                      [disabled]="_helper.formType === _helper.formTypes.EDIT_MEMBERSHIP"
+                      [(ngModel)]="_helper.membership.isDiscountPercentage" name="isDiscountPercentage">
+                      <mat-option [value]="true">{{'reports.table.percentage' | translate}}</mat-option>
+                      <mat-option [value]="false">{{'reports.table.amount' | translate}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{'reports.table.amountPaidCash' | translate}}</mat-label>
+                    <input matInput [(ngModel)]="_helper.membership.amountPaid" (keyup)="onInputAmountPaidCash()"
+                      name="amountPaid" [required]="!_helper.membership.amountPaidVisa"
+                      [disabled]="_helper.formType === _helper.formTypes.EDIT_MEMBERSHIP" />
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                      <mat-label>{{'reports.table.amountPaidVisa' | translate}}</mat-label>
+                      <input matInput [disabled]="_helper.formType === _helper.formTypes.EDIT_MEMBERSHIP"
+                        [(ngModel)]="_helper.membership.amountPaidVisa" [required]="!_helper.membership.amountPaid"
+                        (keyup)="onInputAmountPaidCash()" name="amountPaidVisa" />
+                      </mat-form-field>
+                      @if (_helper.membership.amountPaidVisa > 0) {
+                        <mat-form-field class="mo-w-full" appearance="outline">
+                          <mat-label>{{'members.visaType' | translate}}</mat-label>
+                          <mat-select [disabled]="'hasNo'|permission:'membershipsBasic':'ChangeVisaType'"
+                            [(ngModel)]="_helper.membership.visaTypeId" name="visaTypeId" required>
+                            @for (v of visaTypes; track v) {
+                              <mat-option [value]="v.id">{{v.name}}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                      }
+                      <mat-form-field appearance="outline">
+                        <mat-label>{{'members.remainingAmount' | translate}}</mat-label>
+                        <input matInput disabled [(ngModel)]="_helper.membership.remainingMoney" name="remainingMoney" />
+                      </mat-form-field>
+                      @if (isShowReceiptNo) {
+                        <mat-form-field class="mo-w-full" appearance="outline">
+                          <mat-label>{{'members.receiptNo' | translate}}</mat-label>
+                          <input matInput [(ngModel)]="_helper.membership.receiptNo" name="receiptNo" required />
+                        </mat-form-field>
+                      }
+                      @if (_helper.membership.remainingMoney > 0) {
+                        <mat-form-field appearance="outline" (click)="nextDueDatepicker.open()"
+                          >
+                          <mat-label>{{'members.nextDueDate' | translate}}</mat-label>
+                          <input [disabled]="_helper.formType === _helper.formTypes.EDIT_MEMBERSHIP" matInput
+                            [matDatepicker]="nextDueDatepicker" [min]="_helper.membership.paymentDate"
+                            [(ngModel)]="_helper.membership.nextDueDate" name="nextDueDate"
+                            [required]="_helper.membership.wholeAmountPaid != _helper.membership.amountPaid" />
+                            <mat-datepicker-toggle matSuffix [for]="nextDueDatepicker"></mat-datepicker-toggle>
+                            <mat-datepicker #nextDueDatepicker></mat-datepicker>
+                          </mat-form-field>
+                        }
+                      </div>
+                      @if (_helper.formType === _helper.formTypes.ADD_MEMBERSHIP) {
+                        <div class="mo-mt-2">
+                          <mat-checkbox [(ngModel)]="isPrint" name="isPrint">{{'members.printRec' | translate}}</mat-checkbox>
+                        </div>
+                      }
+                    </div>
+                    <div class="mo-flex mo-justify-between mo-mt-3">
+                      @if (!_helper.isMembershipOnly) {
+                        <button mat-button type="button"
+                          routerLink="/admin/form/member/add"><mat-icon>arrow_back_ios</mat-icon>
+                        {{'common.back' | translate}}</button>
+                      }
+                      <button mat-raised-button color="primary" class="mo-ms-auto" type="submit">{{'members.save' |
+                      translate}}</button>
+                    </div>
+                  </form>
+                }

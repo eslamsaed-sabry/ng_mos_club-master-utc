@@ -1,0 +1,21 @@
+.benefits-list {
+    line-height: 30px;
+  
+    li {
+      label {
+        width: 200px;
+      }
+    }
+  }
+
+  ::ng-deep .action-menu {
+    button.mat-mdc-menu-item {
+      display: flex;
+      align-items: center;
+  
+      i {
+        margin-right: 16px;
+      }
+    }
+  }
+  

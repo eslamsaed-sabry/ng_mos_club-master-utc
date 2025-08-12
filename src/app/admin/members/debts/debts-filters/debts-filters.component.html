@@ -1,0 +1,77 @@
+<form class="filters-container" #debtsFiltersForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.contractNo' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.contractNo" name="applicationNo" type="text" placeholder="{{'members.contractNo' | translate}}" />
+      </mat-form-field>
+    </div>
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.accessCode' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.accessCode" name="code" type="text" placeholder="{{'members.accessCode' | translate}}" />
+      </mat-form-field>
+    </div>
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.memberName' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.memberName" name="name" type="text" placeholder="{{'members.memberName' | translate}}" />
+      </mat-form-field>
+    </div>
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.phone' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.phoneNo" name="phoneNo" type="text" placeholder="{{'members.phone' | translate}}" />
+      </mat-form-field>
+    </div>
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.gender' | translate}}</mat-label>
+        <mat-select [(ngModel)]="filters.gender" name="gender">
+          <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+          <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full" (click)="pickerDOB.open()">
+        <mat-label>{{'members.dueDateRange' | translate}}</mat-label>
+        <mat-date-range-input [rangePicker]="pickerDOB">
+          <input matStartDate [(ngModel)]="filters.debtFromDueDate" name="fromDate" placeholder="From date">
+          <input matEndDate [(ngModel)]="filters.debtToDueDate" name="toDate" placeholder="To date">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="pickerDOB"></mat-datepicker-toggle>
+        <mat-date-range-picker startView="year" #pickerDOB></mat-date-range-picker>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.status' | translate}}</mat-label>
+        <mat-select name="paymentStatus" [(ngModel)]="filters.paymentStatus">
+          <mat-option [value]="debtStatus.PAYMENT_DONE">{{'reports.table.paid' | translate}}</mat-option>
+          <mat-option [value]="debtStatus.NOT_PAID">{{'reports.table.notPaid' | translate}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+        <mat-select name="salesPersonId" [(ngModel)]="filters.salesPersonId">
+          <mat-option [value]="null">None</mat-option>
+          @for (sale of sales; track sale) {
+            <mat-option [value]="sale.id">{{sale.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="mo-my-3">
+    <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilter.emit()" mat-raised-button color="primary" type="button">{{'members.search' | translate}}</button>
+    <button class="mo-font-bold mo-w-full" (click)="debtsFiltersForm.reset();onFilter.emit()" mat-button type="button">{{'members.clearAll' | translate}}</button>
+  </div>
+</form>

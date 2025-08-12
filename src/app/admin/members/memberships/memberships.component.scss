@@ -1,0 +1,64 @@
+mat-drawer-container {
+  min-height: 100vh;
+}
+
+mat-drawer {
+  width: 310px;
+  overflow: hidden;
+  padding: 10px;
+
+  @media (max-width:600px) {
+    width: 200px;
+  }
+}
+
+.filters-drawer {
+  overflow-x: hidden;
+}
+
+::ng-deep {
+  .mat-drawer-opened+.mat-drawer-content {
+    padding: 0 20px !important;
+  }
+}
+
+tr {
+
+  &:hover {
+    background-color: #f2f2f2;
+  }
+
+  &.expired {
+    background: rgb(255 0 0 / 20%);
+  }
+
+  &.freezed {
+    background: rgba(0, 138, 252, 0.322);
+  }
+}
+
+::ng-deep .action-menu {
+  button.mat-mdc-menu-item {
+    display: flex;
+    align-items: center;
+
+    i {
+      margin-right: 16px;
+    }
+  }
+}
+
+.benefits-list {
+  line-height: 30px;
+
+  li {
+    label {
+      width: 200px;
+    }
+  }
+}
+
+.view-profile-btn {
+  width: auto;
+  height: auto;
+}

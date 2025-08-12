@@ -1,0 +1,6 @@
+<h5 mat-dialog-title class="mo-font-bold mo-text-center">{{data.mainTitle}}</h5>
+<h6 class="mo-font-bold mo-text-center mo-mt-3">{{data.subTitle}}</h6>
+<div class="mo-justify-center mo-my-3" mat-dialog-actions>
+  <button mat-raised-button (click)="dismiss()">{{'classSchedule.no' | translate}}</button>
+  <button mat-raised-button class="mo-mx-3" (click)="confirm()" color="warn">{{'classSchedule.yes' | translate}}</button>
+</div>

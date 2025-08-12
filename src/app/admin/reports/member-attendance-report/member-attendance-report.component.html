@@ -1,0 +1,58 @@
+<app-reports-page-header [permissions]="['memberAttendanceReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.memberAttendance' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-member-attendance-filters [filters]="filters"></app-member-attendance-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'reports.table.attendanceDate' | translate}}</th>
+                  <th>{{'reports.table.checkOutDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.phone' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.package' | translate}}</th>
+                  <th>{{'members.startDate' | translate}}</th>
+                  <th>{{'members.expDate' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                  <th>{{'members.branch' | translate}}</th>
+                  <th>{{'members.username' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.attendanceDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.checkOutDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.contractNo }}</td>
+                    <td>{{el.phoneNumber}}</td>
+                    <td>{{el.englishName}}</td>
+                    <td>{{el.package}}</td>
+                    <td>{{el.startDate | date : 'mediumDate'}}</td>
+                    <td>{{el.endDate | date : 'mediumDate'}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                    <td>{{el.branchName}}</td>
+                    <td>{{el.userName}}</td>
+                  </tr>
+                }
+                @if (reports&&reports.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

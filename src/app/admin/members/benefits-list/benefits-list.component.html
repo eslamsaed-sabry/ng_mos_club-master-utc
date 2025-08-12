@@ -1,0 +1,40 @@
+@if (selectedMember.membershipMatchedData) {
+  <div class="benefits-list {{style}}">
+    <ul>
+      @for (b of selectedMember.membershipMatchedData.benfits; track b) {
+        <li (click)="onBenefitClick(b)">
+          <div>
+            {{b.name}}
+          </div>
+          <div>
+            <strong>{{b.consumedCount}}</strong> / <small>{{b.count}}</small>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+}
+
+<ng-template #invitationsModal>
+  <div class="p-4">
+    <app-member-invitations [membershipId]="selectedMember.membershipMatchedData.membershipId"
+      [member]="selectedMember.personalData" (refresh)="refresh.emit()">
+    </app-member-invitations>
+  </div>
+</ng-template>
+
+<ng-template #freezeModal>
+  <div class="p-4">
+    <app-member-freezes [symbol]="symbol" [membershipId]="selectedMember.membershipMatchedData.membershipId"
+      (refresh)="refresh.emit()">
+    </app-member-freezes>
+  </div>
+</ng-template>
+
+<ng-template #sessionModal>
+  <div class="p-4">
+    <app-member-benefits-sessions [membershipId]="selectedMember.membershipMatchedData.membershipId" [benefit]="benefit"
+      [sessions]="sessions" (refresh)="getSessions(true); refresh.emit()">
+    </app-member-benefits-sessions>
+  </div>
+</ng-template>

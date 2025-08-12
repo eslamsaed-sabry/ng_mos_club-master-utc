@@ -1,0 +1,74 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.closingTransactions' | translate}} </h4>
+
+  <div class="mo-flex mo-gap-2">
+    <button *appRole="['endOfDayTransactions', 'ShowAllData']" color="default" (click)="openCalculateTotal()"
+      mat-raised-button>
+      <mat-icon>payment</mat-icon> {{'management.calculateTotal' | translate}}
+    </button>
+
+    <button mat-raised-button *appRole="['endOfDayTransactions', 'tsb_Save']" color="primary"
+      (click)="openTransactionModal()"><mat-icon class="mo-m-0">add</mat-icon>
+      {{'members.add' | translate}}</button>
+
+  </div>
+</div>
+
+<div class="table-responsive card p-3">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.startDate' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.startDate | date:'medium' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="closingDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.closingDate' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.endDate | date:'medium' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalCash">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.totalCash' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.totalCash| number:'1.0' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalVisa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.totalVisa' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.totalVisa | number:'1.0' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="storageOver">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.storageOver' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.short_Over | number:'1.0' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="creationDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.creationDate' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.creationDate | date:'medium' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdBy">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.createdBy' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.userName }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+    </tr>
+  </table>
+
+  <mat-paginator (page)="onPaginationChange($event)" [pageSize]="perPage" [pageIndex]="page" [length]="totalElements"
+    [pageSizeOptions]="[10, 25, 100]">
+  </mat-paginator>
+</div>
+
+
+<ng-template #calculateTotalModal>
+  <div mat-dialog-content class="mo-px-10 mo-py-2">
+    <label class="mo-font-bold">{{'reports.table.total' | translate}} : </label>
+    <span>{{calculateTotal | number:'1.0'}}</span>
+  </div>
+</ng-template>

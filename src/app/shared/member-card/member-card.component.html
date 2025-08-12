@@ -1,0 +1,40 @@
+<div class="card-member">
+  <app-member-actions class="options-btn" [member]="member" [styleMember]="styleMember"></app-member-actions>
+
+  <div class="inner mo-shadow-md" [ngClass]="{'blocked': member.isBlocked}">
+    @if (member.photo) {
+      <div class="member-img"
+        [ngStyle]="{'background-image': 'url('+ proxyUrl + '/Images/' + member.photo+')'}">
+        @if (member.photo && imageLoader) {
+          <mat-spinner [color]="'accent'" [diameter]="20" class="spinner"></mat-spinner>
+        }
+        @if (member.photo) {
+          <img (load)="imageLoader = false" class="d-none"
+            [src]="proxyUrl + '/Images/' + member.photo">
+          }
+        </div>
+      }
+
+      @if (!member.photo) {
+        <div class="member-img"
+          [ngStyle]="{'background-image': member.gender === 1 ? 'url(assets/images/avatar.png)' : 'url(assets/images/female-avatar.png)'}">
+        </div>
+      }
+      <div class="member-details">
+        <ul class="mo-p-0">
+          <li class="mo-font-bold">{{member.applicationNo}}</li>
+          <li class="mo-font-bold">{{member.nameEng}}</li>
+          <li class="mo-font-bold">{{member.nameAR}}</li>
+        </ul>
+        <div class="mo-flex mo-flex-wrap">
+          <button mat-raised-button *appRole="['profile','EditAfterAddition']"
+            (click)="onAction.emit({actionType: 'edit', member:member})" class="mo-mt-3 view-profile-btn mo-me-2"><mat-icon
+          class="mo-me-1 mo-text-warning-500">edit</mat-icon>
+          <small>{{'members.edit' | translate}}</small></button>
+          <button mat-raised-button routerLink="/admin/member-profile/{{member.id}}"
+            class="mo-mt-3 mo-text-muted view-profile-btn"><small>{{'members.viewProfile' | translate}}</small> <mat-icon
+          class="mo-text-info-500 mo-ms-1">arrow_forward</mat-icon></button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,43 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  <form>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.from' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="filters.fromDate" name="fromDate">
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.to' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="filters.toDate" name="toDate">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'administration.defaultGender' | translate}}</mat-label>
+      <mat-select [(ngModel)]="filters.gender" name="gender">
+          <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+          <mat-option [value]="genders.MALE">{{'members.male' | translate}}</mat-option>
+          <mat-option [value]="genders.FEMALE">{{'members.female' | translate}}</mat-option>
+      </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="mo-w-full" appearance="outline">
+    <mat-label>{{'members.packageType' | translate}}</mat-label>
+    <mat-select [(ngModel)]="filters.packageCategory" name="packageCategory">
+        <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+        <mat-option [value]="packageTypesEnum.GYM">{{'members.gym' | translate}}</mat-option>
+        <mat-option [value]="packageTypesEnum.PRIVATE">{{'members.private' |
+            translate}}</mat-option>
+        <mat-option [value]="packageTypesEnum.MEDICAL">{{'members.medical' |
+            translate}}</mat-option>
+        <mat-option [value]="packageTypesEnum.OTHER">{{'members.other' |
+            translate}}</mat-option>
+    </mat-select>
+</mat-form-field>
+
+    <!-- <mat-radio-group aria-label="Select an option" [(ngModel)]="filters.isMonitoring" name="isMonitoring">
+      <mat-radio-button [value]="false">{{'reports.memPackages' | translate}}</mat-radio-button>
+      <mat-radio-button [value]="true">{{'reports.memMonitPackages' | translate}}</mat-radio-button>
+    </mat-radio-group> -->
+
+  </form>
+</div>

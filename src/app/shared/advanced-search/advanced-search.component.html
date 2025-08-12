@@ -1,0 +1,72 @@
+<div class="search-wrapper PAGE" #wrapper [ngClass]="config.parentClass">
+
+  <div class="mo-shadow-sm mo-border mo-border-neutral-200 dark:!mo-border-0">
+    <input type="text" autocomplete="off" (keyup)="search()" (keyup.enter)="searchWordCheck()"
+      class="form-control focus:mo-border-0 focus:mo-outline-none dark:!mo-bg-neutral-900" [(ngModel)]="searchKeyword" name="searchKeyword"
+      [placeholder]="config.placeholder">
+      @if (loading) {
+        <mat-spinner class="spinner" [diameter]="18"></mat-spinner>
+      }
+
+      <div class="loading">
+        <!-- [ngClass]="{'moving-animation' : loading}" -->
+        <div>
+          <mat-icon>search</mat-icon>
+        </div>
+      </div>
+      <!-- <select class="form-select" [(ngModel)]="searchType" name="searchType">
+      <option [value]="'name'">Member name</option>
+      <option [value]="'code'">Access code</option>
+      <option [value]="'phoneNo'">Phone number</option>
+    </select> -->
+  </div>
+
+  @if (onSearchResults) {
+    <div class="search-results" [ngClass]="config.theme" (scroll)="onScroll($event)">
+      <ul>
+        @for (r of results; track r) {
+          <li (click)="onSelectMember(r)" class="max-sm:mo-text-xs"
+            [ngClass]="{'selected': r.id === memberSelected.id, 'mo-bg-error-500': r.isBlocked}">
+            @if (r.photo) {
+              <div class="img-container"
+              [ngStyle]="{'background-image':'url('+proxyUrl + '/Images/' + r.photo+')'}"></div>
+            }
+            @if (!r.photo) {
+              <div class="img-container" [ngStyle]="{'background-image':'url(assets/images/avatar.png)'}">
+              </div>
+            }
+            <div class="details">
+              <p class="mo-m-0 mo-font-bold">{{r.nameEng}}
+                @if (r.code) {
+                  <small class="mo-text-muted mo-mx-2">({{r.code}})</small>
+                }
+                @if (r.isPossibleMember) {
+                  <span class="badge mo-bg-warning-500">{{'members.potMember' | translate}}</span>
+                }
+              </p>
+              <p class="mo-m-0">{{r.phoneNo}} @if (r.applicationNo) {
+                <small
+                class="mo-text-muted mo-mx-2 mo-font-bold">({{r.applicationNo}})</small>
+              }</p>
+            </div>
+            @if (!r.isPossibleMember && config.theme === 'HEADER') {
+              <button class="mo-ms-auto"
+                (click)="$event.stopPropagation();attend(r)" mat-flat-button color="primary">{{'common.attend' |
+              translate}}</button>
+            }
+          </li>
+        }
+        @if (results.length === 0) {
+          <li>
+            {{'common.topSearchNoData' | translate}} <strong class="mo-px-2">{{searchKeyword}}</strong>
+          </li>
+        }
+        @if (onScrollLoading) {
+          <li class="mo-justify-center">
+            <app-spinner [width]="'20px'" [height]="'20px'"></app-spinner>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</div>

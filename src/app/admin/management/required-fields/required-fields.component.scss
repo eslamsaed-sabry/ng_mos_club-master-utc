@@ -1,0 +1,12 @@
+.fields-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    li {
+        padding: 5px;
+
+        .inner {
+            border: 0;
+        }
+    }
+}

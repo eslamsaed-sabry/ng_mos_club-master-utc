@@ -1,0 +1,22 @@
+<h5 mat-dialog-title class="mo-font-bold">
+  {{data.type==='add'? ('management.packagesCommissionsMonths'|translate) :
+  ('management.copyPackagesCommissions'|translate)}}
+</h5>
+
+<form (ngSubmit)="submit(packagesCommissionsForm)" #packagesCommissionsForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field class="mo-w-full" (click)="fullDatepicker.open()">
+      <mat-label>{{'reports.table.month' | translate}} - {{'reports.table.year' | translate}}</mat-label>
+      <input matInput [matDatepicker]="fullDatepicker" [(ngModel)]="fullDate" name="fullDate" required />
+      <mat-datepicker-toggle matSuffix [for]="fullDatepicker"></mat-datepicker-toggle>
+      <mat-datepicker #fullDatepicker startView="year"></mat-datepicker>
+    </mat-form-field>
+
+  </div>
+  <div class="mo-text-end mo-mt-2" mat-dialog-actions>
+    <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+  </div>
+</form>

@@ -1,0 +1,204 @@
+<h5 class="mo-font-bold" mat-dialog-title>
+{{data.type === 'add' ? ('packages.addPackage' | translate) : ('packages.editPackage' | translate)}}</h5>
+
+
+<form (ngSubmit)="submit(packageForm)" #packageForm="ngForm">
+
+  <div mat-dialog-content>
+    <div class="row">
+
+      <div class="col-md-6 col-12">
+        <div class="mo-mb-3">
+          <div><label class="mo-font-bold" for="Select Package type">{{'members.packageCategory' | translate}}</label>
+        </div>
+        <mat-radio-group class="mo-mx-3" aria-label="Select Package type" [(ngModel)]="package.packageCategory"
+          name="packageCategory" required>
+          @for (el of packageCats; track el) {
+            <mat-radio-button class="!mo-m-0" [value]="el.value">{{el.label | translate}}
+            </mat-radio-button>
+          }
+        </mat-radio-group>
+      </div>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.packageType' | translate}}</mat-label>
+        <mat-select [(ngModel)]="package.packageTypeId" name="packageTypeId" required>
+          @for (el of packageTypes; track el) {
+            <mat-option [value]="el.id">{{el.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.branches' | translate}}</mat-label>
+        <mat-select [(ngModel)]="package.branchesIds" name="branchesIds" multiple [required]="branches.length>0">
+          <mat-option [value]="0" (click)="onSelect()">{{'common.selectAll' | translate}}</mat-option>
+          @for (el of branches; track el) {
+            <mat-option [value]="el.id">
+              {{el.name}}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="mo-my-3">
+        <h5 class="mo-font-bold">{{'members.benefits' | translate}}</h5>
+        <ul class="benefits-list">
+          @for (ben of package.benfitList; track ben) {
+            <li>
+              <div>
+                <label>{{ben.name}}</label>
+                <app-counter-input [(ngModel)]="ben.count" [name]="ben.symbol"></app-counter-input>
+              </div>
+            </li>
+          }
+        </ul>
+
+        <h5 class="mo-font-bold">{{'members.weekPlanner' | translate}}</h5>
+        <app-week-planner [data]="data.type === 'edit' ? package : {}" #planner></app-week-planner>
+      </div>
+
+      @if (package.packageCategory === OtherType || package.packageCategory === Gym) {
+        <div>
+          <h5 class="mo-font-bold">{{'packages.includedPrograms' | translate}}</h5>
+          <ul>
+            @for (program of classProgram$ | async; track $index) {
+              <li>
+                <mat-checkbox (change)="onChooseClass($event, program.id)" [checked]="program.checked">{{program.name}}
+                </mat-checkbox>
+              </li>
+            }
+          </ul>
+        </div>
+      }
+
+    </div>
+
+    <div class="col-md-6 col-12">
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.englishName' | translate}}</mat-label>
+        <input matInput [(ngModel)]="package.nameEng" (blur)="copyName()" name="nameEng" required />
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.arabicName' | translate}}</mat-label>
+        <input matInput [(ngModel)]="package.nameAR" name="nameAR" required />
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'packages.duration' | translate}}</mat-label>
+        <input matInput [(ngModel)]="package.duration" name="duration" type="number" required />
+      </mat-form-field>
+
+
+      <div class="mo-my-2">
+        <label class="mo-font-bold">{{'packages.durationType' | translate}}</label>
+        <mat-radio-group class="mo-mx-3" [(ngModel)]="package.isDays" name="packageType" required>
+          <mat-radio-button [value]="false" selected>{{'packages.months' | translate}}</mat-radio-button>
+          <mat-radio-button [value]="true">{{'packages.days' | translate}}</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'packages.validDurationForUpgrade' | translate}}</mat-label>
+        <input matInput [(ngModel)]="package.validDurationForUpgrade" name="validDurationForUpgrade" type="number" />
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'packages.attendanceCount' | translate}}</mat-label>
+        <input matInput [(ngModel)]="package.attendanceCount" name="attendanceCount" type="number" />
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.price' | translate}}</mat-label>
+        <input matInput [(ngModel)]="package.price" name="price" type="number" required />
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.minPrice' | translate}}</mat-label>
+        <input matInput [(ngModel)]="package.minPrice" name="minPrice" type="number" />
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'packages.minFreeze' | translate}}</mat-label>
+        <input matInput [(ngModel)]="package.minFreeze" name="minFreeze" type="number" />
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'packages.maxClassesReservationPerDay' | translate}}</mat-label>
+        <input matInput [(ngModel)]="package.maxClassesReservationPerDay" name="maxClassesReservationPerDay"
+          type="number" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.availabilityFrom' | translate}}</mat-label>
+          <input matInput type="datetime-local" [(ngModel)]="package.availabilityFrom" name="availabilityFrom">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.availabilityTo' | translate}}</mat-label>
+          <input matInput type="datetime-local" [(ngModel)]="package.availabilityTo" name="availabilityTo">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'packages.accessAreas' | translate}}</mat-label>
+          <mat-select [(ngModel)]="package.areasIds" name="areasIds" multiple>
+            <mat-option [value]="0" (click)="onAccessAreasSelect()">{{'common.selectAll' | translate}}</mat-option>
+            @for (el of accessAreas; track el) {
+              <mat-option [value]="el.id">
+                {{el.name}}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'members.incomeType' | translate}}</mat-label>
+          <mat-select [(ngModel)]="package.incomeTypeId" name="incomeTypeId">
+            @for (el of incomeTypes; track el) {
+              <mat-option [value]="el.id">{{el.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'reports.table.description' | translate}}</mat-label>
+          <textarea matInput [(ngModel)]="package.description" name="description"></textarea>
+        </mat-form-field>
+
+        <div class="mo-w-full">
+          <mat-checkbox [(ngModel)]="package.showToMembers" name="showOnline">{{'packages.showOnline' | translate}}
+          </mat-checkbox>
+        </div>
+
+        <!-- <div class="mo-w-full">
+        <mat-checkbox [(ngModel)]="specificAttendance" name="specificAttendance">{{'packages.specifyAtt' | translate}}
+        </mat-checkbox>
+      </div> -->
+
+
+      @if (specificAttendance) {
+        <div class="mo-my-3">
+          <small class="mo-text-muted">{{'packages.entranceFrom' | translate}}</small>
+          <ngx-timepicker-field class="d-block" name="entranceFrom" [(ngModel)]="package.enteranceFrom">
+          </ngx-timepicker-field>
+        </div>
+      }
+
+      @if (specificAttendance) {
+        <div>
+          <small class="mo-text-muted">{{'packages.entranceTo' | translate}}</small>
+          <ngx-timepicker-field class="d-block" name="entranceTo" [(ngModel)]="package.enteranceTo">
+          </ngx-timepicker-field>
+        </div>
+      }
+    </div>
+
+  </div>
+</div>
+
+<div mat-dialog-actions class="mo-justify-end">
+  <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+  <button mat-raised-button color="primary" type="submit">{{'members.save' | translate}}</button>
+</div>
+</form>

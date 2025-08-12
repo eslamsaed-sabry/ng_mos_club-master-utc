@@ -1,0 +1,282 @@
+<app-reports-page-header [permissions]="permissions" [reportName]="reportName" [isResult]="isResult"
+  (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-memberships-report-filters [filters]="filters" [dataType]="dataType"></app-memberships-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+
+    @if (isResult && (dataType === 'all' || dataType === 'privateMemberships' )) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <!-- <h5 class="mo-font-bold">
+            {{reportName}}
+          </h5> -->
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.phone' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'members.package' | translate}}</th>
+                <th>{{'members.paymentDate' | translate}}</th>
+                <th>{{'members.startDate' | translate}}</th>
+                <th>{{'members.expDate' | translate}}</th>
+                <th>{{'reports.table.totalPrice' | translate}}</th>
+                <th>{{'reports.table.status' | translate}}</th>
+                @if (dataType === 'all') {
+                  <th>{{'members.salesPerson' | translate}}</th>
+                }
+                @if (dataType === 'privateMemberships') {
+                  <th>{{'members.trainer' | translate}}</th>
+                }
+                <th>{{'reports.table.upgradeDeadline' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of memberships; track el) {
+                <tr>
+                  <td>{{el.contractNo}}</td>
+                  <td>{{el.phoneNo}}</td>
+                  <td>{{el.memberEnglishName}}</td>
+                  <td>{{el.gender | gender}}</td>
+                  <td>{{el.packageName}}</td>
+                  <td>{{el.paymentDate | date : 'mediumDate'}}</td>
+                  <td>{{el.startDate | date : 'mediumDate'}}</td>
+                  <td>{{el.expirationDate | date : 'mediumDate'}}</td>
+                  <td>{{el.price}}</td>
+                  <td>{{el.statusName}}</td>
+                  @if (dataType === 'all') {
+                    <td>{{el.salesName}}</td>
+                  }
+                  @if (dataType === 'privateMemberships') {
+                    <td>{{el.coachName}}</td>
+                  }
+                  <td>{{el.upgradeDeadline | date:'MMM d, y, h:mm a'}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (isResult && dataType === 'notRenewed') {
+    <div>
+      <div class="reports-tabs-container2">
+        <div class="table-responsive">
+          <!-- <h5 class="mo-font-bold">
+          {{reportName}}
+        </h5> -->
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>{{'members.startDate' | translate}}</th>
+              <th>{{'members.expDate' | translate}}</th>
+              <th>{{'members.contractNo' | translate}}</th>
+              <th>{{'members.phone' | translate}}</th>
+              <th>{{'members.memberName' | translate}}</th>
+              <th>{{'members.gender' | translate}}</th>
+              <th>{{'members.package' | translate}}</th>
+              <th>{{'members.price' | translate}}</th>
+              <th>{{'reports.table.paid' | translate}}</th>
+              <th>{{'reports.table.remaining' | translate}}</th>
+              <th>{{'reports.table.attendance' | translate}}</th>
+              <th>{{'reports.table.memCount' | translate}}</th>
+              <th>{{'reports.table.comment' | translate}}</th>
+              <th>{{'members.salesPerson' | translate}}</th>
+              <th>{{'members.calls' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (el of membershipsNotRenewed; track el) {
+              <tr>
+                <td>{{el.startDate | date : 'mediumDate'}}</td>
+                <td>{{el.endDate | date : 'mediumDate'}}</td>
+                <td>{{el.memberApplicationNo}}</td>
+                <td>{{el.memberPhone}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.gender | gender}}</td>
+                <td>{{el.periodName}}</td>
+                <td>{{el.price}}</td>
+                <td>{{el.totalAmountPaid}}</td>
+                <td>{{el.totalAmountRemaining}}</td>
+                <td>{{el.attendedTimes}}</td>
+                <td>{{el.membershipsCount}}</td>
+                <td>{{el.comment}}</td>
+                <td>{{el.salesPersonName}}</td>
+                <td><a target="_blank" routerLink="/admin/calls"
+                  [queryParams]="{memberId:el.memberId, memberName:el.memberName}"
+                  mat-icon-button><mat-icon>phone_callback</mat-icon></a></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (isResult && dataType === 'newRenewed') {
+    <div>
+      <div class="reports-tabs-container2">
+        <div class="table-responsive" id="newMemberships">
+          <h5 class="mo-font-bold">
+            {{'reports.table.newMemberships' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.phone' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'members.package' | translate}}</th>
+                <th>{{'members.paymentDate' | translate}}</th>
+                <th>{{'members.startDate' | translate}}</th>
+                <th>{{'members.expDate' | translate}}</th>
+                <th>{{'reports.table.totalPrice' | translate}}</th>
+                <th>{{'reports.table.paid' | translate}}</th>
+                <th>{{'reports.table.status' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of newMemberships; track el) {
+                <tr>
+                  <td>{{el.contractNo}}</td>
+                  <td>{{el.phoneNo}}</td>
+                  <td>{{el.memberEnglishName}}</td>
+                  <td>{{el.gender | gender}}</td>
+                  <td>{{el.packageName}}</td>
+                  <td>{{el.paymentDate | date : 'mediumDate'}}</td>
+                  <td>{{el.startDate | date : 'mediumDate'}}</td>
+                  <td>{{el.expirationDate | date : 'mediumDate'}}</td>
+                  <td>{{el.price}}</td>
+                  <td>{{el.totalAmountPaid}}</td>
+                  <td>{{el.statusName}}</td>
+                  <td>{{el.salesName}}</td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="8"></td>
+                <td>{{calcTotal(newMemberships, 'price') | number : '1.2'}}</td>
+                <td>{{calcTotal(newMemberships, 'totalAmountPaid') | number : '1.2'}}</td>
+                <td colspan="2"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="table-responsive" id="renewedMemberships">
+          <h5 class="mo-font-bold">
+            {{'reports.table.renewedMemberships' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.phone' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'members.package' | translate}}</th>
+                <th>{{'members.paymentDate' | translate}}</th>
+                <th>{{'members.startDate' | translate}}</th>
+                <th>{{'members.expDate' | translate}}</th>
+                <th>{{'reports.table.totalPrice' | translate}}</th>
+                <th>{{'reports.table.paid' | translate}}</th>
+                <th>{{'reports.table.status' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of renewMemberships; track el) {
+                <tr>
+                  <td>{{el.contractNo}}</td>
+                  <td>{{el.phoneNo}}</td>
+                  <td>{{el.memberEnglishName}}</td>
+                  <td>{{el.gender | gender}}</td>
+                  <td>{{el.packageName}}</td>
+                  <td>{{el.paymentDate | date : 'mediumDate'}}</td>
+                  <td>{{el.startDate | date : 'mediumDate'}}</td>
+                  <td>{{el.expirationDate | date : 'mediumDate'}}</td>
+                  <td>{{el.price}}</td>
+                  <td>{{el.totalAmountPaid}}</td>
+                  <td>{{el.statusName}}</td>
+                  <td>{{el.salesName}}</td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="8"></td>
+                <td>{{calcTotal(renewMemberships, 'price') | number : '1.2'}}</td>
+                <td>{{calcTotal(renewMemberships, 'totalAmountPaid') | number : '1.2'}}</td>
+                <td colspan="2"></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="mo-px-4 reports-summary-list table-responsive" id="summary">
+          <h5 class="mo-font-bold">
+            {{'members.summary' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td>{{'reports.table.totalNew' | translate}}</td>
+                <td>{{newMemberships.length}}</td>
+              </tr>
+              <tr>
+                <td>{{'reports.table.totalRenew' | translate}}</td>
+                <td>{{renewMemberships.length}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (isResult && dataType === 'log') {
+    <div>
+      <div class="reports-tabs-container2">
+        <div class="table-responsive">
+          <!-- <h5 class="mo-font-bold">
+          {{reportName}}
+        </h5> -->
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>{{'reports.table.id' | translate}}</th>
+              <th>{{'reports.table.date' | translate}}</th>
+              <th>{{'reports.table.type' | translate}}</th>
+              <th>{{'reports.table.logData' | translate}}</th>
+              <th>{{'members.username' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (el of membershipsLog; track el) {
+              <tr>
+                <td>{{el.id}}</td>
+                <td>{{el.logDate}}</td>
+                <td>{{el.logTypeName}}</td>
+                <td>{{el.logData}}</td>
+                <td>{{el.userName}}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+}
+
+</div>
+</div>

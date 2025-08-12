@@ -1,0 +1,15 @@
+{
+  "/api": {
+    "______target": "https://dynamicapi.mosclubeg.com",
+    "_____target": "https://testing3api.mosclubeg.com",
+    "target": "https://testing2api.mosclubeg.com",
+    "___target": "https://onehundredapi.mosclubeg.com",
+    "_target": "https://mosapi.mosclubeg.com",
+    "____target": "https://gympanzeeapi.mosclubeg.com",
+    "__target": "https://v2.mosclubeg.com",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "ws": true
+  }
+}

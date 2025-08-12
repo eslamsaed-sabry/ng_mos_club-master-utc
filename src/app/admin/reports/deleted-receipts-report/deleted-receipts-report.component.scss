@@ -1,0 +1,18 @@
+.report-bg {
+  background-image: url('../../../../assets/images/deleted-report-bg.png');
+  background-position: top center;
+  background-repeat: no-repeat;
+  min-height: 600px;
+}
+
+.table-responsive {
+  background-color: #FFF;
+
+  padding: 20px;
+
+  thead {
+    background: #2196f3;
+    color: #FFF;
+    font-weight: normal;
+  }
+}

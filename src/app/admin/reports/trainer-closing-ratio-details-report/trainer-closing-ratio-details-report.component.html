@@ -1,0 +1,68 @@
+<app-reports-page-header [permissions]="['trainerClosingRatioDetailsReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.trainerClosingRatioDetails' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-trainer-closing-ratio-details-report-filters
+    [filters]="filters"></app-trainer-closing-ratio-details-report-filters>
+  </div>
+
+  @if (isResult) {
+    <div class="col-xl-9 col-md-8 col-12">
+      <div class="card p-2">
+        <ul class="row">
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'reports.table.successfulSales' | translate}}</label>
+            <span>{{reports.closingRatio.successfulSales}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'reports.table.totalOpportunities' | translate}} </label>
+            <span> {{reports.closingRatio.totalOpportunities}} </span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'reports.table.ratio' | translate}}</label>
+            <span>{{reports.closingRatio.ratio}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="reports-tabs-container mo-mt-4">
+        <div class="table-responsive" id="receipts">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.trainerName' | translate}}</th>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.startDate' | translate}}</th>
+                <th>{{'members.packageName' | translate}}</th>
+                <th>{{'reports.table.PTSessionsCount' | translate}}</th>
+                <th>{{'reports.table.PtPackageName' | translate}}</th>
+                <th>{{'reports.table.PtStartDate' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.details; track el) {
+                <tr matTooltipPosition="left">
+                  <td>{{el.trainerName}}</td>
+                  <td>{{el.contractNo}}</td>
+                  <td>{{el.memberName}}</td>
+                  <td>{{el.startDate| date :'mediumDate'}}</td>
+                  <td>{{el.packageName}}</td>
+                  <td>{{el.ptSessionsCount}}</td>
+                  <td>{{el.ptPackageName}}</td>
+                  <td>{{el.ptStartDate| date :'mediumDate'}}</td>
+                </tr>
+              }
+              @if (reports && reports.details.length === 0) {
+                <tr>
+                  <td colspan="10">{{'members.noData' | translate}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>

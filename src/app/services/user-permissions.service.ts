@@ -1,0 +1,202 @@
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Entities } from '../models/permissions.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserPermissionsService {
+  userPermissions: string[] = [];
+  entitiesList: any = {};
+  constructor() { }
+
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    this.userPermissions = JSON.parse(localStorage.getItem('mosUser')!).permissionsList;
+    this.getEntityPermissions();
+    // console.log(this.getPermissions(Entities.ATTACHMENTS))
+    return true;
+  }
+
+  getEntityPermissions() {
+    this.entitiesList = {
+      dashboard: this.getPermissions(Entities.DASHBOARD),
+      members: this.getPermissions(Entities.MEMBERS),
+      calls: this.getPermissions(Entities.CALLS),
+      memberships: this.getPermissions(Entities.MEMBERSHIPS),
+      membershipsBasic: this.getPermissions(Entities.MEMBERSHIPSBASIC),
+      extra: this.getPermissions(Entities.EXTRA),
+      sessions: this.getPermissions(Entities.SESSIONS),
+      profile: this.getPermissions(Entities.MEMBERPROFILE),
+      authorities: this.getPermissions(Entities.AUTHORITIES),
+      roles: this.getPermissions(Entities.ROLES),
+      users: this.getPermissions(Entities.USERS),
+      administration: this.getPermissions(Entities.ADMINISTRATION),
+      debts: this.getPermissions(Entities.DEBTS),
+      reports: this.getPermissions(Entities.REPORTS),
+      profitReport: this.getPermissions(Entities.PROFIT_REPORT),
+      membershipsReport: this.getPermissions(Entities.MEMBERSHIPS_REPORT),
+      newRenewMemReport: this.getPermissions(Entities.NEW_RENEWED_MEM_REPORT),
+      notRenewMemReport: this.getPermissions(Entities.NOT_RENEWED_MEM_REPORT),
+      memLogReport: this.getPermissions(Entities.MEM_LOG_REPORT),
+      pkgUtilReport: this.getPermissions(Entities.PACKAGES_UTIL_REPORT),
+      dayByDayReport: this.getPermissions(Entities.DAY_BY_DAY_REPORT),
+      birthdaysReport: this.getPermissions(Entities.BIRTHDAYS_REPORT),
+      callsReport: this.getPermissions(Entities.CALLS_SUMMARY_REPORT),
+      inactiveMembersReport: this.getPermissions(Entities.INACTIVE_MEMBERS_REPORT),
+      OverAttReport: this.getPermissions(Entities.OVER_ATTENDANCE_REPORT),
+      debtsReport: this.getPermissions(Entities.DEBTS_REPORT),
+      salesReport: this.getPermissions(Entities.SALES_REPORT),
+      trainerReport: this.getPermissions(Entities.TRAINER_REPORT),
+      staff: this.getPermissions(Entities.STAFF),
+      staffData: this.getPermissions(Entities.STAFFDATA),
+      instructors: this.getPermissions(Entities.INSTRUCTORS_DATA),
+      staffAttendance: this.getPermissions(Entities.STAFF_ATTENDANCE),
+      monitoring: this.getPermissions(Entities.MONITORING),
+      classSchedule: this.getPermissions(Entities.CLASS_SCHEDULE),
+      changePW: this.getPermissions(Entities.CHANGE_PASSWORD),
+      potMembers: this.getPermissions(Entities.POSSIBLEMEMBERS),
+      invitations: this.getPermissions(Entities.INVITATIONS),
+      gymAttendance: this.getPermissions(Entities.GYM_ATTENDANCE),
+      shifts: this.getPermissions(Entities.SHIFTS),
+      packages: this.getPermissions(Entities.PACKAGES),
+      accounts: this.getPermissions(Entities.ACCOUNTS),
+      revenue: this.getPermissions(Entities.OTHER_REVENUE),
+      expenses: this.getPermissions(Entities.EXPENSES),
+      deductions: this.getPermissions(Entities.DEDUCTIONS),
+      advances: this.getPermissions(Entities.ADVANCES),
+      bonus: this.getPermissions(Entities.BONUS),
+      announcement: this.getPermissions(Entities.ANNOUNCEMENT),
+      attachments: this.getPermissions(Entities.ATTACHMENTS),
+      receipts: this.getPermissions(Entities.RECEIPTS),
+      freeBenefits: this.getPermissions(Entities.FREE_BENEFITS),
+      memberNotification: this.getPermissions(Entities.MEMBER_NOTIFICATION),
+      approveDecline: this.getPermissions(Entities.APPROVE_DECLINE),
+      events: this.getPermissions(Entities.EVENTS),
+      offers: this.getPermissions(Entities.OFFERS),
+      news: this.getPermissions(Entities.NEWS),
+      requiredFields: this.getPermissions(Entities.REQUIRED_FIELDS),
+      complaints: this.getPermissions(Entities.COMPLAINTS),
+      gymSettings: this.getPermissions(Entities.GYM_SETTINGS),
+      lostItems: this.getPermissions(Entities.LOST_ITEMS),
+      machines: this.getPermissions(Entities.MACHINES),
+      machinesModels: this.getPermissions(Entities.MACHINES_MODELS),
+      logsReport: this.getPermissions(Entities.LOGS_REPORT),
+      absentMembersReport: this.getPermissions(Entities.ABSENT_MEMBERS_REPORT),
+      gymRules: this.getPermissions(Entities.GYM_RULES),
+      benefits: this.getPermissions(Entities.BENEFITS),
+      classesTypes: this.getPermissions(Entities.CLASSES_TYPES),
+      gymSections: this.getPermissions(Entities.GYM_SECTIONS),
+      expensesTypes: this.getPermissions(Entities.EXPENSES_TYPES),
+      srcOfKnowledge: this.getPermissions(Entities.SOURCE_OF_KNOWLEDGE),
+      owners: this.getPermissions(Entities.OWNERS),
+      nationalities: this.getPermissions(Entities.NATIONALITIES),
+      maintenance: this.getPermissions(Entities.MAINTENANCE),
+      maintenanceTypes: this.getPermissions(Entities.MAINTENANCETYPES),
+      regions: this.getPermissions(Entities.REGIONS),
+      visaTypes: this.getPermissions(Entities.VISA_TYPES),
+      jobTitles: this.getPermissions(Entities.JOB_TITLES),
+      callFeedback: this.getPermissions(Entities.CALL_FEEDBACK),
+      classRoom: this.getPermissions(Entities.CLASS_ROOM),
+      classCancelReasons: this.getPermissions(Entities.CLASS_CANCELLATION_REASONS),
+      membershipCancelReasons: this.getPermissions(Entities.MEMBERSHIP_CANCELLATION_REASONS),
+      interestPercent: this.getPermissions(Entities.INTEREST_PERCENTAGE),
+      location: this.getPermissions(Entities.LOCATION),
+      lostCategory: this.getPermissions(Entities.LOST_CATEGORY),
+      packageTypes: this.getPermissions(Entities.PACKAGE_TYPES),
+      memberLevels: this.getPermissions(Entities.MEMBER_LEVELS),
+      sessionTypes: this.getPermissions(Entities.SESSION_TYPES),
+      ranges: this.getPermissions(Entities.RANGES),
+      percentages: this.getPermissions(Entities.PERCENTAGES),
+      targets: this.getPermissions(Entities.TARGETS),
+      gymImages: this.getPermissions(Entities.GYM_IMAGES),
+      transformationImages: this.getPermissions(Entities.TRANSFORMATION_IMAGES),
+      reminders: this.getPermissions(Entities.REMINDERS),
+      goals: this.getPermissions(Entities.MEMBER_GOALS),
+      sizes: this.getPermissions(Entities.SUIT_SIZE),
+      faqs: this.getPermissions(Entities.FAQS),
+      workoutTypes: this.getPermissions(Entities.WORKOUT_TYPES),
+      exercises: this.getPermissions(Entities.EXERCISES),
+      workouts: this.getPermissions(Entities.WORKOUTS),
+      deletedReceiptsReport: this.getPermissions(Entities.DELETED_RECEIPT_REPORT),
+      classesReports: this.getPermissions(Entities.CLASSES_REPORTS),
+      classesTypesReport: this.getPermissions(Entities.CLASSES_TYPES_REPORT),
+      heldClassesReport: this.getPermissions(Entities.HELD_CLASSES_REPORT),
+      classesPerInstructorAndTypeReport: this.getPermissions(Entities.CLASSES_PER_INSTRUCTOR_AND_TYPE_REPORT),
+      classesBookingListReport: this.getPermissions(Entities.CLASSES_BOOKING_LIST_REPORT),
+      cancelledClassesReport: this.getPermissions(Entities.CANCELED_CLASSES_REPORT),
+      memberReservationsReport: this.getPermissions(Entities.MEMBER_RESERVATIONS_ON_CLASSES_REPORT),
+      memberAttendanceReport: this.getPermissions(Entities.MEMBER_ATTENDANCE_REPORT),
+      blockedMembersReport: this.getPermissions(Entities.BLOCKED_MEMBERS_REPORT),
+      membersReport: this.getPermissions(Entities.MEMBERS_REPORT),
+      lostItemsReport: this.getPermissions(Entities.LOST_ITEMS_REPORT),
+      benefitsConsumptionReport: this.getPermissions(Entities.BENEFITS_CONSUMPTION_REPORT),
+      invitationCountReport: this.getPermissions(Entities.INVITATION_COUNT_REPORT),
+      freeBenefitsReport: this.getPermissions(Entities.FREE_BENEFITS_REPORT),
+      salaries: this.getPermissions(Entities.SALARIES),
+      employeesCommissions: this.getPermissions(Entities.EMPLOYEES_COMMISSIONS),
+      staffPayrollReport: this.getPermissions(Entities.STAFF_PAY_ROLL_REPORT),
+      gymAttendanceCountDayByDayReport: this.getPermissions(Entities.GYM_ATTENDANCE_COUNT_DAY_BY_DAY_REPORT),
+      tasks: this.getPermissions(Entities.TASKS),
+      membershipTransferReport: this.getPermissions(Entities.MEMBERSHIP_TRANSFER_REPORT),
+      notificationsTemplates: this.getPermissions(Entities.NOTIFICATIONS_TEMPLATES),
+      customPackagesCommissionReport: this.getPermissions(Entities.CUSTOM_PACKAGES_COMMISSION_REPORT),
+      topActiveMembersReport: this.getPermissions(Entities.TOP_ACTIVE_MEMBERS_REPORT),
+      membershipsDiscountReport: this.getPermissions(Entities.MEMBERSHIPS_DISCOUNT_REPORT),
+      trainersAchievementReport: this.getPermissions(Entities.TRAINERS_ACHIEVEMENT_REPORT),
+      privateMembershipsReport: this.getPermissions(Entities.PRIVATE_MEMBERSHIPS_REPORT),
+      maximumExpirationDateReport: this.getPermissions(Entities.MAXIMUM_EXPIRATION_DATE_REPORT),
+      packageUtilizationPerSalesPersonalReport: this.getPermissions(Entities.PACKAGE_UTILIZATION_PER_SALES_PERSONAL_REPORT),
+      freePrivateTraining: this.getPermissions(Entities.FREE_PRIVATE_TRAINING),
+      gymMembershipsIncome: this.getPermissions(Entities.GYMMEMBERSHIPSINCOME),
+      privateMembershipsIncome: this.getPermissions(Entities.PRIVATEMEMBERSHIPSINCOME),
+      consumedPTSessionsReport: this.getPermissions(Entities.CONSUMED_PTSESSIONS_REPORT),
+      membersTrainingNotes: this.getPermissions(Entities.MEMBERS_TRAINING_NOTES),
+      membershipUpgradeReport: this.getPermissions(Entities.MEMBERSHIP_UPGRADE_REPORT),
+      trainersData: this.getPermissions(Entities.TRAINERS_DATA),
+      trainersRanges: this.getPermissions(Entities.TRAINERS_RANGES),
+      trainersPercentages: this.getPermissions(Entities.TRAINERS_PERCENTAGES),
+      trainersTargets: this.getPermissions(Entities.TRAINERS_TARGETS),
+      instructorsClassesPrices: this.getPermissions(Entities.INSTRUCTORS_CLASSES_PRICES),
+      employeeFinancialReport: this.getPermissions(Entities.EMPLOYEE_FINANCIAL_REPORT),
+      instructorDueAmountReport: this.getPermissions(Entities.INSTRUCTOR_DUE_AMOUNT_REPORT),
+      endOfDayTransactions: this.getPermissions(Entities.END_OF_DAY_TRANSACTIONS),
+      consumedPTSessionsPerMembershipReport: this.getPermissions(Entities.CONSUMED_PT_SESSIONS_PER_MEMBERSHIP_REPORT),
+      consumedPTSessionsPerTrainerReport: this.getPermissions(Entities.CONSUMED_PT_SESSIONS_PER_TRAINER_REPORT),
+      trainerClosingRatioDetailsReport: this.getPermissions(Entities.TRAINER_CLOSING_RATIO_DETAILS_REPORT),
+      trainerClosingRatioReport: this.getPermissions(Entities.TRAINER_CLOSING_RATIO_REPORT),
+      multipleAttendancePerDayReport: this.getPermissions(Entities.MULTIPLE_ATTENDANCE_PER_DAY_REPORT),
+      fixedTrainerCommissionReport: this.getPermissions(Entities.FIXED_TRAINER_COMMISSION_REPORT),
+      trainerMemberRetentionReport: this.getPermissions(Entities.TRAINER_MEMBER_RETENTION_REPORT),
+      freeConsumedBenefitsReport: this.getPermissions(Entities.FREE_CONSUMED_BENEFITS_REPORT),
+      salesPersonClosingRatioDetailsReport: this.getPermissions(Entities.SALES_PERSON_RATIO_DETAILS_REPORT),
+      salesPersonClosingRatioReport: this.getPermissions(Entities.SALES_PERSON_RATIO_REPORT),
+      trainersTransformations: this.getPermissions(Entities.TRAINERS_TRANSFORMATIONS),
+      membershipsIncomePerPackageType: this.getPermissions(Entities.MEMBERSHIPS_INCOME_PER_PACKAGE_TYPE),
+      freePrivateTrainingReport: this.getPermissions(Entities.FREE_PRIVATE_TRAINING_REPORT),
+      employeesRequests: this.getPermissions(Entities.EMPLOYEES_REQUESTS),
+      branchesVisits: this.getPermissions(Entities.BRANCHES_VISITS),
+      medicalMembershipsIncome: this.getPermissions(Entities.MEDICAL_MEMBERSHIPS_INCOME),
+      financialTransactions: this.getPermissions(Entities.FINANCIAL_TRANSACTIONS),
+      feedbacks: this.getPermissions(Entities.FEEDBACKS),
+      profitSummaryReport: this.getPermissions(Entities.PROFIT_SUMMARY_REPORT),
+      requests: this.getPermissions(Entities.REQUESTS),
+      otherEntitiesBookings: this.getPermissions(Entities.OTHER_ENTITIES_BOOKINGS_REPORT),
+      benefitsReservations: this.getPermissions(Entities.BENEFITS_RESERVATIONS),
+    }
+  }
+
+  getPermissions(entity: Entities) {
+    return this.userPermissions.filter((el: string) => el.includes(entity)).map(el => el.substring(entity.length))
+  }
+
+  hasPermissions(permission: string[]): boolean {
+    let permissionArray = permission[0];
+    let accessKeys = permission.splice(1);
+    if (this.entitiesList[permissionArray].some((r: string) => accessKeys.includes(r))) {
+      return true;
+    }
+    return false;
+  }
+}

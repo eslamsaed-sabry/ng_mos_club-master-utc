@@ -1,0 +1,28 @@
+  .signature {
+    display: flex;
+  
+    li {
+      width: 50%;
+    }
+  }
+  
+  @media print {
+    .mat-mdc-dialog-actions {
+      display: none;
+    }
+  
+    .print-wrapper {
+      width: 600px;
+      margin: auto;
+    }
+  }
+  
+  .img-logo {
+    width: 145px;
+    margin: auto;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    height: 50px;
+  }
+  

@@ -1,0 +1,56 @@
+mat-drawer-container {
+  min-height: 100vh;
+}
+
+mat-drawer {
+  width: 310px;
+  overflow: hidden;
+  padding: 10px;
+
+  @media (max-width:600px) {
+    width: 200px;
+  }
+}
+
+.filters-drawer {
+  overflow-x: hidden;
+}
+
+::ng-deep {
+  .mat-drawer-opened+.mat-drawer-content {
+    padding: 0 20px !important;
+  }
+}
+
+.member-img {
+  margin: auto;
+  width: 120px;
+  height: 120px;
+  background-size: cover;
+  background-position: 0 0;
+  border-radius: 100%;
+  transition: all .3s ease 0s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .spinner {
+    position: absolute;
+    z-index: 99;
+  }
+}
+
+.atten-card {
+  text-align: center;
+  background-color: #FFF;
+  height: 280px;
+}
+
+tr.isDeleted td {
+  color: red;
+}
+
+.view-profile-btn {
+  width: auto;
+  height: auto;
+}

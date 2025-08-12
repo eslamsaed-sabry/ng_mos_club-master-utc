@@ -1,0 +1,4 @@
+@if (referrals()) {
+  <app-material-table [defaultSearch]="true" [cols]="displayedCols" [dataTable]="referrals()"
+  [totalElements]="referrals().length"></app-material-table>
+}

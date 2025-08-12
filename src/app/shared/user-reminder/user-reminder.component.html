@@ -1,0 +1,98 @@
+<div MatDialogTitle class="overflow-hidden mo-relative">
+  @if (data.reminders.length > 1) {
+    <h5 class="mo-pt-3 mo-px-3">{{'members.reminders' | translate}}</h5>
+  }
+
+  <button class="modal-close-btn" type="button" mat-icon-button
+    (click)="dismiss()"><mat-icon>close</mat-icon></button>
+  </div>
+
+
+  @if(data.reminders.length === 1) {
+
+    <div matDialogContent>
+      <div class="mo-flex mo-flex-wrap mo-items-center">
+        <app-call-ringing-animation [iconName]="'notifications'"></app-call-ringing-animation>
+        <h5 class="mo-text-center mo-pe-4">
+          {{'members.reminder' | translate}} {{'members.for' | translate}} {{'members.user' | translate}}
+          {{data.reminders[0].createdToUsername}}
+          <br> <strong>{{data.reminders[0].reminderDate| date:'MMM d, y, h:mm a'}}</strong>
+        </h5>
+      </div>
+
+      <ul class="info-list">
+        <li>
+          <label>{{'members.memberName' | translate}}: </label>
+          <span>{{data.reminders[0].memberName}}</span>
+          <button class="mo-ms-2" mat-raised-button
+            [routerLink]="['/admin/member-profile/',data.reminders[0].memberId]">{{'members.view' | translate}}
+          {{'members.profile' | translate}}</button>
+        </li>
+        <li>
+          <label>{{'members.summary' | translate}}: </label>
+          <span>{{data.reminders[0].notes}}</span>
+        </li>
+      </ul>
+    </div>
+    @if (data.reminders[0].isDismissed) {
+      <div matDialogActions class="mo-justify-center">
+        <span class="mo-text-muted">{{'common.reminderIsDismissed' | translate}}</span>
+      </div>
+    }
+    @if (!data.reminders[0].isDismissed) {
+      <div matDialogActions class="!mo-justify-center">
+        <button mat-raised-button color="warn" type="button"
+          (click)="dismissUserReminder(data.reminders[0])">{{'members.dismiss' |
+        translate}}</button>
+        @if (canBeSnoozed(data.reminders[0].reminderDate)) {
+          <button mat-raised-button class="mo-mx-2" [matMenuTriggerFor]="menu">
+            {{'members.snooze' | translate}} {{'members.for' | translate}}
+            <mat-icon>arrow_drop_down</mat-icon>
+          </button>
+        }
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="snoozeUserReminder(15, data.reminders[0])">15 min</button>
+          <button mat-menu-item (click)="snoozeUserReminder(30, data.reminders[0])">30 min</button>
+          <button mat-menu-item (click)="snoozeUserReminder(60, data.reminders[0])">1 hour</button>
+        </mat-menu>
+      </div>
+    }
+  } @else {
+    <div matDialogContent>
+      <ul class="mo-p-0">
+        @for (r of data.reminders; track r; let last = $last) {
+          <li class="mo-py-2 mo-flex mo-justify-between mo-items-center"
+            [ngClass]="{'border-bottom': !last}">
+            <div>
+              <span class="mo-font-bold">
+                <span class="mo-flex">
+                  <mat-icon>notifications_none</mat-icon>
+                  <span style="width: 90%;">{{r.notes}}</span>
+                </span>
+                <button color="primary" mat-button
+                [routerLink]="['/admin/member-profile/',r.memberId]">{{r.memberName}}</button>
+              </span>
+              <small class="mo-text-muted mo-px-2">{{r.reminderDate | date:'MMM d, y, h:mm a'}}</small>
+            </div>
+            <div class="mo-flex gap-2">
+              @if (canBeSnoozed(r.reminderDate)) {
+                <button mat-icon-button [matMenuTriggerFor]="menu" [matTooltip]="'members.snooze' | translate"
+                  type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <mat-icon>snooze</mat-icon>
+                </button>
+              }
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="snoozeUserReminder(15, r, false)">15 min</button>
+                <button mat-menu-item (click)="snoozeUserReminder(30, r, false)">30 min</button>
+                <button mat-menu-item (click)="snoozeUserReminder(60, r, false)">1 hour</button>
+              </mat-menu>
+              <button mat-icon-button [matTooltip]="'members.dismiss' | translate" color="warn" type="button"
+                (click)="dismissUserReminder(r, false)">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+  }

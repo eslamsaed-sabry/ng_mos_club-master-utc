@@ -1,0 +1,69 @@
+<h5 mat-dialog-title>{{'navigation.deductions' | translate}}
+  @if (data.type != 'edit') {
+    <div class="mo-font-bold mo-text-center">
+      <label class="fs-6">{{'common.yourCurrentBranch' | translate}}{{branchName}}</label>
+    </div>
+  }
+</h5>
+
+<form (ngSubmit)="submit(deductionsForm)" #deductionsForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field class="mo-w-full" appearance="outline" (click)="deductionsPicker.open()">
+      <mat-label>{{'accounts.deductionsDate' | translate}}</mat-label>
+      <input matInput [matDatepicker]="deductionsPicker" [(ngModel)]="deductions.actionDate" name="actionDate"
+        required />
+        <mat-datepicker-toggle matSuffix [for]="deductionsPicker"></mat-datepicker-toggle>
+        <mat-datepicker #deductionsPicker startView="year"></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'staff.staffMember' | translate}}</mat-label>
+        <mat-select [(ngModel)]="deductions.staffMemberId" name="staffMemberId" required>
+          @for (c of staffMembers; track c) {
+            <mat-option [value]="c.id">{{c.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.price' | translate}}</mat-label>
+        <input matInput [(ngModel)]="deductions.price" name="amountCash" required />
+      </mat-form-field>
+
+      <label class="mo-font-bold">{{'receiptPrint.paymentMethod' | translate}}</label>
+      <mat-radio-group class="mo-mx-3" [(ngModel)]="deductions.isCash" name="isCash" required>
+        <mat-radio-button [value]="true" selected>{{'receiptPrint.cash' | translate}}</mat-radio-button>
+        <mat-radio-button [value]="false" selected>{{'receiptPrint.visa' | translate}}</mat-radio-button>
+      </mat-radio-group>
+
+      @if (!deductions.isCash) {
+        <div>
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.visaType' | translate}}</mat-label>
+            <mat-select [(ngModel)]="deductions.visaTypeId" name="visaTypeId" required>
+              @for (v of visaTypes; track v) {
+                <mat-option [value]="v.id">{{v.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'reports.table.description' | translate}}</mat-label>
+        <textarea matInput [(ngModel)]="deductions.description" name="description" required></textarea>
+      </mat-form-field>
+
+    </div>
+
+
+    <div mat-dialog-actions class="mo-justify-end">
+      <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit">
+        {{'members.save' | translate}}
+      </button>
+    </div>
+
+  </form>

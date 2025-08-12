@@ -1,0 +1,317 @@
+<mat-drawer-container class="example-container" autosize>
+
+  <div class="page-title" [ngClass]="{'drawer-opened': drawer.opened}">
+    <h4 class="mo-font-bold mo-m-0"> {{'navigation.potMembers' | translate}} </h4>
+
+    <div class="mo-flex mo-gap-2">
+
+      <button (click)="drawer.toggle()" mat-raised-button color="default">
+        <mat-icon>{{drawer.opened ? 'filter_alt_off' : 'filter_alt'}}</mat-icon>
+        {{drawer.opened ? ('members.hide' | translate) : ('members.show' | translate)}}
+        {{'members.filters' | translate}}
+      </button>
+
+      <button *appRole="['potMembers','Export']" type="button" mat-raised-button color="default"
+        (click)="getExportedData()">
+        @if (!loading) {
+          <img src="assets/images/excel-ico.png" width="20">
+        }
+        @if (loading) {
+          <mat-spinner [diameter]="20" class="d-inline-block"></mat-spinner>
+        }
+        {{'members.exportExcel'|translate}}
+      </button>
+
+      <button *appRole="['potMembers', 'Upload']" color="default" (click)="onUploadBulk()" mat-raised-button>
+        <mat-icon>upload_file</mat-icon> {{'members.upload' | translate}}
+      </button>
+
+      <button *appRole="['potMembers', 'tsb_Add']" color="primary" (click)="addMember()" mat-raised-button>
+        <mat-icon>person_add_alt</mat-icon> {{'members.addPotMember' | translate}}
+      </button>
+    </div>
+  </div>
+
+  <mat-drawer #drawer [mode]="width < 600 ? 'over':'side'" [dir]="'ltr'" [position]="'end'">
+    <div class="filters-drawer">
+      <div class="inner">
+        <h4 class="mo-font-bold"> {{'members.filters' | translate}}</h4>
+        <app-potential-member-filters [filters]="filters" (onFilterChange)="applyFilter()">
+        </app-potential-member-filters>
+      </div>
+    </div>
+  </mat-drawer>
+
+  @if (selection.selected.length) {
+    <div
+      class="mo-my-3 mo-bg-neutral-200 mo-flex mo-items-center mo-rounded-md mo-p-2 mo-flex-wrap mo-gap-3">
+      <div>
+        <button (click)="selection.clear()" mat-button color="warn">
+          <mat-icon class="!mo-text-base">close</mat-icon>
+          <small>{{'common.clearSelection' | translate}}</small>
+        </button>
+        <small class="mo-text-neutral-600">{{selection.selected.length}} {{'common.itemsSelected' | translate}}</small>
+      </div>
+      <ul class="mo-flex mo-items-center mj-gap-3">
+        <li *appRole="['profile', 'EditSalesPerson']">
+          <button (click)="changeSalesPerson()" mat-raised-button>
+            <mat-icon>published_with_changes</mat-icon>
+            <small class="mj-ps-2">{{'staff.changeSalesPerson' | translate}}</small>
+          </button>
+        </li>
+      </ul>
+    </div>
+  }
+
+  <div [ngClass]="{'drawer-opened': drawer.opened}">
+    <div class="table-responsive card p-3">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="onSelection($event, 'ALL')" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="onSelection($event, 'ROW', row)"
+              [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="joiningDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.creationDate' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.joiningDate | date:'MMM d, y, h:mm a' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="guestCardNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.guestCard' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.guestCardNumber }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="nameEng">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.memberName' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="mo-flex">
+              <a class="view-profile-btn mo-my-1 mo-py-1" [routerLink]="['/admin/member-profile/', row.id]" mat-button
+                color="primary">
+                <small>{{row.nameEng}}</small>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nameAR">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.arabicName' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.nameAR }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="phoneNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.phone' | translate}}</th>
+          <td mat-cell *matCellDef="let row" class="cursor-pointer" (click)="openPhonePopup(row)">
+          {{'reports.table.phoneStars' | translate}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.gender' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.gender | gender }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="comment">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.comment' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.comment }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="salesPerson">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.salesPerson' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.salesPerson }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="source">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.source' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.source }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="userName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.createdBy' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.userName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastCall">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.lastCall' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.lastCall | date:'MMM d, y, h:mm a' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="highPotential">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button matTooltip="High Potential" color="default" (click)="isHighPotential(row)">
+              @if (!row.isHighPotential) {
+                <mat-icon class="mo-m-0">star_border</mat-icon>
+              }
+              @if (row.isHighPotential) {
+                <mat-icon class="mo-m-0 mo-text-warning-500">star</mat-icon>
+              }
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="mo-text-center">
+            <mat-icon>settings</mat-icon>
+          </th>
+          <td mat-cell *matCellDef="let row" class="mo-text-center">
+            <button mat-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="actionMenu">
+              <mat-icon>more_horiz</mat-icon>
+            </button>
+            <mat-menu #actionMenu="matMenu" class="action-menu">
+              <button *appRole="['potMembers', 'Edit']" mat-menu-item (click)="editMember(row)">
+                <mat-icon>edit</mat-icon>
+                {{ 'members.edit' | translate }}
+              </button>
+              <button *appRole="['potMembers', 'EditName']" mat-menu-item (click)="editNameMember(row)">
+                <mat-icon>edit</mat-icon>
+                {{ 'members.editName' | translate }}
+              </button>
+              <!-- <button mat-menu-item *appRole="['calls','tsb_Add']" (click)="addCall(row)">
+              <mat-icon> call</mat-icon> {{'members.addCall' | translate}}
+            </button> -->
+
+            <button (click)="viewMemberHistory(row)" mat-menu-item>
+              <mat-icon>history_toggle_off</mat-icon> {{'members.showHis' | translate}}
+            </button>
+
+            <button mat-menu-item (click)="getNotes(row)">
+              <mat-icon>notes</mat-icon> {{'members.notes' | translate}}
+            </button>
+
+            <button mat-menu-item (click)="getCalls(row)">
+              <mat-icon>add_call</mat-icon> {{'members.calls' | translate}}
+            </button>
+
+            @if (row.phoneNo) {
+              <button mat-menu-item (click)="directCall(row)">
+                <mat-icon>call</mat-icon> <span>{{'members.directCall' | translate}}</span>
+              </button>
+            }
+
+            @if (row.phoneNo) {
+              <button mat-menu-item (click)="openWhatsapp(row)">
+                <img src="assets/images/whatsapp-ico.svg" width="20" class="mo-me-3" alt="">
+                <span>{{'classSchedule.whatsapp' | translate}}</span>
+              </button>
+            }
+
+            <button mat-menu-item (click)="onAttachments(row)" *appRole="['attachments','Show']">
+              <mat-icon> attach_file</mat-icon> {{'members.attachments' | translate}}
+            </button>
+
+            <button mat-menu-item (click)="addReminder(row)" *appRole="['reminders','tsb_Add']">
+              <mat-icon>notification_add</mat-icon> {{'members.addReminder' | translate}}
+            </button>
+
+            <button mat-menu-item (click)="addTask(row)" *appRole="['tasks','tsb_Add']">
+              <mat-icon>add</mat-icon> {{'extra.addTask' | translate}}
+            </button>
+
+            <button *appRole="['potMembers', 'tsb_Remove']" mat-menu-item class="mo-text-error-500"
+              (click)="onDeleteMember(row)">
+              <mat-icon>person_remove</mat-icon> {{'members.delMember' | translate}}
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row [ngClass]="{'mo-bg-error-500 bg-opacity-25': row.isBlocked}"
+      *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+      </tr>
+    </table>
+
+    <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+      [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+    </mat-paginator>
+  </div>
+</div>
+</mat-drawer-container>
+
+<ng-template #historyModal>
+  <div class="p-4">
+    <h4 class="mo-font-bold">{{'members.salesHistory' | translate}}</h4>
+    <ul class="list-group">
+      @for (el of memberHistory; track el) {
+        <li class="list-group-item mo-flex mo-items-center">
+          <mat-icon>arrow_right</mat-icon> <span>{{ el }}</span>
+        </li>
+      }
+      @if (memberHistory.length === 0) {
+        <li class="mo-text-center">
+          {{'members.noHis' | translate}}
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #attachmentsModal>
+  <div class="p-4">
+    <div class="mo-flex mo-flex-wrap mo-items-center mo-justify-between">
+      <h4 class="mo-font-bold">{{'members.attachmentsFor' | translate}} {{selectedMember.nameAR }}
+        ({{selectedMember.nameEng}})
+      </h4>
+      <button *appRole="['attachments','tsb_Add']" (click)="addAttachment(selectedMember)" mat-raised-button
+        color="primary"><mat-icon>attachment</mat-icon> {{'staff.addAttachment' | translate}}</button>
+      </div>
+      <app-attachments #attachmentsComp [staff]="selectedMember" [contextTypeId]="contextTypeId"></app-attachments>
+    </div>
+  </ng-template>
+
+  <ng-template #notesModal>
+    <div class="p-4">
+      <h4 class="mo-font-bold">{{'members.notes' | translate}}</h4>
+      <app-member-notes [notes]="notes" (refresh)="getNotes(member, false)" [member]="member"></app-member-notes>
+    </div>
+  </ng-template>
+
+  <ng-template #callsModal>
+    <div class="p-4">
+      <h4 class="mo-font-bold">{{'members.calls' | translate}}</h4>
+      <app-member-calls (refresh)="getCalls(member, false)" [member]="member" [calls]="calls"></app-member-calls>
+    </div>
+  </ng-template>
+
+  <ng-template #editNameModal>
+    <h5 class="mo-font-bold" mat-dialog-title>{{'members.editName' | translate}}</h5>
+    <div mat-dialog-content>
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.englishName' | translate}}</mat-label>
+        <input matInput [(ngModel)]="possibleMember.nameEng" name="nameEng" required />
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button color="primary" (click)="editPotentialName()">{{'members.save' | translate}}</button>
+    </div>
+  </ng-template>
+
+  <ng-template #phoneModal>
+    <div class="p-4">
+      <div class="row">
+        <div class="col-md-5">
+          <h5>{{'reports.table.name' | translate}} : </h5>
+          <h5>{{'members.phone' | translate}} : </h5>
+        </div>
+        <div class="col-md-7">
+          <h5 class="">{{phoneModalData.nameEng}}</h5>
+          <h5 class="">{{phoneModalData.phoneNo}}</h5>
+        </div>
+      </div>
+    </div>
+  </ng-template>

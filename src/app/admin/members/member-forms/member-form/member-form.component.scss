@@ -1,0 +1,26 @@
+.type-ahead-list {
+    position: absolute;
+    z-index: 99999;
+    background: #FFF;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    top: 62px;
+    width: 97%;
+    line-height: 33px;
+    box-shadow: 0 4px 9px #999;
+    max-height: 270px;
+    overflow-y: auto;
+  
+    li {
+      font-size: 14px;
+      border-bottom: 1px solid #ccc;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+  
+      &:hover {
+        background-color: #eee;
+      }
+    }
+  }

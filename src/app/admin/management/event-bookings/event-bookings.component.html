@@ -1,0 +1,13 @@
+
+@if (eventBooking$ | async; as BOOKINGS) {
+<app-material-table [defaultSearch]="true" [cols]="displayedCols" [dataTable]="BOOKINGS.data"
+    [totalElements]="BOOKINGS.totalCount" (getAction)="getTableAction($event)">
+    <div tableHeader class="mo-flex mo-items-center mo-justify-between mo-w-full">
+
+        <h4 class="mo-font-bold mo-m-0"> {{'management.eventBookings' | translate}} ({{event?.newsTitle}})</h4>
+        <button mat-raised-button color="primary" (click)="addBooking()">
+            <mat-icon class="mo-m-0">add</mat-icon>
+            {{'members.add' | translate}}</button>
+    </div>
+</app-material-table>
+}

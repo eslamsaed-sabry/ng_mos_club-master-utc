@@ -1,0 +1,82 @@
+<div class="mo-mt-3 mo-mb-0 page-title">
+  <mat-form-field appearance="outline">
+    <mat-label class="mo-ps-5">{{'members.search' | translate}}...</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Search table" #input>
+  </mat-form-field>
+
+  <div class="actions">
+    <button color="primary" (click)="addSession()" mat-raised-button>
+      <mat-icon>add</mat-icon> {{'extra.addSession' | translate}}
+    </button>
+  </div>
+</div>
+
+<div class="card p-3">
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="sessionDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.sessionDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.sessionDate | date: 'mediumDate' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.phone' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.phone }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="memberName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.memberName' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.memberName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.type' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.price' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.price }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="approveStatus">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.status' | translate}}</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="badge rounded-pill" [ngClass]="{
+            'mo-bg-error-500': (row.approveStatus | sessionStatus : row.sessionDate) === 'Expired',
+             'mo-bg-success-500' : (row.approveStatus | sessionStatus : row.sessionDate) === 'Active',
+             'mo-bg-warning-500' : (row.approveStatus | sessionStatus : row.sessionDate) === 'Pending Approval',
+             'mo-bg-info-500' : (row.approveStatus | sessionStatus : row.sessionDate) === 'Pending Final Approval'}">
+            {{ row.approveStatus | sessionStatus : row.sessionDate}}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.edit' | translate}}</th>
+        <td mat-cell *matCellDef="let row"><button (click)="editSession(row)" mat-icon-button
+            color="accent"><mat-icon>edit_note</mat-icon></button></td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.delete' | translate}}</th>
+        <td mat-cell *matCellDef="let row"><button (click)="onDeleteSession(row)" mat-icon-button
+            color="warn"><mat-icon>delete_sweep</mat-icon></button></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [ngClass]="{'selected-row': selectedId == row.sessionId}">
+      </tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of calls">
+    </mat-paginator>
+  </div>
+</div>

@@ -1,0 +1,309 @@
+<div mat-dialog-title class="!mo-mt-3 remove">
+  <h5 class="mo-font-bold mo-m-0 mo-flex mo-items-center mo-justify-between">
+    <span>{{'classSchedule.classScheduleDetails' | translate}}</span>
+    @if (data.type != 'Add') {
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    }
+    <mat-menu #menu="matMenu">
+      @if (!selectedClass.isCancelled) {
+      <button mat-menu-item color="warn" type="button" (click)="onCancelClass()"><mat-icon>cancel</mat-icon>
+        {{'classSchedule.cancelClass' | translate}}</button>
+      }
+      @if (!selectedClass.isPublished) {
+      <button mat-menu-item type="button" (click)="publishClass()"><mat-icon>publish</mat-icon>
+        {{'classSchedule.publishClass' | translate}}</button>
+      }
+
+      @if (data.type != 'Add') {
+      <button mat-menu-item type="button" (click)="onRepeat()"><mat-icon>event_repeat</mat-icon>
+        {{'classSchedule.repeatClass' | translate}}</button>
+      }
+
+      <button mat-menu-item type="button" *appRole="['classSchedule', 'tsb_Remove']"
+        (click)="deleteClass()"><mat-icon>delete</mat-icon> {{'classSchedule.deleteClass' | translate}}</button>
+    </mat-menu>
+  </h5>
+  @if (data.type != 'Add' && !data.hideBookingListLink) {
+  <button mat-button color="primary" (click)="dismiss()"
+    [routerLink]="['/admin/scheduler/booking-list/class/'+selectedClass.id]">
+    <small class="mo-flex mo-items-center">{{'classSchedule.showBookingList' | translate}} <mat-icon
+        class="fs-14">arrow_forward_ios</mat-icon></small>
+  </button>
+  }
+</div>
+
+<form (ngSubmit)="submit(scheduleForm)" #scheduleForm="ngForm">
+
+  <div mat-dialog-content>
+
+    @if(data.type === 'Add'){
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.classProgram' | translate}}</mat-label>
+      <mat-select (selectionChange)="onSelectProgram()" [(ngModel)]="selectedClass.programId" name="programId" required>
+        <!-- <mat-option [value]="''">{{'members.all' | translate}}</mat-option> -->
+        @for ( c of classProgram$ | async; track $index) {
+        <mat-option [value]="c.id">{{c.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    }
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.className' | translate}}</mat-label>
+      <mat-select (selectionChange)="onSelectClassType()" [(ngModel)]="selectedClass.classTypeId" name="classTypeId">
+        @for (c of classTypes; track c) {
+        <mat-option [value]="c.id">{{c.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (instructors.length> 0) {
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.instructor' | translate}}</mat-label>
+      <!-- (selectionChange)="getInsPrice()" -->
+      <mat-select [(ngModel)]="selectedClass.instructorId" name="instructorId">
+        @for (ins of instructors; track ins) {
+        <mat-option [value]="ins.id">{{ins.englishName}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <!-- <mat-form-field appearance="outline" class="mo-w-full" *ngIf="selectedClass.instructorId">
+              <mat-label>{{'classSchedule.instructorPrice' | translate}}</mat-label>
+              <input type="number" min="0" matInput [(ngModel)]="selectedClass.instructorPrice" name="instructorPrice" required>
+            </mat-form-field> -->
+    }
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.classRoom' | translate}}</mat-label>
+      <mat-select [(ngModel)]="selectedClass.roomId" name="roomId">
+        @for (r of rooms; track r) {
+        <mat-option [value]="r.id">{{r.englishName}} ({{r.arabicName}})</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.startDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="selectedClass.startDate" name="startDate" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.endDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="selectedClass.endDate" name="endDate" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.bookingStartsAt' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="selectedClass.bookingStartsAt" name="bookingStartsAt" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.bookingEndsAt' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="selectedClass.bookingEndsAt" name="bookingEndsAt" required>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'classSchedule.minBookingCancelMin' | translate}}</mat-label>
+      <input matInput [(ngModel)]="selectedClass.minBookingCancellationMinutes" type="number"
+        name="minBookingCancellationMinutes" required />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'classSchedule.maxAttCount' | translate}}</mat-label>
+      <input matInput [(ngModel)]="selectedClass.maxAttendeesCount" type="number" name="maxAttendeesCount" required />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'classSchedule.maxWaitingListCount' | translate}}</mat-label>
+      <input matInput [(ngModel)]="selectedClass.maxWaitingListCount" type="number" name="maxWaitingListCount" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.allowedGender' | translate}}</mat-label>
+      <mat-select [(ngModel)]="selectedClass.allowedGender" name="allowedGender">
+        <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+        <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+        <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'classSchedule.punishMentDays' | translate}}</mat-label>
+      <input matInput [(ngModel)]="selectedClass.punishmentInDays" type="number" name="punishmentInDays" required />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full mo-mb-[34px]" appearance="outline">
+      <mat-label>{{'classSchedule.autoCancelAttendeesLimit' | translate}}</mat-label>
+      <input matInput [(ngModel)]="selectedClass.autoCancelAttendeesLimit" type="number"
+        name="autoCancelAttendeesLimit" />
+      <mat-hint>{{'classSchedule.autoCancelAttendeesLimitHint' | translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full mo-mb-[34px]" appearance="outline">
+      <mat-label>{{'classSchedule.autoCancelDelay' | translate}}</mat-label>
+      <input matInput [(ngModel)]="selectedClass.autoCancelDelay" type="number" name="autoCancelDelay" />
+      <span matSuffix>{{'extra.minutes' | translate}}</span>
+      <mat-hint>{{'classSchedule.autoCancelDelayHint' | translate}}</mat-hint>
+    </mat-form-field>
+
+    <!-- <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'classSchedule.memberPrice' | translate}}</mat-label>
+            <input matInput [(ngModel)]="selectedClass.memberPrice" type="number" name="memberPrice" required />
+          </mat-form-field>
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'classSchedule.nonMemberPrice' | translate}}</mat-label>
+            <input matInput [(ngModel)]="selectedClass.nonMemberPrice" type="number" name="nonMemberPrice" required />
+          </mat-form-field> -->
+
+    <div class="mo-w-full mo-mt-2 mo-flex mo-justify-between">
+      <label>{{'classSchedule.onlineBooking' | translate}}</label>
+      <mat-radio-group color="warn" [(ngModel)]="selectedClass.enableOnlineBooking" name="enableOnlineBooking">
+        <mat-radio-button [value]="true">{{'classSchedule.yes' | translate}}</mat-radio-button>
+        <mat-radio-button [value]="false">{{'classSchedule.no' | translate}}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="mo-w-full mo-mt-2 mo-flex mo-justify-between">
+      <label>{{'classSchedule.forActiveMem' | translate}}</label>
+      <mat-radio-group color="warn" [(ngModel)]="selectedClass.enableForActiveMembershipOnly"
+        name="enableForActiveMembershipOnly">
+        <mat-radio-button [value]="true">{{'classSchedule.yes' | translate}}</mat-radio-button>
+        <mat-radio-button [value]="false">{{'classSchedule.no' | translate}}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="mo-w-full mo-mt-2 mo-flex mo-justify-between">
+      <label>{{'classSchedule.showAttToPublic' | translate}}</label>
+      <mat-radio-group color="warn" [(ngModel)]="selectedClass.showAttendeesToPublic" name="showAttendeesToPublic">
+        <mat-radio-button [value]="true">{{'classSchedule.yes' | translate}}</mat-radio-button>
+        <mat-radio-button [value]="false">{{'classSchedule.no' | translate}}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div>
+      <mat-checkbox [(ngModel)]="selectedClass.allowDropIns" class="mo-ps-0"
+        name="allowDropIns">{{'classSchedule.allowDropIns' |
+        translate}}</mat-checkbox>
+    </div>
+
+    <div>
+      <mat-checkbox [(ngModel)]="selectedClass.isShowCapacity" class="mo-ps-0"
+        name="isShowCapacity">{{'classSchedule.showCapacity' |
+        translate}}</mat-checkbox>
+    </div>
+
+
+    @if (data.type === 'Add') {
+    <div class="row">
+      <div class="col-md-6 col-12 mo-p-0">
+        <mat-checkbox [(ngModel)]="repeatEveryWeek" class="mo-ps-0"
+          name="repeatEveryWeek">{{'classSchedule.repeatEveryWeek'
+          | translate}}</mat-checkbox>
+      </div>
+      @if(repeatEveryWeek){
+      <div class="col-md-6 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'classSchedule.repeatTill' | translate}}</mat-label>
+          <input matInput type="datetime-local" [(ngModel)]="selectedClass.repeatTillDate" name="repeatTillDate"
+            required>
+        </mat-form-field>
+        <!-- <mat-form-field *ngIf="repeatEveryWeek" appearance="outline">
+                    <mat-label>{{'classSchedule.numbersOfWeeks' | translate}}</mat-label>
+                    <input type="number" matInput [(ngModel)]="selectedClass.repeatCount" name="repeatCount">
+                  </mat-form-field> -->
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div mat-dialog-actions class="mo-flex mo-justify-between mo-w-full">
+    <div class="mo-ms-auto">
+      <button mat-raised-button type="button" (click)="dismiss()">{{'common.close' | translate}}</button>
+      @if (data.type === 'Add') {
+      <button mat-raised-button type="submit" [appRoleAttr]="['classSchedule', 'tsb_Add']"
+        color="primary">{{'members.save' | translate}}</button>
+      }
+      @if (data.type === 'Save') {
+      <button mat-raised-button type="submit" [appRoleAttr]="['classSchedule', 'tsb_Save']"
+        color="primary">{{'members.save' | translate}}</button>
+      }
+    </div>
+  </div>
+
+</form>
+
+<ng-template #repeatClassDialogRef>
+  <div mat-dialog-title>{{'classSchedule.repeatClass' | translate}}</div>
+  <form (ngSubmit)="updateRepeatCount(repeatForm)" #repeatForm="ngForm">
+    <div mat-dialog-content>
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'classSchedule.repeatTill' | translate}}</mat-label>
+        <input matInput type="datetime-local" [(ngModel)]="repeatTillDate" name="repeatTill" required>
+      </mat-form-field>
+
+      <!-- <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'classSchedule.repeatCount' | translate}}</mat-label>
+            <input type="number" matInput [(ngModel)]="repeatCount" name="repeatCount" required>
+          </mat-form-field> -->
+    </div>
+    <div mat-dialog-actions class="mo-my-3 mo-flex mo-justify-end">
+      <button mat-button type="button" (click)="dialog.closeAll()">{{'common.close' | translate}}</button>
+      <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #cancellationReasonModal>
+  <form (ngSubmit)="cancelClass(cancelForm)" #cancelForm="ngForm">
+    <div mat-dialog-title>
+      {{'classSchedule.cancelClass' | translate}} <span class="mo-font-bold">{{selectedClass.Subject}}</span>
+      <div>
+        <small>{{selectedClass.StartTime | date:'mediumDate'}} - {{selectedClass.EndTime | date:'mediumDate'}}</small>
+      </div>
+    </div>
+    <div mat-dialog-content>
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'classSchedule.cancellationReason' | translate}}</mat-label>
+        <mat-select [(ngModel)]="reasonId" name="reasonId" required>
+          @for (r of cancellationReasons; track r) {
+          <mat-option [value]="r.id">{{r.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'classSchedule.cancellationDescription' | translate}}</mat-label>
+        <textarea [(ngModel)]="cancelReason" name="cancelReason" matInput></textarea>
+      </mat-form-field>
+
+      <div>
+        <mat-checkbox [(ngModel)]="isCancelUpcomingRelatedClasses" class="mo-ps-0"
+          name="isCancelUpcomingRelatedClasses">{{'classSchedule.cancelAllUpcoming' | translate}}</mat-checkbox>
+      </div>
+
+    </div>
+    <div mat-dialog-actions class="mo-my-3 mo-flex mo-justify-end">
+      <button mat-button type="button" (click)="dialog.closeAll()">{{'common.close' | translate}}</button>
+      <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #confirmEditTempRef>
+  <div mat-dialog-content>
+    <h3 class="mo-text-center">{{'classSchedule.editAlsoRelatedClasses' | translate}}</h3>
+  </div>
+  <div mat-dialog-actions>
+    <div class="mo-flex mo-gap-3 mo-items-center mo-justify-center mo-w-full">
+      <button mat-button type="button" (click)="editClass(false)" color="primary">{{'classSchedule.editThisClassOnly' |
+        translate}}</button>
+      <button mat-flat-button type="button" (click)="editClass(true)"
+        color="primary">{{'classSchedule.editAllRelatedClasses' |
+        translate}}</button>
+    </div>
+  </div>
+</ng-template>

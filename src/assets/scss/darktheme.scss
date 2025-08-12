@@ -1,0 +1,322 @@
+$whiteColor: #d1ccccde;
+$darkColor: #444444;
+$mediumColor: #303030;
+$superDark: #222222;
+$dark: #000000;
+$simiDark: #1a1919;
+$grayColor: #6C6967;
+$offwhite: #faecd0;
+$warning-color: #E8A014;
+$inputBG: rgb(255 255 255 / .3);
+$errorColor: #A80F34;
+$inputErrBG: #eecfd6;
+
+body#dark-theme {
+  &:after {
+    content: "";
+    background-color: $superDark;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    left: 0;
+    z-index: -1;
+    top: 0;
+  }
+
+  background-color: $superDark !important;
+  color: $whiteColor;
+
+  nav {
+    background-color: $mediumColor !important;
+    color: $whiteColor;
+
+    a {
+      color: $whiteColor !important;
+    }
+  }
+
+  .header {
+    background-color: $mediumColor;
+  }
+
+  .search-wrapper {
+    .loading {
+      background: none !important;
+    }
+
+    .form-control {
+      background: #ffffff66;
+      border: #999;
+
+      &::placeholder {
+        color: $superDark
+      }
+    }
+  }
+
+  .mos-logo {
+    border-top: 1px solid #444;
+
+    .mos-white-sm {
+      display: none;
+    }
+
+    .mos-dark-sm {
+      display: inline-block;
+    }
+  }
+
+  .card {
+    background-color: $darkColor;
+    color: $whiteColor;
+    border: 0;
+  }
+
+  tr:hover {
+    background-color: $superDark;
+  }
+
+  .sitename {
+    border-bottom: 1px solid $darkColor;
+  }
+
+  .main {
+    background-color: $superDark;
+  }
+
+  .main-nav>li>a:hover {
+    background-color: $superDark !important
+  }
+
+  .main-nav .sub-menu {
+    background-color: $darkColor !important;
+
+    li {
+      a {
+        &:hover {
+          background-color: $mediumColor !important;
+          color: $whiteColor !important;
+        }
+      }
+    }
+  }
+
+
+  .cards .inner {
+    background-color: $simiDark !important;
+  }
+
+
+  .benefits-list {
+    ul {
+      li {
+        background: linear-gradient(to right, rgb(36 36 36), rgb(139 139 139));
+        animation: gradient 2s ease infinite;
+        background-size: 200% 200%;
+
+        &:hover {
+          background: linear-gradient(to right, $simiDark, $dark);
+        }
+      }
+    }
+  }
+
+  .card-member {
+    .inner {
+      background-color: $mediumColor;
+
+      .member-details .view-profile-btn {
+        display: flex;
+        background: $simiDark;
+        color: #FFF !important;
+      }
+    }
+  }
+
+  .search-results {
+    border: 1px solid $simiDark;
+    background-color: $simiDark;
+
+    li:hover {
+      background-color: $darkColor;
+    }
+  }
+
+  .COMPACT {
+    background: $darkColor;
+  }
+
+  .atten-card {
+    background-color: $darkColor;
+  }
+
+
+  .printable-report {
+    .report-filters-bg {
+      background-color: $mediumColor;
+    }
+
+    .report-bg {
+      position: relative;
+
+      >div {
+        position: relative;
+      }
+
+      &::before {
+        position: absolute;
+        z-index: 0;
+        content: '';
+        width: 100%;
+        height: 100%;
+        background-color: rgb(34 34 34 / 95%);
+        display: block;
+      }
+
+      .report-tabs {
+        background-color: $simiDark;
+      }
+    }
+  }
+
+  .table-responsive {
+    background-color: $mediumColor;
+
+    td {
+      color: #FFF;
+      border: 0;
+
+    }
+
+    tr {
+      border: 0;
+    }
+
+    tfoot {
+      background: $dark;
+    }
+
+  }
+
+  /*******************Materials*****************/
+  .mat-mdc-raised-button:not(:disabled).mat-default {
+    background: $simiDark;
+  }
+
+  .mat-drawer-container {
+    background-color: transparent;
+  }
+
+  header mat-form-field {
+    .mat-mdc-form-field-flex {
+      background-color: transparent;
+    }
+  }
+
+  .ngx-timepicker-control__input {
+    background: $grayColor;
+    border-radius: 5px;
+  }
+
+
+  .counter input {
+    border: 0 !important;
+    color: #FFF;
+    background: $simiDark;
+  }
+
+  .counter .minus,
+  .counter .plus {
+    border: 0 !important;
+    background: none !important;
+  }
+
+  .type-ahead-list {
+    background: $simiDark;
+    border-color: $grayColor;
+
+    li {
+      border-color: $grayColor;
+
+      &:hover {
+        background: $superDark;
+      }
+    }
+  }
+
+  .border-bottom {
+    border-color: $grayColor !important;
+  }
+
+
+  .cdk-drop-list {
+    border: 0;
+
+    .example-box {
+      background: $darkColor;
+      border-color: $grayColor;
+    }
+  }
+
+  // .table>:not(caption)>*>*{
+  //   background-color: inherit;
+  // }
+
+  .mat-mdc-tab-header {
+    border-color: $grayColor !important;
+  }
+  
+
+
+  mat-form-field:not(.ng-touched) {
+
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+  
+  mat-form-field.ng-valid.ng-touched {
+  
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+    .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .HORIZONTAL, .side-tabs.mat-mdc-tab-group .mat-mdc-tab.mdc-tab--active, .side-tabs.mat-mdc-tab-group .mat-mdc-tab-body-wrapper{
+    background-color: #303030;
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

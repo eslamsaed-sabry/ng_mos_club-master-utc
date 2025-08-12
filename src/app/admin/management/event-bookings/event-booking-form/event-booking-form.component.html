@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>{{'accounts.addNewBooking' | translate}}</h2>
+
+<form (ngSubmit)="addBooking(bookingFormRef)" #bookingFormRef="ngForm">
+  <mat-dialog-content>
+
+    <div class="mo-mb-4">
+      <app-advanced-search [autoPredict]="true" [config]="config"
+        (selectedMember)="getSelectedMember($event)"></app-advanced-search>
+    </div>
+
+    <mat-form-field appearance="outline" class="mo-w-full" (click)="paymentDatePicker.open()">
+      <mat-label>{{'members.paymentDate' | translate}}</mat-label>
+      <input matInput [matDatepicker]="paymentDatePicker" [(ngModel)]="event.paymentDate" name="paymentDate" required />
+      <mat-datepicker-toggle matSuffix [for]="paymentDatePicker"></mat-datepicker-toggle>
+      <mat-datepicker #paymentDatePicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'receiptPrint.cashAmount' | translate}}</mat-label>
+      <input matInput [(ngModel)]="event.cashAmountPaid" type="number" name="cashAmountPaid" [required]="!event.visaAmountPaid" />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'receiptPrint.visaAmount' | translate}}</mat-label>
+      <input matInput [(ngModel)]="event.visaAmountPaid" type="number" name="visaAmountPaid" [required]="!event.cashAmountPaid" />
+    </mat-form-field>
+
+    @if (event.visaAmountPaid) {
+    <div>
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.visaType' | translate}}</mat-label>
+        <mat-select [(ngModel)]="event.visaTypeId" name="visaTypeId" required>
+          @for (v of visaTypes$ | async; track v) {
+          <mat-option [value]="v.id">{{v.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    }
+
+  </mat-dialog-content>
+
+  <div mat-dialog-actions>
+    <button mat-button matDialogClose type="button">{{ 'members.cancel' | translate}}</button>
+    <button type="submit" color="primary" mat-raised-button>{{'members.save' | translate}}</button>
+  </div>
+</form>

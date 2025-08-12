@@ -1,0 +1,49 @@
+<h5 mat-dialog-title> {{('staff.employeeRequest' | translate) }}</h5>
+
+<form (ngSubmit)="submit(roleForm)" #roleForm="ngForm">
+
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'staff.requestType' | translate}}</mat-label>
+      <mat-select (selectionChange)="selectRequestType()" [(ngModel)]="employeeRequest.requestTypeId"
+        name="requestTypeId" required>
+        @for (type of requestType; track type) {
+          <mat-option [value]="type.id">{{type.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="mo-grid mo-grid-cols-2 mo-gap-x-6">
+      <mat-form-field appearance="outline" (click)="startDatepicker.open()">
+        <mat-label>{{'members.startDate' | translate}}</mat-label>
+        <input matInput [matDatepicker]="startDatepicker" [(ngModel)]="employeeRequest.startDate" name="startDate"
+          required />
+          <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatepicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" (click)="endDatepicker.open()">
+          <mat-label>{{'members.endDate' | translate}}</mat-label>
+          <input matInput [matDatepicker]="endDatepicker" [(ngModel)]="employeeRequest.endDate" name="endDate"
+            [required]="endDateRequired" [disabled]="!endDateRequired" />
+            <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #endDatepicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'reports.table.description' | translate}}</mat-label>
+          <textarea matInput [(ngModel)]="employeeRequest.notes" name="notes"></textarea>
+        </mat-form-field>
+
+      </div>
+
+
+      <div mat-dialog-actions class="mo-justify-end">
+        <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+        <button mat-raised-button color="primary" type="submit">
+          {{'members.save' | translate}}
+        </button>
+      </div>
+
+    </form>

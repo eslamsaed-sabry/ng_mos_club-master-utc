@@ -1,0 +1,86 @@
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer [mode]="'over'" [position]="'end'">
+    <div class="filters-drawer">
+      @if (selectedCard) {
+        <div class="inner">
+          <div class="border-bottom mo-pb-2 mo-my-3">
+            <h4 class="mo-font-bold mo-m-0 mo-p-0">{{selectedCard.newsTitle}}</h4>
+            <h6 class="mo-text-muted mo-m-0">{{'management.createdOn' | translate}}:
+            {{selectedCard.creationDate | date:'MMM d, y, h:mm a'}}</h6>
+          </div>
+          <div>
+            <img class="img-fluid" [src]="proxyUrl +selectedCard.imagePath">
+          </div>
+          @if (pageID.EVENTS === entityTypeId) {
+            <div>
+              <strong>{{'management.eventDate' | translate}}: {{selectedCard.eventDate | date:'MMM d, y, h:mm a'}}</strong>
+            </div>
+          }
+          <p>{{selectedCard.newsDescription}}</p>
+        </div>
+      }
+    </div>
+  </mat-drawer>
+
+
+  <div class="mo-text-center mo-mb-4">
+    <h4 class="mo-font-bold mo-my-3"> {{pageTitle}} </h4>
+
+    <div class="actions">
+      <button (click)="addNews()" color="default" mat-raised-button>
+        <mat-icon>add</mat-icon> {{'members.add' | translate}}
+      </button>
+    </div>
+  </div>
+
+
+  <div class="row">
+    @for (card of news; track card) {
+      <div class="col-xl-4 col-md-6 col-12 mo-mb-3">
+        <div class="card mo-shadow-md h-100">
+          <div class="row g-0 h-100">
+            <div class="col-md-4 col-12 bg rounded-start"
+              [ngStyle]="{'background-image':'url('+proxyUrl +card.imagePath+')'}">
+            </div>
+            <div class="col-md-8 col-12 mo-flex align-items-between flex-column">
+              <div class="card-body">
+                <h5 class="card-title mo-font-bold mo-m-0">{{card.newsTitle | slice:0:30}}...</h5>
+                <div class="border-bottom mo-pb-1"><small class="mo-text-muted">{{'management.createdOn' | translate}}:
+                {{card.creationDate | date:'MMM d, y, h:mm a'}}</small></div>
+                <p class="card-text description mo-mt-2">
+                  <span [innerHTML]="card.newsDescription | slice:0:90"></span>
+                  <span>...</span>
+                  <button class="more-btn" (click)="showMore(card)">{{'common.showMore' | translate}}</button>
+                </p>
+                @if (pageID.EVENTS === entityTypeId) {
+                  <div class="card-date">
+                    <small>{{'management.eventDate' | translate}}: {{card.eventDate | date:'MMM d, y, h:mm a'}}</small>
+                  </div>
+                }
+              </div>
+              <div class="card-footer">
+                <ul class="mo-m-0 mo-p-0 mo-flex">
+                  <li class="mo-ms-auto">
+                    <button (click)="editNews(card)" mat-icon-button>
+                      <mat-icon>edit</mat-icon>
+                    </button></li>
+                    <li><button (click)="onDeleteNews(card)" class="mo-text-error-500" mat-icon-button>
+                      <mat-icon>delete_outline</mat-icon>
+                    </button></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (totalElements > news.length) {
+      <div class="row">
+        <div class="col-12">
+          <button (click)="onPaginationChange()" class="show-more-btn">{{'common.showMore' | translate}}</button>
+        </div>
+      </div>
+    }
+  </mat-drawer-container>

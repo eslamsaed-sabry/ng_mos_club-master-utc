@@ -1,0 +1,94 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.appHomeScreenSections' | translate}} </h4>
+
+  <div class="mo-flex mo-gap-3 mo-items-center">
+    <mat-form-field>
+      <mat-label>{{'members.packageType' | translate}}</mat-label>
+      <mat-select [(ngModel)]="typeSelected" name="typeSelected" (selectionChange)="getNews(true)">
+        @for (el of newsTypes; track el) {
+        <mat-option [value]="el">{{el.nameEng}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button (click)="addNews()" color="primary" mat-raised-button>
+      <mat-icon>add</mat-icon> {{'members.add' | translate}}
+    </button>
+  </div>
+</div>
+
+<ul class="mo-grid mo-grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))] mo-gap-3">
+  @for (card of news; track card) {
+  <li class="card mo-shadow-md mo-flex mo-gap-3">
+    <div class="mo-rounded-md mo-bg-cover mo-w-[30%]"
+      [ngStyle]="{'background-image':'url('+proxyUrl +card.imagePath+')'}">
+    </div>
+    <div class="mo-flex-1 mo-flex mo-flex-col">
+      <div class="card-body">
+        <h5 class="card-title mo-font-bold mo-m-0">{{card.newsTitle | slice:0:30}}...</h5>
+        <div class="border-bottom mo-pb-1"><small class="mo-text-muted">{{'management.createdOn' | translate}}:
+            {{card.creationDate | date:'MMM d, y, h:mm a'}}</small></div>
+        <p class="card-text description mo-mt-2">
+          <span [innerHTML]="card.newsDescription | slice:0:90"></span>
+          <span>...</span>
+          <button class="more-btn" (click)="showMore(card)">{{'common.showMore' | translate}}</button>
+        </p>
+        <!-- <div *ngIf="typeSelected.symbol === entityTypeId" class="card-date">
+                <small>{{'management.eventDate' | translate}}: {{card.eventDate | date:'MMM d, y, h:mm a'}}</small>
+              </div> -->
+      </div>
+
+      <ul class="mo-flex mo-mt-auto">
+        @if(typeSelected.id === pageID.EVENTS){
+        <li>
+          <button (click)="openEventBookings(card)" mat-raised-button color="accent">{{'classSchedule.showBookingList' | translate}}</button>
+        </li>
+        }
+        <li class="mo-ms-auto">
+          <button (click)="editNews(card)" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+        </li>
+        <li><button (click)="onDeleteNews(card)" class="mo-text-error-500" mat-icon-button>
+            <mat-icon>delete_outline</mat-icon>
+          </button></li>
+      </ul>
+
+    </div>
+  </li>
+  }
+</ul>
+
+@if (totalElements > news.length) {
+<div class="row">
+  <div class="col-12">
+    <button (click)="onPaginationChange()" class="show-more-btn">{{'common.showMore' | translate}}</button>
+  </div>
+</div>
+}
+
+<ng-template #moreDetailsTempRef>
+  <div class="mo-p-3">
+    @if (selectedCard) {
+    <div class="mo-border-b mo-pb-2 mo-mb-3">
+      <h4 class="mo-font-bold mo-m-0 mo-p-0">{{selectedCard.newsTitle}}</h4>
+      <h6 class="mo-text-muted mo-m-0">{{'management.createdOn' | translate}}:
+        {{selectedCard.creationDate | date:'MMM d, y, h:mm a'}}</h6>
+    </div>
+    <div class="mo-mb-3">
+      <img class="img-fluid" [src]="proxyUrl +selectedCard.imagePath">
+    </div>
+    @if (pageID.EVENTS === typeSelected.id) {
+    <div>
+      <strong>{{'management.eventDate' | translate}}: {{selectedCard.eventDate | date:'MMM d, y, h:mm a'}}</strong>
+    </div>
+    }
+    <p>{{selectedCard.newsDescription}}</p>
+    }
+  </div>
+</ng-template>
+
+<ng-template #eventBookingModalRef let-data>
+  <div class="mo-p-4">
+    <app-event-bookings [id]="data.id"></app-event-bookings>
+  </div>
+</ng-template>

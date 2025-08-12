@@ -1,0 +1,84 @@
+@if (classDetails) {
+<div class="page-title">
+  <div>
+    <div class="mo-m-0 mo-flex mo-items-center">
+      <h3 class="mo-text-3xl mo-font-bold">{{classDetails.classTypeName}}</h3>
+      @if(classDetails.isCancelled){
+      <h5 class="badge mo-bg-red-500 mo-mx-3">{{'membershipStatus.cancelled' | translate}}</h5>
+      }
+      <mat-icon class="mo-ms-3 mo-me-1">calendar_month</mat-icon>
+      <small class="mo-text-muted">{{classDetails.startDate | date:'MMM d, y, h:mm a'}}</small>
+    </div>
+    <div class="mo-flex mo-items-center">
+      <mat-icon class="mo-me-1">person_outline</mat-icon> {{classDetails.instructorName}}
+      <mat-icon class="mo-ms-3 mo-me-1">meeting_room</mat-icon> {{classDetails.roomName}}
+      <mat-icon class="mo-ms-3 mo-me-1">groups</mat-icon> {{classDetails.capacity}}
+    </div>
+    <!-- <h4 class="mo-font-bold mo-m-0"> {{'classSchedule.bookingList' | translate}} </h4> -->
+    <div class="mo-flex mo-gap-2 mo-items-center">
+      <button mat-button color="primary" routerLink="/admin/scheduler">
+        <mat-icon class="!mo-text-sm">arrow_back_ios</mat-icon>
+        <small>{{'classSchedule.backToScheduler' | translate}}</small>
+      </button>
+      <span>|</span>
+      <button mat-button color="primary" (click)="editClass()">
+        <mat-icon class="!mo-text-sm">edit</mat-icon>
+        <small>{{'classSchedule.editClass' | translate}}</small>
+      </button>
+    </div>
+  </div>
+  <div>
+    <mat-form-field class="mo-me-2">
+      <mat-label>{{'members.search' | translate}}</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input type="text" matInput (input)="searchMembers($event)">
+    </mat-form-field>
+    @if (!classDetails.isPublished) {
+    <button class="mo-me-2" (click)="publishClass()" mat-raised-button>
+      <mat-icon>published_with_changes</mat-icon> {{'classSchedule.publishClass' | translate}}
+    </button>
+    }
+    <button mat-raised-button (click)="addMember()" color="primary"><mat-icon>add</mat-icon> {{'members.addMember' |
+      translate}}</button>
+  </div>
+</div>
+}
+
+<div cdkDropListGroup>
+  <div class="example-container">
+    <h2>{{'classSchedule.attended' | translate}} ({{attended.length}})</h2>
+    <div cdkDropList [cdkDropListData]="attended" class="example-list" id="attended"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of attended; track item) {
+      <div class="example-box" [id]="item.memberId" cdkDrag>
+        <app-single-booking-list-item class="mo-w-full" [item]="item"></app-single-booking-list-item>
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="example-container">
+    <h2>{{'classSchedule.booked' | translate}} ({{booked.length}})</h2>
+    <div cdkDropList [cdkDropListData]="booked" class="example-list opacity-75" id="booked"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of booked; track item) {
+      <div class="example-box" [id]="item.memberId" cdkDrag>
+        <app-single-booking-list-item (onRefresh)="getListDetails()" class="mo-w-full"
+          [item]="item"></app-single-booking-list-item>
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="example-container">
+    <h2>{{'classSchedule.waitingList' | translate}} ({{waitingList.length}})</h2>
+    <div cdkDropList [cdkDropListData]="waitingList" class="example-list opacity-50" id="waitingList"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of waitingList; track item) {
+      <div class="example-box" [id]="item.memberId" cdkDrag>
+        <app-single-booking-list-item class="mo-w-full" [item]="item"></app-single-booking-list-item>
+      </div>
+      }
+    </div>
+  </div>
+</div>

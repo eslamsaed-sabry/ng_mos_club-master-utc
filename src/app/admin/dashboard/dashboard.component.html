@@ -1,0 +1,48 @@
+<mat-tab-group mat-stretch-tabs="false" [(selectedIndex)]="selectedIndex" (selectedTabChange)="onChangeTab($event)"
+  mat-align-tabs="start">
+  <mat-tab *appRole="['dashboard', 'MiddleBoard']" aria-label="main">
+    <ng-template mat-tab-label>
+      <h6 class="mo-flex">
+        <mat-icon class="example-tab-icon mo-me-3">stacked_line_chart</mat-icon>
+        <span>{{'dashboard.analOverview' | translate}}</span>
+      </h6>
+    </ng-template>
+    <div class="overflow-hidden">
+      @defer (on viewport; when selectTabName === 'main') {
+      <app-analytics-overview></app-analytics-overview>
+      }@placeholder {
+      <p>loading...</p>
+      }
+    </div>
+  </mat-tab>
+  <mat-tab *appRole="['salesReport', 'tsb_Print']" aria-label="sales">
+    <ng-template mat-tab-label>
+      <h6 class="mo-flex">
+        <mat-icon class="example-tab-icon mo-me-3">stacked_bar_chart</mat-icon>
+        <span>{{'dashboard.salesOverview' | translate}}</span>
+      </h6>
+    </ng-template>
+    <div class="overflow-hidden">
+      @defer (on viewport;when selectTabName === 'sales') {
+      <app-sales-overview></app-sales-overview>
+      }@placeholder {
+      <p>loading...</p>
+      }
+    </div>
+  </mat-tab>
+  <mat-tab *appRole="['trainersAchievementReport', 'tsb_Print']" aria-label="trainers">
+    <ng-template mat-tab-label>
+      <h6 class="mo-flex">
+        <mat-icon class="example-tab-icon mo-me-3">stacked_bar_chart</mat-icon>
+        <span>{{'dashboard.trainerOverview' | translate}}</span>
+      </h6>
+    </ng-template>
+    <div class="overflow-hidden">
+      @defer (on viewport; when selectTabName === 'trainers') {
+      <app-trainer-overview></app-trainer-overview>
+      }@placeholder {
+      <p>loading...</p>
+      }
+    </div>
+  </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,62 @@
+<h5 mat-dialog-title class="mo-font-bold mo-my-2">{{'members.noteDetails' | translate}}</h5>
+<form (ngSubmit)="addNote(noteForm)" #noteForm="ngForm">
+
+  <div mat-dialog-content>
+    <div class="main-section">
+      <mat-form-field appearance="outline">
+        <mat-label>{{'members.contractNo' | translate}}</mat-label>
+        <input matInput disabled [(ngModel)]="data.memberData.applicationNo" name="contractNo" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{'members.accessCode' | translate}}</mat-label>
+        <input matInput disabled [(ngModel)]="data.memberData.code" name="accessCode" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{'members.phone' | translate}}</mat-label>
+        <input matInput disabled [(ngModel)]="data.memberData.phoneNo" name="phoneNo" required />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{'members.memberName' | translate}}</mat-label>
+        <input matInput disabled [(ngModel)]="data.memberData.nameEng" name="userName" required />
+      </mat-form-field>
+    </div>
+    <hr>
+      <div class="row">
+
+        <div class="col-md-4 col-12">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.importancy' | translate}}</mat-label>
+            <mat-select [(ngModel)]="note.importanceTypeId" name="importanceTypeId" required>
+              <mat-option [value]="1">{{'members.low' | translate}}</mat-option>
+              <mat-option [value]="2">{{'members.medium' | translate}}</mat-option>
+              <mat-option [value]="3">{{'members.high' | translate}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.note' | translate}}</mat-label>
+            <textarea matInput [(ngModel)]="note.note" name="note" required></textarea>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </div>
+
+
+    <div mat-dialog-actions class="mo-justify-end">
+      <button (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+      @if (data.type === 'addNote') {
+        <button mat-raised-button color="primary" type="submit">
+          {{'members.save' | translate}}
+        </button>
+      }
+      @if (data.type === 'editNote') {
+        <button mat-raised-button color="primary" type="button"
+          (click)="editNote(noteForm)">
+          {{'members.save' | translate}}
+        </button>
+      }
+    </div>
+  </form>

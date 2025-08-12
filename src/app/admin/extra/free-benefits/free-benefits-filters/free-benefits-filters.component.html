@@ -1,0 +1,61 @@
+<form class="filters-container" #freeBenefitsForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+  <div class="row">
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full" (click)="fromDateSelector.open()">
+        <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+        <input matInput [matDatepicker]="fromDateSelector" [(ngModel)]="filters.sessionDateFrom"
+          name="fromDateDate" />
+          <mat-datepicker-toggle matSuffix [for]="fromDateSelector"></mat-datepicker-toggle>
+          <mat-datepicker #fromDateSelector></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="mo-w-full" (click)="toDateSelector.open()">
+          <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+          <input matInput [matDatepicker]="toDateSelector" [(ngModel)]="filters.sessionDateTo" name="toDateDate" />
+          <mat-datepicker-toggle matSuffix [for]="toDateSelector"></mat-datepicker-toggle>
+          <mat-datepicker #toDateSelector></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.memberName' | translate}}</mat-label>
+          <input matInput [(ngModel)]="filters.memberName" name="memberName" type="text" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'reports.table.coach' | translate}}</mat-label>
+          <mat-select [(ngModel)]="filters.trainerId" name="trainer">
+            <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+            @for (c of coaches; track c) {
+              <mat-option [value]="c.id">{{c.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'extra.benefit' | translate}}</mat-label>
+          <mat-select [(ngModel)]="filters.benfitId" name="benefit">
+            <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+            @for (b of benefits; track b) {
+              <mat-option [value]="b.id">{{b.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="mo-my-3">
+      <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilter.emit()" mat-raised-button color="primary"
+      type="button">{{'members.search' | translate}}</button>
+      <button class="mo-font-bold mo-w-full" (click)="freeBenefitsForm.reset();onFilter.emit()" mat-button
+      type="button">{{'members.clearAll' | translate}}</button>
+    </div>
+  </form>

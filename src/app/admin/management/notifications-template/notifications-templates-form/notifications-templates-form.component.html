@@ -1,0 +1,31 @@
+<h5 mat-dialog-title>{{'navigation.notificationsTemplates' | translate}}</h5>
+
+<div class="mo-mx-2">
+  <form (ngSubmit)="submit()" #itemForm="ngForm">
+    <div>
+      <ul class="gallery row">
+        @for (ex of availableData; track ex) {
+          <li class="col-lg-3 col-md-4 col-12 hover ">
+            <div class="gal-item " (click)="onChangeValue(ex)">
+              <div class="card-info">
+                <caption class="mo-w-full gal-controls mo-flex mo-justify-center">{{ex}}</caption>
+              </div>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.description' | translate}}</mat-label>
+      <textarea matInput #textArea [(ngModel)]="copyTemplate" (focus)="curPos = null" rows="6" name="description"></textarea>
+    </mat-form-field>
+
+    <div mat-dialog-actions class="mo-justify-end">
+      <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit">
+        {{'members.save' | translate}}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,17 @@
+.info-list {
+    margin-left: 50px;
+
+    li {
+        label {
+            width: 150px;
+        }
+
+        span {
+            font-weight: bold;
+        }
+    }
+}
+
+.dropdown-item {
+    cursor: pointer;
+}

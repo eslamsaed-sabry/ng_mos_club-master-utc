@@ -1,0 +1,37 @@
+<h5 class="mo-font-bold" mat-dialog-title>{{'management.classRooms' | translate}}</h5>
+<form (ngSubmit)="submit(lookupForm)" #lookupForm="ngForm">
+
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'members.englishName' | translate}}</mat-label>
+      <input matInput [(ngModel)]="classRoom.englishName" name="englishName" required>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.branch' | translate}}</mat-label>
+      <mat-select [(ngModel)]="classRoom.branchId" name="branchId" required>
+        @for (c of branches; track c) {
+          <mat-option [value]="c.id">{{c.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.viewOrder' | translate}}</mat-label>
+      <input matInput [(ngModel)]="classRoom.viewOrder" name="viewOrder" type="number">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.description' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="classRoom.roomDescription" name="description"></textarea>
+    </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="classRoom.isActive" name="isActive">{{'administration.active' |
+    translate}}</mat-checkbox>
+  </div>
+
+  <div class="mo-text-end mo-mt-2" mat-dialog-actions>
+    <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+  </div>
+</form>

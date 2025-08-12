@@ -1,0 +1,11 @@
+.data-list {
+  padding: 0;
+  line-height: 35px;
+
+  li {
+    display: flex;
+    min-width: 380px;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

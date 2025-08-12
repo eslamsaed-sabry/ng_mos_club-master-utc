@@ -1,0 +1,48 @@
+<h5 class="mo-font-bold" mat-dialog-title>{{action}} Membership
+  @if (data.type === 'freeze' || 'addFreeze') {
+    <div class="mo-font-bold mo-text-center">
+      <label class="fs-6">{{'common.yourCurrentBranch' | translate}}{{branchName}}</label>
+    </div>
+  }
+</h5>
+
+<form #freezeFrom="ngForm" (ngSubmit)="toggleFreeze(freezeFrom)">
+
+  <div mat-dialog-content>
+    <mat-form-field class="mo-w-full" appearance="outline" (click)="atPicker.open()">
+      <mat-label>{{'reports.table.fromDate'|translate}}</mat-label>
+      <input matInput [disabled]="'hasNo' | permission : 'membershipsBasic' : 'FreezeDate'" [min]="setMin ? today: ''"
+        [matDatepicker]="atPicker" [(ngModel)]="atDate" name="atDate" required />
+        <mat-datepicker-toggle matSuffix [for]="atPicker"></mat-datepicker-toggle>
+        <mat-datepicker #atPicker></mat-datepicker>
+      </mat-form-field>
+
+      @if (action === 'Freeze') {
+        <div>
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.freezeAmountInDays'|translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="noDays" name="noDays" required />
+          </mat-form-field>
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.freezeAdditionalAmountPaid'|translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="amount" name="amount" />
+          </mat-form-field>
+          <mat-form-field class="mo-w-full" appearance="outline" (click)="paymentPicker.open()">
+            <mat-label>{{'members.paymentDateForAdditionalAmount'|translate}}</mat-label>
+            <input matInput [matDatepicker]="paymentPicker" [(ngModel)]="paymentDate" name="paymentDate" />
+            <mat-datepicker-toggle matSuffix [for]="paymentPicker"></mat-datepicker-toggle>
+            <mat-datepicker #paymentPicker startView="year"></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.notes'|translate}}</mat-label>
+            <input matInput [(ngModel)]="comment" name="comment" />
+          </mat-form-field>
+        </div>
+      }
+    </div>
+
+    <div class="mo-text-end mo-mt-3" mat-dialog-actions>
+      <button type="button" (click)="dismiss()" mat-button>{{'members.cancel'|translate}}</button>
+      <button type="submit" mat-raised-button color="primary">{{action}}</button>
+    </div>
+  </form>

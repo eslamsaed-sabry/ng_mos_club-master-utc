@@ -1,0 +1,29 @@
+<h5 mat-dialog-title class="mo-font-bold mo-my-2"> {{'classSchedule.slotMembers' | translate}}</h5>
+<div mat-dialog-content>
+  <div class="mo-flex mo-items-center">
+    <h6 class="white-space-pre-line w-lg-50">{{data.slotData.summary}}</h6>
+    <button (click)="onAddMember()" class="text-nowrap mo-font-bold" color="primary" mat-button>{{'members.addMember' |
+    translate}}</button>
+  </div>
+  <ul class="mo-p-0">
+    @for (member of members; track member) {
+      <li class="border-bottom mo-flex mo-justify-between mo-items-center">
+        <div class="mo-py-2">
+          <strong>{{member.englishName}}</strong>
+          <div>{{member.accessCode}}</div>
+        </div>
+        <div class="mo-flex mo-items-center">
+          <a mat-button color="primary" target="_blank"
+            [routerLink]="['/admin/member-profile/', member.memberId]">
+            {{'members.view' | translate}} {{'members.profile' | translate}}
+          </a>
+          <button mat-icon-button color="warn" (click)="removeMember(member)"><mat-icon>delete</mat-icon></button>
+        </div>
+      </li>
+    }
+    @if (members && members.length === 0) {
+      <li class="mo-text-center mo-pt-3 mo-text-muted">{{'classSchedule.noMembersAdded'
+      | translate}}</li>
+    }
+  </ul>
+</div>

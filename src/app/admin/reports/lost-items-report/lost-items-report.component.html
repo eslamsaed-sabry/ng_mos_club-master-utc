@@ -1,0 +1,50 @@
+<app-reports-page-header [permissions]="['lostItemsReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.lostItems' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-lost-items-filters [filters]="filters"></app-lost-items-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.creationDate' | translate}}</th>
+                  <th>{{'reports.table.category' | translate}}</th>
+                  <th>{{'reports.table.location' | translate}}</th>
+                  <th>{{'reports.table.description' | translate}}</th>
+                  <th>{{'members.notes' | translate}}</th>
+                  <th>{{'reports.table.status' | translate}}</th>
+                  <th>{{'reports.table.deliveredDate' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.creationDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.categoryName}}</td>
+                    <td>{{el.locationName}}</td>
+                    <td>{{el.itemDescription}}</td>
+                    <td>{{el.notes}}</td>
+                    <td>{{el.status}}</td>
+                    <td>{{el.deliveredDate| date:'MMM d, y, h:mm a'}}</td>
+                  </tr>
+                }
+                @if (reports&&reports.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

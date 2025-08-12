@@ -1,0 +1,19 @@
+table {
+  @apply mo-w-full;
+
+  th {
+    @apply mo-text-zinc-500 mo-font-semibold;
+  }
+
+  .img-thumb {
+    @apply mo-rounded-sm mo-m-2 mo-p-[2px];
+  }
+
+  .mat-row:hover {
+    @apply mo-bg-slate-50;
+  }
+
+  .selected-row {
+    @apply mo-bg-slate-100
+  }
+}

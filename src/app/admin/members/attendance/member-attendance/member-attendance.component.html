@@ -1,0 +1,146 @@
+<div class="mo-mt-3 mo-mb-0 page-title">
+  @if (!hideSearch) {
+    <mat-form-field appearance="outline">
+      <mat-label class="mo-ps-5">{{'members.search' | translate}}...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Search table" #input>
+    </mat-form-field>
+  }
+
+  <mat-checkbox [(ngModel)]="isDeleted" name="isDeleted" (change)="getAttendance()">
+    {{'members.includeDeleted'|translate}}
+  </mat-checkbox>
+  @if (!hideAddBtn) {
+    <button color="primary" class="mo-mb-2" (click)="addAttendance()" mat-raised-button>
+      <mat-icon>add</mat-icon> {{'members.addAtt' | translate}}
+    </button>
+  }
+
+</div>
+
+<div class="card p-3">
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="attendanceDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.attDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.attendanceDate | date:'MMM d, y, h:mm a'}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="accessCode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.accessCode' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.accessCode }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="contractNo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.contractNo' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.contractNo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="phoneNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.phone' | translate}}</th>
+        <td mat-cell *matCellDef="let row">
+          <span *appRole="['gymAttendance','ShowPhoneNo']">{{ row.phoneNumber }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="englishName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.nameEn' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.englishName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="package">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.package' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.package }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.startDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.startDate | date: 'mediumDate' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.expDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.endDate | date: 'mediumDate' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="checkOutDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.checkoutDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.checkOutDate | date:'MMM d, y, h:mm a' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="branch">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.branch' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.branchName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.status' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.attendanceApproveStatus }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="trainerName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.coach' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.trainerName }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rateName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.rate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.rateName }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="salesPersonName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.salesPerson' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.salesPersonName }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.username' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.userName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="response">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'common.info' | translate}}</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="showResponse(row)"><mat-icon>info_outline</mat-icon></button>
+        </td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.delete' | translate}}</th>
+        <td mat-cell *matCellDef="let row"><button *appRole="['gymAttendance', 'tsb_Remove']"
+          (click)="onDeleteAttendance(row)" mat-icon-button color="warn"><mat-icon>delete_sweep</mat-icon></button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row [ngClass]="{'isDeleted': row.isDeleted, 'mo-bg-warning-500': row.isUpcomingReservation}"
+      *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+  </div>
+</div>
+
+<ng-template #responseModal>
+  <h6 mat-dialog-title class="mo-font-bold">{{'common.info' | translate}}</h6>
+  <div mat-dialog-content>
+    <div class="white-space-pre-line row">
+      <label class="col-12">
+        {{'members.creationDate' | translate}} : {{attendanceResponse.creationDate | date:'MMM d, y, h:mm a'}}
+      </label>
+      <label class="col-12">
+        {{'receipts.approvedDate' | translate}} : {{attendanceResponse.attendanceApprovedDate | date:'MMM d, y, h:mm
+        a'}}
+      </label>
+      <label class="col-12">
+        {{'members.rate' | translate}} : {{attendanceResponse.rateName}}
+      </label>
+    </div>
+  </div>
+</ng-template>

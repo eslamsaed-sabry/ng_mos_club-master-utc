@@ -1,0 +1,157 @@
+<div class="page-title">
+    <div class="mo-flex mo-gap-3 mo-items-center">
+        <button (click)="backToPre()" class="mo-border mo-border-neutral-300 mo-w-12 mo-h-12 mo-flex mo-items-center mo-justify-center mo-rounded-full 
+    mo-bg-white print:mo-hidden">
+            <mat-icon>{{translate.currentLang === 'ar' ? 'keyboard_arrow_right':
+                'keyboard_arrow_left'}}</mat-icon>
+        </button>
+        <h4 class="mo-font-bold mo-m-0"> {{'classSchedule.instructorsPayrollClassesGrouped' | translate}} </h4>
+    </div>
+
+    <ul class="mo-flex mo-gap-3 mo-flex-wrap">
+        <li class="card mo-py-2">
+            <p class="mo-text-muted">{{'classSchedule.instructor' | translate}}</p>
+            <h6 class="mo-font-bold">{{instructorName}}</h6>
+        </li>
+        <li class="card mo-py-2">
+            <p class="mo-text-muted">{{'classSchedule.classesCount' | translate}}</p>
+            <h6 class="mo-font-bold">{{count}}</h6>
+        </li>
+        <li class="card mo-py-2">
+            <p class="mo-text-muted">{{'navigation.instructorDueAmount' | translate}}</p>
+            <h6 class="mo-font-bold">{{dueAmount}}</h6>
+        </li>
+    </ul>
+</div>
+
+
+
+<div class="mo-flex mo-items-center mo-justify-between">
+    <div class="mo-flex mo-gap-3" tableHeader>
+        <mat-form-field appearance="outline">
+            <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+            <input matInput [(ngModel)]="filters.fromDate" name="fromDate" [matDatepicker]="fromPicker"
+                (dateChange)="getInstructors()">
+            <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+            <input matInput [(ngModel)]="filters.toDate" name="toDate" [matDatepicker]="toPicker"
+                (dateChange)="getInstructors()">
+            <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline">
+        <mat-icon matPrefix>search</mat-icon>
+        <mat-label>{{'members.search' | translate}}</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+    </mat-form-field>
+</div>
+
+
+
+<div class="card">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="classTypeName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'classSchedule.className' | translate}} </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="mo-flex mo-items-center mo-gap-2">
+                    <a target="_blank" class="mo-text-blue-500"
+                        (click)="$event.stopPropagation(); gotoClass(row)">{{row.classTypeName}}</a>
+                    @if (row.isWithoutMembership) {
+                    <mat-icon class="mo-text-red-500"
+                        [matTooltip]="'classSchedule.dueInstructorNoMembershipMsg'| translate">warning_amber</mat-icon>
+                    }
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="classStartDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'classSchedule.classStartDate' | translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.classStartDate | date:'MMM d, y, h:mm a'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="classEndDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'classSchedule.classEndDate' | translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.classEndDate | date:'MMM d, y, h:mm a'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="membersCount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'classSchedule.membersCount' | translate}} </th>
+            <td mat-cell *matCellDef="let row"> {{row.membersCount}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="instructorRate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'classSchedule.instructorRate' | translate}} </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-form-field appearance="outline" class="sm">
+                    <input type="number" matInput (click)="$event.stopPropagation()" (blur)="onChangeClassRate(row)"
+                        [(ngModel)]="row.instructorRate" [name]="'instructorRate' + row.classId">
+                </mat-form-field>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="isPercentage">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'reports.table.percentage' |
+                translate}}/{{'reports.table.amount' | translate}} </th>
+            <td mat-cell *matCellDef="let row;">
+                <mat-form-field appearance="outline" class="sm" (click)="$event.stopPropagation()">
+                    <mat-select [(ngModel)]="row.isPercentage" (selectionChange)="onChangeClassRate(row)"
+                        [name]="'isPercentage' + row.classId">
+                        <mat-option [value]="false">{{'reports.table.amount' | translate}}</mat-option>
+                        <mat-option [value]="true">{{'reports.table.percentage' | translate}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row (click)="showClassDetails(row)" class="mo-cursor-pointer"
+            *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="8">
+                <p class="mo-text-sm mo-text-muted mo-py-3">{{'members.noData' | translate}}</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- <mat-paginator [length]="totalElements" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator> -->
+</div>
+
+<ng-template #dueAmountReportModal>
+    <div class="mo-p-3 print:mo-p-0">
+
+        <div id="printableTable">
+            <ul style="margin-bottom: 10px;" class="mo-flex mo-items-center mo-gap-3 mo-flex-wrap">
+                <li class="mo-bg-neutral-200 mo-py-2 mo-px-4 mo-rounded dark:mo-bg-neutral-900">
+                    <p class="mo-text-muted">{{'classSchedule.className' | translate}}</p>
+                    <h6 class="mo-font-bold">{{selectedClass.classTypeName}}</h6>
+                </li>
+                <li class="mo-bg-neutral-200 mo-py-2 mo-px-4 mo-rounded dark:mo-bg-neutral-900">
+                    <p class="mo-text-muted">{{'classSchedule.instructor' | translate}}</p>
+                    <h6 class="mo-font-bold">{{selectedClass.instructorName}}</h6>
+                </li>
+                <li class="mo-bg-neutral-200 mo-py-2 mo-px-4 mo-rounded dark:mo-bg-neutral-900">
+                    <p class="mo-text-muted">{{'classSchedule.classStartDate' | translate}}</p>
+                    <h6 class="mo-font-bold">{{selectedClass.classStartDate | date:'MMM d, y, h:mm a'}}</h6>
+                </li>
+                <li class="mo-bg-neutral-200 mo-py-2 mo-px-4 mo-rounded dark:mo-bg-neutral-900">
+                    <p class="mo-text-muted">{{'classSchedule.instructorRate' | translate}}</p>
+                    <h6 class="mo-font-bold">{{selectedClass.instructorRate | number:'1.0'}}
+                        ({{selectedClass.isPercentage ? ('reports.table.percentage' | translate) :
+                        ('reports.table.amount' | translate)}})</h6>
+                </li>
+            </ul>
+            <app-reports-page-header [permissions]="['instructorDueAmountReport', 'tsb_Print', 'Export']"
+                [reportName]="'reports.instructorDueAmount' | translate" [isResult]="true" [hideClearBtn]="true"
+                [hideGenerateBtn]="true" (onAction)="printReport()"></app-reports-page-header>
+            <app-instructor-due-amount-report [filters]="classDetailsFilter!"></app-instructor-due-amount-report>
+        </div>
+    </div>
+</ng-template>

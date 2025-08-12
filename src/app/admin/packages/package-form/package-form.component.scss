@@ -1,0 +1,9 @@
+.benefits-list {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+
+  li {
+    flex: 0 1 48%;
+  }
+}

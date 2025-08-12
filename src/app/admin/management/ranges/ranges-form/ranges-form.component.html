@@ -1,0 +1,21 @@
+<h5 matDialogTitle class="mo-font-bold">{{'management.target' | translate}}</h5>
+
+<form (ngSubmit)="submit(rangeForm)" #rangeForm="ngForm">
+  <div matDialogContent>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.from' | translate}}</mat-label>
+      <input type="number" matInput [(ngModel)]="form.rangeFrom" name="from" required>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.to' | translate}}</mat-label>
+      <input type="number" matInput [(ngModel)]="form.rangeTo" name="to" required>
+    </mat-form-field>
+  </div>
+
+  <div matDialogActions>
+    <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' |
+      translate}}</button>
+    <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+  </div>
+
+</form>

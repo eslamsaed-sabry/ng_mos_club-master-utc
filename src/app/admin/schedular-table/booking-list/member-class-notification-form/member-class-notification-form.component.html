@@ -1,0 +1,34 @@
+<h5 class="mo-font-bold" mat-dialog-title>{{'classSchedule.notifyMembers' | translate}}</h5>
+<form (ngSubmit)="submit(memberNotificationForm)" #memberNotificationForm="ngForm">
+
+    <div mat-dialog-content>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'classSchedule.memberType' | translate}}</mat-label>
+            <mat-select [(ngModel)]="notificationForm.attendanceStatus" name="attendanceStatus">
+                <mat-option [value]="memberStatus.All">{{'members.all' | translate}}</mat-option>
+                <mat-option [value]="memberStatus.Booked">{{'classSchedule.booked' | translate}}</mat-option>
+                <mat-option [value]="memberStatus.Attended">{{'classSchedule.attended' | translate}}</mat-option>
+                <mat-option [value]="memberStatus.WaitingList">{{'classSchedule.waitingList' | translate}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <app-checkbox-group [task]="notificationType"></app-checkbox-group>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'management.title' | translate}}</mat-label>
+            <input matInput [(ngModel)]="notificationForm.title" name="title" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'classSchedule.message' | translate}}</mat-label>
+            <textarea matInput [(ngModel)]="notificationForm.message" name="message" required></textarea>
+        </mat-form-field>
+
+    </div>
+
+    <div class="mo-text-end mo-mt-2" mat-dialog-actions>
+        <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+        <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+    </div>
+</form>

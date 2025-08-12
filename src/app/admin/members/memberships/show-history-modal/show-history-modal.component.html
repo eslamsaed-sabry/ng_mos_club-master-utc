@@ -1,0 +1,13 @@
+<h4 mat-dialog-title class="mo-font-bold">{{'members.history' | translate}}</h4>
+<ul class="list-group" mat-dialog-content>
+  @for (el of membershipHistory; track el) {
+    <li class="list-group-item mo-flex mo-items-center">
+      <mat-icon>arrow_right</mat-icon> <span>{{ el }}</span>
+    </li>
+  }
+  @if (membershipHistory.length === 0) {
+    <li class="mo-text-center">
+      {{'members.noHis' | translate}}
+    </li>
+  }
+</ul>

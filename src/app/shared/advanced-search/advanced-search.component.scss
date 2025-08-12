@@ -1,0 +1,139 @@
+
+.search-wrapper {
+  position: relative;
+
+  &.HEADER {
+    @media (max-width:800px) {
+      // display: none;
+    }
+  }
+
+  .form-control {
+    min-width: 350px;
+
+    @media (max-width:1025px) {
+      min-width: 150px;
+    }
+  }
+
+  .input-group {
+    position: relative;
+  }
+
+  .moving-animation {
+    position: relative;
+    animation: run 1s infinite;
+    animation-direction: alternate;
+    transition: all .3s ease 0s;
+  }
+
+  @keyframes run {
+    0% {
+      opacity: 1;
+      left: 0px;
+      top: 0;
+      transform: rotate(0deg);
+    }
+
+    50% {
+      left: 15px;
+      top: 0;
+      opacity: .5;
+      transform: rotate(5deg);
+    }
+
+    100% {
+      left: 0px;
+      top: 0;
+      opacity: 1;
+      transform: rotate(0deg);
+    }
+  }
+
+  .spinner {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    right: 14px;
+    top: 15px;
+  }
+
+  .loading {
+    position: absolute;
+    left: 420px;
+    z-index: 99;
+    width: 34px;
+    height: 36px;
+    line-height: 52px;
+    background: #FFF;
+    top: 1px;
+  }
+}
+
+.PAGE {
+  .loading {
+    left: 8px;
+    top: 6px;
+  }
+
+  input {
+    padding-left: 45px;
+    height: 50px;
+    border-radius: 0;
+  }
+
+  .search-results {
+    top: 48px !important;
+  }
+}
+
+.search-results {
+  position: absolute;
+  top: 38px;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  border: 1px solid #eee;
+  box-shadow: 0 3px 5px #ccc;
+  background-color: #FFF;
+  overflow: auto;
+  max-height: 410px;
+
+  ul {
+    padding: 0 !important;
+
+    li {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      cursor: pointer;
+
+      .img-container {
+        background-size: cover;
+        background-position: 0 0;
+        width: 60px;
+        height: 60px;
+        border-radius: 5px;
+        margin-right: 5px;
+
+        @media (max-width:800px) {
+          width: 45px;
+          height: 45px;
+        }
+      }
+
+      &:hover {
+        background-color: #eee;
+      }
+
+      &.selected {
+        background-color: var(--primary-color);
+      }
+    }
+  }
+
+  &.FIXED {
+    position: initial;
+    margin-bottom: 10px;
+  }
+}

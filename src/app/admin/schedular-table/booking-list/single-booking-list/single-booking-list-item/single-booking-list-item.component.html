@@ -1,0 +1,77 @@
+<div class="mo-flex mo-gap-2 mo-p-3" [ngClass]="{'mo-bg-red-100': !item.membershipId}">
+  <div>
+    <img width="50"
+      [src]="item.memberPhoto ? (proxyUrl + '/Images/' +item.memberPhoto) : '../../../../../assets/images/avatar.png'"
+      alt="MemberPhotoPath">
+  </div>
+  <ul>
+    <li class="mo-inline-flex mo-gap-1">
+      <strong>{{item.memberName}}</strong>
+      <span>({{item.memberContractNo}})</span>
+    </li>
+    <li>
+      {{item.memberPhone}}
+    </li>
+    <li>
+      {{item.package}}
+    </li>
+    <li>
+      {{item.remainingSessionsAsText}}
+    </li>
+    <li>
+      {{item.statusName}}
+    </li>
+    @if (item.debts > 0) {
+    <li [ngClass]="{'mo-text-error-500': item.anyLateDebts}">
+      {{item.debts}}
+    </li>
+    }
+    @if(item.invitationId){
+    <li class="mo-text-yellow-600 mo-flex mo-items-center mo-gap-1">
+      <mat-icon class="mo-text-sm">warning_amber</mat-icon> <span>{{'classSchedule.joinedByInvitationCode' |
+        translate}}</span>
+    </li>
+    }
+    @if(item.otherEntityId){
+    <li class="mo-text-muted mo-flex mo-items-center mo-gap-1">
+      <mat-icon class="mo-text-sm">info_outline</mat-icon> <span>{{'classSchedule.bookedByOther' |
+        translate}}</span>
+    </li>
+    }
+    @if(!item.membershipId){
+    <small class="mo-font-bold mo-text-red-600">{{'classSchedule.bookedWithoutMembershipWarning' | translate}}</small>
+    }
+  </ul>
+
+  <button mat-button class="mo-ms-auto" [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+  <mat-menu #menu="matMenu">
+    <button [routerLink]="['/admin/member-profile/'+item.memberId]" mat-menu-item>{{'members.viewProfile' |
+      translate}}</button>
+    @if(!item.membershipId){
+    <button *appRole="['classSchedule', 'Book']" (click)="openMembershipDialog()"
+      mat-menu-item>{{'members.linkMembership' | translate}}</button>
+    }
+    <button (click)="removeMemberFromClass(item)" mat-menu-item>{{'classSchedule.deleteClass' | translate}}</button>
+  </mat-menu>
+
+</div>
+
+<ng-template #memberMembershipsModalRef>
+  <h3 mat-dialog-title>Select Membership</h3>
+  <div mat-dialog-content>
+    <p></p>
+    <mat-form-field appearance="outline" class="mo-w-full mo-mt-3">
+      <mat-label>{{'members.packageName' | translate}}</mat-label>
+      <mat-select matInput [(ngModel)]="membershipId" name="membershipId">
+        @for(m of memberships; track $index){
+        <mat-option [value]="m.id">{{m.packageName}}</mat-option>
+
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-flat-button color="primary" (click)="linkMembership()">Submit</button>
+  </div>
+</ng-template>

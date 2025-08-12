@@ -1,0 +1,57 @@
+<div class="mo-relative">
+    <button class="modal-close-btn" type="button" mat-icon-button (click)="dismiss()"><mat-icon>close</mat-icon></button>
+
+    <div matDialogContent>
+        <div class="mo-flex mo-flex-wrap mo-items-center">
+            <app-call-ringing-animation></app-call-ringing-animation>
+            <h5 class="mo-text-center mo-pe-4">
+                Call Follow-up Date Reminder on <br> <strong>{{data.reminder.followUpDate | date:'MMM d, y, h:mm a'}}</strong>
+            </h5>
+        </div>
+
+        <ul class="info-list">
+            <li>
+                <label>{{'members.callDate' | translate}}: </label>
+                <span>{{data.reminder.callDate | date:'MMM d, y, h:mm a'}}</span>
+            </li>
+            <li>
+                <label>{{'members.memberName' | translate}}: </label>
+                <span>{{data.reminder.memberName}}</span>
+            </li>
+            <li>
+                <label>{{'reports.table.memberPhone' | translate}}: </label>
+                <span>{{data.reminder.memberPhoneNo}}</span>
+            </li>
+            <li>
+                <label>{{'reports.table.reason' | translate}}: </label>
+                <span>{{data.reminder.reasonName}}</span>
+            </li>
+            <li>
+                <label>{{'members.feedback' | translate}}: </label>
+                <span>{{data.reminder.feedbackName}}</span>
+            </li>
+            <li>
+                <label>{{'members.summary' | translate}}: </label>
+                <span>{{data.reminder.summary}}</span>
+            </li>
+        </ul>
+    </div>
+
+    <div matDialogActions class="mo-justify-center">
+        <button mat-raised-button type="button" (click)="dismiss('dismissed')">{{'members.dismiss' | translate}}</button>
+        <div class="dropdown-center mo-mx-2">
+            <button class="btn btn-info mo-shadow-md dropdown-toggle mo-text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{'members.snooze' | translate}} {{'members.for' | translate}}
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" (click)="onSnooze(15)">15 min</a></li>
+              <li><a class="dropdown-item" (click)="onSnooze(30)">30 min</a></li>
+              <li><a class="dropdown-item" (click)="onSnooze(60)">1 hour</a></li>
+            </ul>
+          </div>
+
+        <!-- <button mat-raised-button color="primary" type="button" (click)="dismiss('snoozed')">
+            Snooze for 15 Min
+        </button> -->
+    </div>
+</div>

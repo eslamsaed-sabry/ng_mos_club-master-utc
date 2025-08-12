@@ -1,0 +1,22 @@
+<div class="reports-tabs-wrapper">
+  @if (showPrevBtn) {
+  <button class="tab-nav-arrows tab-nav-arrow-left" (click)="goto('prev')">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  }
+
+  <ul class="report-tabs" id="reports-tabs">
+    @for (tab of tabs(); track $index) {
+    <li>
+      <button (click)="onSelectTab($index,tab)" [ngClass]="{'active' : $index === selectedIndex}" type="button"
+        class="mo-capitalize">{{tab}}</button>
+    </li>
+    }
+  </ul>
+
+  @if (showNextBtn) {
+  <button class="tab-nav-arrows tab-nav-arrow-right" (click)="goto('next')">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+  }
+</div>

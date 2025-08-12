@@ -1,0 +1,37 @@
+@if (isStepper()) {
+  <ul class="mo-flex mo-w-1/2 mo-mx-auto mo-gap-14 mo-items-center mo-justify-center mo-mb-4">
+    @for (step of steps; track step) {
+      <li class="mo-flex mo-gap-2 mo-text-neutral-300"
+        [ngClass]="{'mo-text-primary-500': activeStep() == step.id}">
+        <div class="mo-w-4 mo-h-4 mo-text-center">
+          @if (activeStep() === step.id) {
+            <mat-icon class="mo-text-primary-500">radio_button_checked</mat-icon>
+          }
+          @if (activeStep() > step.id) {
+            <mat-icon class="mo-text-primary-500">check_circle</mat-icon>
+          }
+          @if (activeStep() < step.id) {
+            <mat-icon>radio_button_unchecked</mat-icon>
+          }
+        </div>
+        <label [ngClass]="{'mo-text-primary-500': activeStep() == step.id}" [for]="step.label">{{step.label}}</label>
+      </li>
+    }
+  </ul>
+}
+
+@if (!isStepper()) {
+  <h3 class="mo-font-bold mo-mb-3">
+    @switch (formType()) {
+      @case (types.ADD_MEMBER) {
+        {{'members.addMember' | translate}}
+        } @case (types.EDIT_MEMBER) {
+        {{'members.editMember' | translate}}
+        } @case (types.ADD_MEMBERSHIP) {
+        {{'members.addMembership' | translate}}
+        } @case (types.EDIT_MEMBERSHIP) {
+        {{'members.editMember' | translate}}
+      }
+    }
+  </h3>
+}

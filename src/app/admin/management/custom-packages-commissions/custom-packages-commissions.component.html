@@ -1,0 +1,50 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.packagesCommissionsMonths' | translate}} </h4>
+
+  <div class="actions">
+    <button (click)="openPackageModal('add')" *appRole="['employeesCommissions', 'tsb_Add']" color="primary"
+      mat-raised-button>
+      <mat-icon>add</mat-icon> {{'members.add' | translate}}
+    </button>
+  </div>
+</div>
+
+<div>
+  <ul class="gallery row">
+    @for (ex of packagesCommissions; track ex) {
+      <li class="col-lg-3 col-md-4 col-12 hover">
+        <div class="gal-item">
+          <div class="image-info">
+            <caption class="mo-w-full">{{ex.name}}</caption>
+            <ul class="gal-controls">
+              <li>{{ex.totalIncludedPackages}}</li>
+              <li class="mo-ms-auto">
+                <button (click)="openIncludedPackages(ex)" [matTooltip]="'management.includePackages' | translate"
+                  *appRole="['employeesCommissions', 'tsb_Add']" mat-icon-button>
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </li>
+              <li>
+                <button (click)="openCopyPackagesCommissions(ex)"
+                  [matTooltip]="'management.copyPackagesCommissions' | translate"
+                  *appRole="['employeesCommissions', 'tsb_Add']" mat-icon-button>
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+              </li>
+              <li>
+                <button (click)="onDeletePackage(ex)" *appRole="['employeesCommissions', 'tsb_Remove']"
+                  class="mo-text-error-500" mat-icon-button>
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </li>
+    }
+
+    <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+      [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+    </mat-paginator>
+  </ul>
+</div>

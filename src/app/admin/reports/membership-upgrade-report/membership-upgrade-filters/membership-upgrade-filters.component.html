@@ -1,0 +1,27 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  <form>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="filters.fromDate" name="fromDate" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="filters.toDate" name="toDate" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full mo-mb-2">
+      <mat-label>{{'reports.table.user' | translate}}</mat-label>
+      <mat-select [(ngModel)]="filters.userId" name="userId">
+        <mat-option [value]="null">None</mat-option>
+        @for (user of users; track user) {
+          <mat-option [value]="user.id">{{user.userName}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+  </form>
+
+</div>

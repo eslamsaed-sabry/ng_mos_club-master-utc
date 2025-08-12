@@ -1,0 +1,143 @@
+<div class="member-card">
+  <div>
+    <div class="row">
+      <div class="col-xl-3 col-12">
+        <div class="search-container">
+          <app-advanced-search #searchSelector [autoPredict]="false" (selectedMember)="getFullMember($event)"
+            [config]="searchConfig">
+          </app-advanced-search>
+          <div class="other-ctrls">
+            <mat-checkbox [(ngModel)]="autoAddAttendance" name="autoAddAttendance"><strong>{{'members.autoAddAtt' |
+            translate}}</strong>
+          </mat-checkbox>
+
+          <label class="fs-6 mo-font-bold mo-mx-3">{{'common.yourCurrentBranch' | translate}}{{branchName}}</label>
+
+          <a class="mo-font-bold" (click)="getCheckedInMembers()" mat-button
+            color="primary"><small>{{'members.viewMembersAtGym'| translate}}</small>
+          </a>
+
+        </div>
+      </div>
+
+      @if (selectedMember) {
+        <app-member-personal-card (showNotes)="showNotes()" [style]="cardStyle.compact"
+          [personalData]="selectedMember.personalData" [notesLength]="notesLength"
+          [membershipStatus]="selectedMember.membershipMatchedData.statusCode">
+          @if (selectedMember.membershipMatchedData) {
+            <button class="pinOnTop" [ngClass]="{'pinned' : signalR.pinned}" (click)="pinPage()"
+              pinOnTop>
+              <mat-icon>push_pin</mat-icon>
+              <!-- ..{{'common.pinPage' | translate}} -->
+            </button>
+          }
+          @if (selectedMember.membershipMatchedData) {
+            <div>
+              @if (selectedMember.personalData.isMemberChangedThePhoto) {
+                <button
+                  (click)="onImgCompare(selectedMember.personalData)" class="photo-is-changed danger">
+                  <mat-icon>switch_account</mat-icon> {{'common.imgIsChanged' | translate}}
+                </button>
+              }
+              <div class="status-badge {{selectedMember.membershipMatchedData.statusCode | membershipStatus}}">
+              {{selectedMember.membershipMatchedData.statusCode | membershipStatus}}</div>
+              <ul class="mo-mb-2 mo-flex mo-justify-center mo-flex-wrap mo-gap-4">
+                <li>
+                  <span class="mo-font-bold mo-text-xl">{{selectedMember.personalData.attachmentsCount}}</span>
+                  <small class="mo-text-neutral-600 mo-px-1">{{'administration.attachmentsCount' | translate}}</small>
+                </li>
+                @if (selectedMember.membershipMatchedData.statusCode > 0) {
+                  <li>
+                    <span class="mo-font-bold mo-text-xl">{{selectedMember.membershipMatchedData.remainingDays}}</span>
+                    <small class="mo-text-neutral-600 mo-px-1">{{'administration.remainingDays' | translate}}</small>
+                  </li>
+                }
+              </ul>
+            <div class="mo-text-center d-block photo-is-changed" [ngClass]="{'danger': selectedMember.membershipMatchedData.messageType === 1,
+              'warning': selectedMember.membershipMatchedData.messageType === 2}">
+                {{selectedMember.membershipMatchedData.message}}
+              </div>
+              <div class="mo-text-warning-500 mo-text-center">
+                <p class="mo-m-0">{{selectedMember.membershipMatchedData.classMessage}}</p>
+                <p class="mo-m-0">{{selectedMember.membershipMatchedData.ptMessage}}</p>
+              </div>
+            </div>
+          }
+        </app-member-personal-card>
+      }
+    </div>
+
+    @if (selectedMember && !notFound) {
+      <div class="col-xl-9 col-12">
+        <div class="limited-width mo-mt-1">
+          <app-single-member-memberships [hideSearch]="true" [member]="selectedMember.personalData"
+            [memberships]="selectedMember.memberships" (refresh)="getFullMember(selectedMember.personalData)">
+          </app-single-member-memberships>
+          <div class="mo-mt-2">
+            @if (selectedMember.monitoringMemberships.length > 0) {
+              <app-single-member-memberships [hideAction]="true"
+                [hideSearch]="true" [member]="selectedMember.personalData"
+                [memberships]="selectedMember.monitoringMemberships">
+              </app-single-member-memberships>
+            }
+          </div>
+          <div class="mo-mt-4">
+            <h6 class="mo-font-bold">{{'common.gymAttendance'|translate}}</h6>
+            <div class="mo-mt-2">
+              <app-attendance [showFilters]="false" [viewMode]="'card'" [perPage]="4"></app-attendance>
+            </div>
+            <!-- <mat-tab-group>
+            <mat-tab label="{{'common.gymAttendance'|translate}}">
+              <div class="mo-mt-2">
+                <app-attendance [showFilters]="false" [viewMode]="'card'" [perPage]="4"></app-attendance>
+              </div>
+            </mat-tab>
+            <mat-tab label="{{'common.monitoringAttendance' | translate}}">
+              <div *ngIf="memberAttendance">
+                <app-member-attendance [hideSearch]="true" [hideAddbtn]="true" [attendance]="memberAttendance">
+                </app-member-attendance>
+              </div>
+            </mat-tab>
+          </mat-tab-group> -->
+        </div>
+      </div>
+    </div>
+  }
+</div>
+
+@if (selectedMember) {
+  <app-benefits-list [selectedMember]="selectedMember"
+    (refresh)="getFullMember(selectedMember!.personalData)">
+  </app-benefits-list>
+}
+</div>
+
+@if (!notFound && !selectedMember) {
+  <div class="mo-text-center" style="margin-top: -15px;">
+    <img class="smooth-transition-3" src="assets/images/search-bg.png">
+    <h3 class="mo-font-bold mo-text-warning-500">{{'common.findMember' | translate}}</h3>
+  </div>
+}
+
+@if (notFound) {
+  <div class="mo-text-center" style="margin-top: -15px;">
+    <img class="smooth-transition-3" src="assets/images/no-member.png" alt="">
+    <h3 class="mo-font-bold mo-text-error-500">{{'common.noMemberFound' | translate}}</h3>
+  </div>
+}
+</div>
+
+
+<ng-template #notesModal>
+  <div class="p-4">
+    <h4 class="mo-font-bold">{{'members.notes' | translate}}</h4>
+    <app-member-notes [notes]="selectedMember!.notes" (refresh)="getFullMember(selectedMember!.personalData)"
+    [member]="selectedMember!.personalData"></app-member-notes>
+  </div>
+</ng-template>
+
+<ng-template #checkedInModal>
+  <div class="p-4">
+    <app-checked-in-members></app-checked-in-members>
+  </div>
+</ng-template>

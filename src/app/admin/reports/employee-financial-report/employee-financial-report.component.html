@@ -1,0 +1,92 @@
+<app-reports-page-header [permissions]="['employeeFinancialReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.employeeFinancial' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-employee-financial-filters [filters]="filters"></app-employee-financial-filters>
+  </div>
+
+  @if (isResult) {
+    <div class="col-xl-9 col-md-8 col-12">
+      <div class="card p-2">
+        <ul class="row">
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.fingerprintCode' | translate}}</label>
+            <span>{{reports.employeeData.code}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.englishName' | translate}} </label>
+            <span> {{reports.employeeData.englishName}} </span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.arabicName' | translate}}</label>
+            <span>{{reports.employeeData.arabicName}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.phone' | translate}}</label>
+            <span>{{reports.employeeData.phoneNo}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.jobTitle' | translate}}</label>
+            <span>{{reports.employeeData.jobTitle}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.managerName' | translate}}</label>
+            <span>
+              {{reports.employeeData.managerName?reports.employeeData.managerName: ('members.noData' | translate)}}
+            </span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.salary' | translate}}</label>
+            <span>{{reports.employeeData.salary}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.birthDate' | translate}}</label>
+            <span>
+              <!-- {{reports.employeeData.birthDate | date :'mediumDate'}} -->
+              {{reports.employeeData.birthDate ? (reports.employeeData.birthDate | date : 'mediumDate') :
+              ('members.noData' | translate)}}
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="reports-tabs-container mo-mt-4">
+        <div class="table-responsive" id="receipts">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'reports.table.actionDate' | translate}}</th>
+                <th>{{'reports.table.totalAmount' | translate}}</th>
+                <th>{{'reports.table.financialType' | translate}}</th>
+                <th>{{'reports.table.description' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.financials; track el; let i = $index) {
+                <tr matTooltipPosition="left">
+                  <td>{{el.actionDate | date :'medium'}}</td>
+                  <td class="mo-text-end">{{el.amountPlusAndMinus | number:'1.0'}}</td>
+                  <td class="mo-text-center">{{el.typeName}}</td>
+                  <td class="mo-text-center">{{el.description}}</td>
+                  <!-- <td>{{el.checkOut| date:'MMM d, y, h:mm a'}}</td> -->
+                </tr>
+              }
+              @if (reports && reports.financials.length === 0) {
+                <tr>
+                  <td colspan="10">{{'members.noData' | translate}}</td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="1"></td>
+                <td class="mo-text-end">{{calcTotal(reports.financials, 'amountPlusAndMinus') | number:'1.0'}}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>

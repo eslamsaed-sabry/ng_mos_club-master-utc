@@ -1,0 +1,78 @@
+<h5 class="mo-font-bold" mat-dialog-title>{{('navigation.'+data.lookupName) | translate}}</h5>
+<form (ngSubmit)="submit(lookupForm)" #lookupForm="ngForm">
+
+  <div mat-dialog-content>
+
+    @if(data.lookupTypeId === lookups.ClassesTypes){
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.classProgram' | translate}}</mat-label>
+      <mat-select [(ngModel)]="lookup.programId" name="programId" required>
+        <!-- <mat-option [value]="''">{{'members.all' | translate}}</mat-option> -->
+        @for ( c of classProgram$ | async; track $index) {
+        <mat-option [value]="c.id">{{c.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    }
+    @if(data.lookupTypeId === lookups.ClassPrograms){
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'classSchedule.classGenre' | translate}}</mat-label>
+      <mat-select [(ngModel)]="lookup.genreId" name="genreId">
+        @for ( c of classGenre$ | async; track $index) {
+        <mat-option [value]="c.id">{{c.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    }
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'members.englishName' | translate}}</mat-label>
+      <input matInput [(ngModel)]="lookup.name" name="name" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.viewOrder' | translate}}</mat-label>
+      <input matInput [(ngModel)]="lookup.viewOrder" name="viewOrder" type="number">
+    </mat-form-field>
+
+    @if (showColorPicker()) {
+    <div class="mo-flex mo-justify-between mo-items-center mo-mb-3">
+      <label class="mo-px-2">{{'management.categoryColor' | translate}}</label>
+      <input [(colorPicker)]="lookup.colorHex" [style.background]="lookup.colorHex" />
+    </div>
+    }
+
+    @if (data.lookupTypeId === lookups.ClassesTypes) {
+    <div class="mo-w-full mo-mb-3">
+      <div class="mo-flex mo-justify-between mo-items-center">
+        <label class="mo-px-2">{{'management.classIco' | translate}}</label>
+        <input type="file" hidden #uploadField (change)="upload($event)" />
+        <button type="button" mat-raised-button (click)="uploadField.click()" color="default">{{'members.upload' |
+          translate}}</button>
+      </div>
+      @if (lookup.imagePath) {
+      <img width="90" [src]="proxyUrl + '/Images/' +lookup.imagePath">
+      }@else {
+      <img (click)="uploadField.click()" src="assets/images/no-image.svg" width="60" alt="">
+      }
+    </div>
+
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.description' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="lookup.description" name="description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.moreDetailsLink' | translate}}</mat-label>
+      <input matInput type="text" [(ngModel)]="lookup.moreDetailsLink" name="moreDetailsLink">
+    </mat-form-field>
+    }
+    <mat-checkbox [(ngModel)]="lookup.isActive" name="isActive">{{'administration.active' | translate}}</mat-checkbox>
+  </div>
+
+  <div class="mo-text-end mo-mt-2" mat-dialog-actions>
+    <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+  </div>
+</form>

@@ -1,0 +1,120 @@
+<h5 mat-dialog-title class="mo-font-bold mo-my-2"> {{'members.invitationDetails' | translate}} @if (invitationCount) {
+  <span
+  class="badge mo-bg-error-500">Invited {{invitationCount}} time(s) before.</span>
+}</h5>
+<form (ngSubmit)="addInvite(invitForm)" #invitForm="ngForm">
+  <div mat-dialog-content>
+    @if (data.memberData) {
+      <div class="main-section">
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.contractNo' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.applicationNo" name="contractNo" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.accessCode' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.code" name="accessCode" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.phone' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.phoneNo" name="phoneNo" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.memberName' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.nameEng" name="nameEng" required />
+        </mat-form-field>
+      </div>
+    }
+    <hr>
+
+
+      <div class="row">
+
+        <div class="col-md-2 col-12">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.countryCode'|translate}}</mat-label>
+            <mat-select
+              (selectionChange)="common.validatePhoneNumber(invitation.inviteePhone,invitation.phoneFormatId,countryCodes)"
+              [(ngModel)]="invitation.phoneFormatId" name="phoneFormatId" required>
+              @for (c of countryCodes; track c) {
+                <mat-option [value]="c.id">{{c.displayName}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-5 col-12">
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'members.inviteePhone'|translate}}</mat-label>
+            <input matInput [(ngModel)]="invitation.inviteePhone"
+              (blur)="common.validatePhoneNumber(invitation.inviteePhone,invitation.phoneFormatId,countryCodes)"
+              (change)="typeAhead('phone', invitation.inviteePhone)" name="inviteePhone" required />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-5 col-12">
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.nationalId'|translate}}</mat-label>
+              <input matInput [(ngModel)]="invitation.inviteeNationalId"
+                (change)="typeAhead('nationalID', invitation.inviteeNationalId)" name="inviteeNationalId" />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'members.inviteeEnglishName'|translate}}</mat-label>
+                <input matInput [(ngModel)]="invitation.inviteeNameEng" (blur)="copyName()" name="inviteeNameEng" required />
+              </mat-form-field>
+            </div>
+
+            <div class="col-md-6 col-12">
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'members.inviteeArabicName'|translate}}</mat-label>
+                <input matInput [(ngModel)]="invitation.inviteeNameAR" name="inviteeNameAR" required />
+              </mat-form-field>
+            </div>
+
+            @if (!data.hideSales || !data.memberData || data.rotateInvitation) {
+              <div class="col-6">
+                <mat-form-field class="mo-w-full" appearance="outline">
+                  <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="invitation.salesPersonId" name="sales" [disabled]="disabledSales"
+                    [required]="requiredFields.includes('salesPersonId')">
+                    @for (s of sales; track s) {
+                      <mat-option [value]="s.id">{{s.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            }
+
+            <div class="col-6">
+              <mat-form-field class="mo-w-full" appearance="outline">
+                <mat-label>{{'members.numberOfDays' | translate}}</mat-label>
+                <mat-select [(ngModel)]="invitation.numberOfDays" name="numberOfDays" required>
+                  @for (s of numberOfDays; track s) {
+                    <mat-option [value]="s.id">{{s.name}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+
+            <div class="col-12 mo-flex mo-items-center mo-py-2">
+              <label class="mo-font-bold" for="Select Gender">{{'members.gender' | translate}} (<small
+              class="mo-text-error-500">{{'reports.table.required' | translate}}</small>)</label>
+              <mat-radio-group class="mo-mx-3" aria-label="Select Gender" [(ngModel)]="invitation.gender" name="gender"
+                required>
+                <mat-radio-button [value]="gender.MALE" selected>{{'members.male' | translate}}</mat-radio-button>
+                <mat-radio-button [value]="gender.FEMALE">{{'members.female' | translate}}</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+
+        </div>
+        <div mat-dialog-actions class="mo-justify-end">
+          <button mat-button (click)="dismiss()" type="button">{{'members.cancel' | translate}}</button>
+          <button mat-raised-button color="primary" type="submit" cdkFocusInitial>
+            {{'members.save' | translate}}
+          </button>
+        </div>
+      </form>

@@ -1,0 +1,30 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  <form>
+    <mat-form-field appearance="outline" class="mo-w-full" (click)="fromDate.open()">
+      <mat-label>{{'reports.table.month' | translate}}</mat-label>
+      <input matInput [matDatepicker]="fromDate" (dateChange)="onSelectDate()" [(ngModel)]="date" name="date" />
+      <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+      <mat-datepicker #fromDate [startView]="'year'"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full" *appRole="['salesReport','ShowAllData']">
+      <mat-label>{{'reports.table.employee' | translate}}</mat-label>
+      <mat-select [(ngModel)]="filters.employeesIds" name="employeeIds" multiple>
+        <mat-option [value]="0" (click)="onSelect()">{{selection}}</mat-option>
+        @for (el of employees; track el) {
+          <mat-option [value]="el.id">
+            {{el.name}}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="mo-px-2 mo-pt-3">
+      <mat-checkbox [(ngModel)]="filters.finalApprovedOnly" name="finalApprovedOnly">
+        {{'reports.finalApprovedOnly' | translate}}
+      </mat-checkbox>
+    </div>
+  </form>
+</div>

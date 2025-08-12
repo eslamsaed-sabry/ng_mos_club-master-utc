@@ -1,0 +1,44 @@
+<app-reports-page-header [reportName]="'reports.logsRep'|translate" [isResult]="isResult" (onAction)="getAction($event)"
+  [permissions]="['logsReport', 'tsb_Print', 'Export']">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-logs-report-filters [filters]="filters"></app-logs-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <!-- <h5 class="mo-font-bold">
+            {{'reports.callsSummaryRep' | translate}}
+          </h5> -->
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'reports.table.date' | translate}}</th>
+                <th>{{'reports.table.logType' | translate}}</th>
+                <th>{{'reports.table.logData' | translate}}</th>
+                <th>{{'reports.table.changes' | translate}}</th>
+                <th>{{'members.username' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of logs; track el) {
+                <tr>
+                  <td>{{el.logDate | date:'MMM d, y, h:mm a'}}</td>
+                  <td>{{el.logTypeName}}</td>
+                  <td>{{el.logData}}</td>
+                  <td>{{el.logChanges}}</td>
+                  <td>{{el.userName}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+</div>

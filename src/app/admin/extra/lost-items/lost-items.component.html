@@ -1,0 +1,100 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.lostItems' | translate}} </h4>
+
+  <div class="mo-flex mo-items-center">
+    <div>
+      <mat-form-field class="mo-w-full">
+        <mat-label>{{'classSchedule.location' | translate}}</mat-label>
+        <mat-select (selectionChange)="applyFilter()" [(ngModel)]="filters.locationId" name="locationId">
+          <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+          @for (l of locations; track l) {
+          <mat-option [value]="l.id">{{l.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="mo-mx-3">
+      <mat-form-field class="mo-w-full">
+        <mat-label>{{'extra.category' | translate}}</mat-label>
+        <mat-select (selectionChange)="applyFilter()" [(ngModel)]="filters.categoryId" name="categoryId">
+          <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+          @for (c of categories; track c) {
+          <mat-option [value]="c.id">{{c.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="openItemModal('add')"><mat-icon class="mo-m-0">add</mat-icon>
+      {{'members.add' | translate}}</button>
+
+  </div>
+</div>
+
+<div class="table-responsive card p-3">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="creationDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.creationDate' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.creationDate | date:'MMM d, y, h:mm a' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="categoryName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'extra.category' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.categoryName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="locationName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'classSchedule.location' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.locationName }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="itemDescription">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.description' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.itemDescription }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="notes">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.notes' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.notes }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.status' | translate}}</th>
+      <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="deliveredDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'extra.deliveredDate' | translate}}</th>
+      <td mat-cell *matCellDef="let row"> {{ row.deliveredDate | date:'MMM d, y, h:mm a'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="deliver">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'extra.deliver' | translate}}</th>
+      <td mat-cell *matCellDef="let row">
+        @if (!row.isDeliverd) {
+        <button mat-raised-button color="default" (click)="onDeliver(row)"><mat-icon
+            class="mo-m-0">check</mat-icon></button>
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.edit' | translate}}</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button color="accent" (click)="openItemModal('edit',row)"><mat-icon
+            class="mo-m-0">edit</mat-icon></button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+    </tr>
+  </table>
+
+  <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+    [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+  </mat-paginator>
+</div>

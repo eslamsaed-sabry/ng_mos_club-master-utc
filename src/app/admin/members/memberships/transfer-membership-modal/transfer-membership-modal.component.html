@@ -1,0 +1,77 @@
+<div mat-dialog-title>
+  <span class="mo-font-bold mo-capitalize">{{'members.membershipTransfer' | translate}}</span>
+  <h6 class="mo-text-muted mo-m-0">{{'members.msgTransferRemainingDays' | translate}}</h6>
+  <div class="mo-font-bold mo-text-center">
+    <label class="fs-6">{{'common.yourCurrentBranch' | translate}}{{branchName}}</label>
+  </div>
+</div>
+
+<form #cancelForm="ngForm" (ngSubmit)="submit(cancelForm)">
+
+  <div mat-dialog-content class="!mo-pt-0">
+
+    <div class="mo-mb-2">
+      <app-advanced-search [autoPredict]="true" [config]="config"
+      (selectedMember)="getSelectedMember($event)"></app-advanced-search>
+
+      <p class="mo-my-2">or <button class="mo-mx-2" (click)="addMember()" mat-stroked-button
+      color="primary">{{'members.addNewMember' | translate}}</button></p>
+    </div>
+
+    @if (member) {
+      <div class="mo-text-center">
+        <div class="mo-text-muted">{{'members.msgMembershipWillTransferredToMember' | translate}}</div>
+        <strong>{{member.nameEng}} ({{member.code}})</strong>
+      </div>
+    }
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.paymentDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="transferMembershipForm.paymentDate" name="paymentDate"
+        required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.startDate' | translate}}</mat-label>
+        <input matInput type="datetime-local" [(ngModel)]="transferMembershipForm.startDate" name="startDate" required>
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'reports.table.amountPaidCash' | translate}}</mat-label>
+        <input matInput type="number" [(ngModel)]="transferMembershipForm.cashAmount"
+          [required]="!transferMembershipForm.visaAmount" name="cashAmount" />
+        </mat-form-field>
+
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'reports.table.amountPaidVisa' | translate}}</mat-label>
+          <input matInput type="number" [(ngModel)]="transferMembershipForm.visaAmount"
+            [required]="!transferMembershipForm.cashAmount" name="visaAmount" />
+          </mat-form-field>
+
+          @if (transferMembershipForm.visaAmount) {
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.visaType' | translate}}</mat-label>
+              <mat-select [(ngModel)]="transferMembershipForm.visaTypeId" name="visaTypeId">
+                @for (v of visaTypes; track v) {
+                  <mat-option [value]="v.id">{{v.name}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
+
+          @if (isShowReceiptNo) {
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.receiptNo' | translate}}</mat-label>
+              <input matInput [(ngModel)]="transferMembershipForm.receiptNo" name="receiptNo" required />
+            </mat-form-field>
+          }
+
+        </div>
+        <div class="mo-text-end mo-mt-3" mat-dialog-actions>
+          <button type="button" (click)="dismiss()" mat-button>{{'members.cancel' | translate}}</button>
+          <button type="submit" class="mo-capitalize" mat-raised-button color="primary">
+          {{'members.save' | translate}}</button>
+        </div>
+
+
+      </form>

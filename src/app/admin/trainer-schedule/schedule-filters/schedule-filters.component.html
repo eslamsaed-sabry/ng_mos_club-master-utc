@@ -1,0 +1,82 @@
+<form class="filters-container" #callFiltersForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+
+
+  <mat-form-field appearance="outline" class="mo-w-full">
+    <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+    <input matInput [matDatepicker]="fromDatePicker" [(ngModel)]="filters.fromDate" name="fromDate">
+    <mat-datepicker-toggle matIconSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #fromDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="mo-w-full">
+    <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+    <input matInput [matDatepicker]="toDatePicker" [(ngModel)]="filters.toDate" name="toDate">
+    <mat-datepicker-toggle matIconSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #toDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <div class="col-12">
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{ scheduleTypeName==scheduleType.trainerSchedule? ('members.trainer' | translate):('members.doctor' |
+      translate)}}</mat-label>
+      <mat-select [(ngModel)]="filters.trainerId" name="trainerId">
+        @for (el of trainersOrDoctors; track el) {
+          <mat-option [value]="el.id">{{el.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- <mat-checkbox [(ngModel)]="filters.includeReminders" name="includeReminders">
+  {{'classSchedule.includeReminders' | translate}}
+</mat-checkbox> -->
+<!-- <ul *ngIf="filters.includeReminders">
+<li>
+  <mat-checkbox [(ngModel)]="filters.notDismissedOnly" name="notDismissedOnly">{{'classSchedule.notDismissedOnly'
+  | translate}}</mat-checkbox>
+</li>
+</ul> -->
+
+<!-- <div class="mo-w-full">
+<mat-checkbox [(ngModel)]="filters.includeExpired" name="includeExpired">{{'classSchedule.includeExpired' |
+translate}}</mat-checkbox>
+</div> -->
+
+<!-- <div class="mo-w-full">
+<mat-checkbox [(ngModel)]="filters.includeDebtors" name="includeDebtors">{{'classSchedule.includeDebtors' |
+translate}}</mat-checkbox>
+</div> -->
+
+<!-- <div class="mo-w-full">
+<mat-checkbox [(ngModel)]="filters.includePTSessions" name="includePTSessions">{{'classSchedule.includeSlots' |
+translate}}</mat-checkbox>
+</div> -->
+
+
+<!-- <div class="mo-w-full">
+<mat-checkbox [(ngModel)]="filters.includeNotActive" name="includeNotActive">{{'classSchedule.includeNotActive'
+  |
+translate}}</mat-checkbox>
+</div> -->
+
+
+<!-- <div class="mo-w-full">
+<mat-checkbox [(ngModel)]="filters.includePeriodicalFollowUp"
+name="includePeriodicalFollowUp">{{'classSchedule.includePeriodicalFollowUp' | translate}}</mat-checkbox>
+</div> -->
+
+
+<!-- <div class="mo-w-full">
+<mat-checkbox [(ngModel)]="filters.includeBirthdays" name="includeBirthdays">{{'classSchedule.includeBirthdays'
+  |
+translate}}</mat-checkbox>
+</div> -->
+
+<div class="mo-my-3">
+  <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilter.emit()" mat-raised-button color="primary"
+  type="button">{{'members.search' | translate}}</button>
+  <button class="mo-font-bold mo-w-full" (click)="callFiltersForm.reset();onFilter.emit()" mat-button
+  type="button">{{'members.clearAll' | translate}}</button>
+</div>
+
+</form>

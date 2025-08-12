@@ -1,0 +1,86 @@
+<form class="filters-container" #attendanceForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.contractNo' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.memberContractNo" name="applicationNo" type="text"
+          placeholder="{{'members.contractNo' | translate}}" />
+        </mat-form-field>
+      </div>
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.accessCode' | translate}}</mat-label>
+          <input matInput name="code" [(ngModel)]="filters.memberCode" type="text"
+            placeholder="{{'members.accessCode' | translate}}" />
+          </mat-form-field>
+        </div>
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'members.memberName' | translate}}</mat-label>
+            <input matInput name="name" [(ngModel)]="filters.memberName" type="text"
+              placeholder="{{'members.memberName' | translate}}" />
+            </mat-form-field>
+          </div>
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.phone' | translate}}</mat-label>
+              <input matInput name="phoneNo" [(ngModel)]="filters.memberPhone" type="text"
+                placeholder="{{'members.phone' | translate}}" />
+              </mat-form-field>
+            </div>
+
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="mo-w-full" (click)="pickerDOB.open()">
+                <mat-label>{{'members.dateRange' | translate}}</mat-label>
+                <mat-date-range-input [rangePicker]="pickerDOB">
+                  <input matStartDate name="fromDate" [(ngModel)]="filters.fromDate" placeholder="From date">
+                  <input matEndDate name="toDate" [(ngModel)]="filters.toDate" placeholder="To date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="pickerDOB"></mat-datepicker-toggle>
+                <mat-date-range-picker startView="year" #pickerDOB></mat-date-range-picker>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'members.gender' | translate}}</mat-label>
+                <mat-select name="gender" [(ngModel)]="filters.gender">
+                  <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+                  <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+                <mat-select name="salesPersonId" [(ngModel)]="filters.salesPersonId">
+                  @for (sale of sales; track sale) {
+                    <mat-option [value]="sale.id">{{sale.name}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'members.user' | translate}}</mat-label>
+                <mat-select name="userId" [(ngModel)]="filters.userId">
+                  @for (user of users; track user) {
+                    <mat-option [value]="user.id">{{user.englishName}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-12">
+              <mat-checkbox [(ngModel)]="filters.includeDeleted" name="includeDeleted">{{'members.includeDeleted'|translate}}
+              </mat-checkbox>
+            </div>
+          </div>
+
+
+          <div class="mo-my-3">
+            <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilterChange.emit()" mat-raised-button color="primary"
+            type="button">{{'members.search' | translate}}</button>
+            <button class="mo-font-bold mo-w-full" (click)="attendanceForm.reset();onFilterChange.emit()" mat-button
+            type="button">{{'members.clearAll' | translate}}</button>
+          </div>
+        </form>

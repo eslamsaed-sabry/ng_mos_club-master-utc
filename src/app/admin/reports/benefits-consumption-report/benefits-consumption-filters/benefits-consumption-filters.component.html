@@ -1,0 +1,16 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  <form>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="filters.startDate" name="fromDate" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="filters.endDate" name="toDate" required>
+    </mat-form-field>
+  </form>
+
+</div>

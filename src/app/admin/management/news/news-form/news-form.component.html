@@ -1,0 +1,48 @@
+<h5 mat-dialog-title>{{'management.newsDetails' | translate}}</h5>
+
+<form (ngSubmit)="submit(newsForm)" #newsForm="ngForm">
+
+  <div mat-dialog-content>
+    @if (imageSrc) {
+      <div class="mo-text-center">
+        <img [src]="imageSrc" style="max-width:300px;max-height:300px" />
+      </div>
+    }
+    <div class="image-upload mo-my-2">
+      <label class="mo-pe-3">{{'management.photo' | translate}}</label>
+      <input name="imageUrl" type="file" accept="image/*" (change)="handleInputChange($event)" />
+    </div>
+
+    <label class="mo-text-error-500">{{message}}</label>
+
+    @if (pageID.EVENTS === data.utilityType) {
+      <mat-form-field class="mo-w-full" appearance="outline"
+        (click)="eventPicker.open()">
+        <mat-label>{{'reports.table.date' | translate}}</mat-label>
+        <input matInput [matDatepicker]="eventPicker" [(ngModel)]="news.eventDate" name="eventDate" required />
+        <mat-datepicker-toggle matSuffix [for]="eventPicker"></mat-datepicker-toggle>
+        <mat-datepicker #eventPicker></mat-datepicker>
+      </mat-form-field>
+    }
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'management.title' | translate}}</mat-label>
+      <input matInput [(ngModel)]="news.newsTitle" name="title" required />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.description' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="news.newsDescription" required name="description" rows="7"></textarea>
+    </mat-form-field>
+
+  </div>
+
+
+  <div mat-dialog-actions class="mo-justify-end">
+    <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button color="primary" type="submit">
+      {{'members.save' | translate}}
+    </button>
+  </div>
+
+</form>

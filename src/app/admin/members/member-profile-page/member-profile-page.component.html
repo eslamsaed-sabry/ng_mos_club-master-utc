@@ -1,0 +1,151 @@
+<div class="p-3">
+  @if (fullMemberInfo.personalData) {
+    <div class="member-profile">
+      <div class="page-title">
+        <h4 class="mo-font-bold mo-m-0"> {{'members.memberData' | translate}} </h4>
+        <div class="actions">
+          <app-member-actions class="mo-mx-2" [member]="fullMemberInfo.personalData" [styleMember]="styleMember"
+          (onAction)="getCardAction($event)"></app-member-actions>
+          <button class="mo-mx-2" (click)="openMedicalHistory()" *appRole="['profile','ShowMedicalHistory']"
+            mat-raised-button>
+            <mat-icon class="adjust-icon">medical_services</mat-icon> {{'members.medicalHistory' | translate}}
+          </button>
+          @if (fullMemberInfo.personalData&&fullMemberInfo.personalData.isPossibleMember) {
+            <button class="mo-mx-2" color="primary" *appRole="['potMembers','Edit']" (click)="openPossibleMemberForm()"
+              mat-raised-button>
+              <mat-icon class="adjust-icon">edit</mat-icon> {{'members.edit' | translate}}
+            </button>
+          } @else {
+            <button class="mo-mx-2" color="primary" *appRole="['profile','EditAfterAddition']"
+              [routerLink]="['/admin/form/member/edit']" [queryParams]="{memberId:fullMemberInfo.personalData.id}"
+              mat-raised-button>
+              <mat-icon class="adjust-icon">edit</mat-icon> {{'members.edit' | translate}}
+            </button>
+          }
+        </div>
+      </div>
+      <div>
+        <div class="member-profile-section">
+          @if (fullMemberInfo.personalData) {
+            <div class="mo-mt-3 mo-relative mo-overflow-hidden">
+              @if (fullMemberInfo.personalData.isPossibleMember) {
+                <div
+                  class="mo-absolute mo-transform mo-rotate-45 mo-bg-green-600 mo-text-center mo-text-white mo-font-semibold mo-py-1 mo-right-[-35px] mo-top-[32px] mo-w-[170px]">
+                  {{'members.potMember' | translate}}
+                </div>
+              }
+              <app-member-personal-card [style]="'HORIZONTAL'" [pageName]="'profile'"
+                [personalData]="fullMemberInfo.personalData">
+              </app-member-personal-card>
+            </div>
+          }
+        </div>
+        <div>
+          <mat-tab-group [ngClass]="{'side-tabs': width > 1024}" (selectedTabChange)="onChangeTab($event)"
+            [selectedIndex]="selectedTab">
+            @for (tab of _MEMBER_PROFILE_TABS; track $index) {
+              <mat-tab [disabled]="tab.isDisabled" [aria-label]="tab.id">
+                <ng-template matTabLabel>
+                  <span>{{tab.title| translate}}</span>
+                  @if (tab.showTitle) {
+                    <span
+                    class="mo-w-4 mo-h-4 mo-text-white mo-bg-primary-500 mo-rounded mo-font-bold mo-leading-6 mo-ms-2 mo-text-xs">{{fullMemberInfo[tab.countKey]}}</span>
+                  }
+                </ng-template>
+                @switch (activeTabName) {
+                  @case (tabs.CALLS) {
+                    @if (fullMemberInfo.calls) {
+                      <app-member-calls (refresh)="getCalls()" [member]="fullMemberInfo.personalData"
+                      [calls]="fullMemberInfo.calls"></app-member-calls>
+                    }
+                  }
+                  @case (tabs.MEMBER_Wallet) {
+                    @if (fullMemberInfo.wallet) {
+                      <app-member-wallet (refresh)="getWallet()"
+                        (refresh)="getMemberFinancialBalance()" [member]="fullMemberInfo.personalData"
+                      [wallet]="fullMemberInfo.wallet" [walletBalance]="fullMemberInfo.walletBalance"></app-member-wallet>
+                    }
+                  }
+                  @case (tabs.PAYMENTS) {
+                    @if (fullMemberInfo.payments) {
+                      <app-member-payments (refresh)="getPayments()"
+                        (refresh)="getMemberPaymentsTotal()" [member]="fullMemberInfo.personalData"
+                        [payments]="fullMemberInfo.payments" [totalPayments]=" fullMemberInfo.totalPayments">
+                      </app-member-payments>
+                    }
+                  }
+                  @case (tabs.INVITEES) {
+                    @if ( fullMemberInfo.invitations) {
+                      <app-member-invitees (refresh)="getInvitations()"
+                        [member]="fullMemberInfo.personalData" [isInvites]="true" [isInvitedBy]="false"
+                        [invitees]="fullMemberInfo.invitations">
+                      </app-member-invitees>
+                    }
+                  }
+                  @case (tabs.INVITED_BY) {
+                    @if (fullMemberInfo.invitations) {
+                      <app-member-invitees (refresh)="getInvitations(true)"
+                        [member]="fullMemberInfo.personalData" [isInvites]="false" [isInvitedBy]="true"
+                        [invitees]="fullMemberInfo.invitations">
+                      </app-member-invitees>
+                    }
+                  }
+                  @case (tabs.TRAINING_NOTES) {
+                    @if (tab.id === tabs.TRAINING_NOTES) {
+                      <app-members-training-notes
+                      [memberId]="fullMemberInfo.personalData.id"></app-members-training-notes>
+                    }
+                  }
+                  @case (tabs.NOTES) {
+                    @if (fullMemberInfo.notes) {
+                      <app-member-notes (refresh)="getNotes()" [member]="fullMemberInfo.personalData"
+                      [notes]="fullMemberInfo.notes"></app-member-notes>
+                    }
+                  }
+                  @case (tabs.ATTENDANCE) {
+                    @if (fullMemberInfo.attendance) {
+                      <app-member-attendance (refresh)="getAttendance()"
+                      [attendance]="fullMemberInfo.attendance" [hideAddBtn]="true"></app-member-attendance>
+                    }
+                  }
+                  @case (tabs.ONE_PASS_SERVICE) {
+                    <app-member-sessions (refresh)="getOnePassServices()" [member]="fullMemberInfo.personalData"
+                    [selectedId]="sessionId" [sessions]="fullMemberInfo.sessions"></app-member-sessions>
+                  }
+                  @case (tabs.NOTIFICATIONS) {
+                    @if (fullMemberInfo.communications) {
+                      <app-member-notifications (refresh)="getNotifications()"
+                        [memberId]="fullMemberInfo.personalData.id" [notifications]="fullMemberInfo.communications">
+                      </app-member-notifications>
+                    }
+                  }
+                  @case (tabs.ATTACHMENTS) {
+                    @if (tab.id === tabs.ATTACHMENTS) {
+                      <app-attachments [showAddBtn]="true" [contextTypeId]="memberContextId"
+                      [staff]="fullMemberInfo.personalData"></app-attachments>
+                    }
+                  }
+                  @case (tabs.CLASSES) {
+                    <app-member-classes [classes]="fullMemberInfo.classes"></app-member-classes>
+                  }
+                  @case (tabs.PT_SESSIONS) {
+                    <app-member-pt-sessions [sessions]="fullMemberInfo.ptSessions"></app-member-pt-sessions>
+                  }
+                  @case (tabs.MEMBER_REFERRALS) {
+                    <app-member-referral [referrals]="fullMemberInfo.referral"></app-member-referral>
+                  }
+                  @default {
+                    <app-single-member-memberships (refresh)="getMembershipData()" #membershipRef [selectedId]="membershipId"
+                      [member]="fullMemberInfo.personalData" [memberships]="fullMemberInfo.memberships">
+                    </app-single-member-memberships>
+                  }
+                }
+              </mat-tab>
+            }
+          </mat-tab-group>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

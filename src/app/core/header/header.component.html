@@ -1,0 +1,93 @@
+<div class="header">
+  <div class="mo-flex max-sm:mo-w-full">
+    <button mat-icon-button (click)="toggleSideMenu()" class="nav-btn">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <app-advanced-search *appRole="['members','Search']" class="mo-ms-3 mo-w-full" [config]="searchConfig" [autoPredict]="true">
+    </app-advanced-search>
+  </div>
+
+  <ul class="action-menu">
+    <li *appRole="['members','tsb_Add']" [appRoleAttr]="['membershipsBasic','tsb_Save']"><button mat-button
+      routerLink="/admin/form/member/add" [queryParams]="{fresh:true}">
+      <mat-icon>person_add</mat-icon> <span class="d-none d-md-inline">{{'header.new' | translate}}</span>
+    </button>
+  </li>
+
+  <li *appRole="['potMembers', 'tsb_Add']"><button mat-button (click)="onNewPotentialMember()">
+    <mat-icon>person_outline</mat-icon> <span class="d-none d-md-inline">{{'header.newPotential' |
+  translate}}</span>
+</button>
+</li>
+
+<li *appRole="['sessions','tsb_Save']">
+  <button mat-button (click)="openSessionForm()">
+    <mat-icon>timelapse</mat-icon> <span class="d-none d-md-inline">{{'members.onePass' | translate}}</span>
+  </button>
+</li>
+<li *appRole="['gymAttendance', 'AdvancedAdd']"><button mat-button routerLink="/admin/attendance-monitoring">
+  <mat-icon> list_alt</mat-icon> <span class="d-none d-md-inline">{{'header.memberAttendance' | translate}}</span>
+</button>
+</li>
+</ul>
+
+<div class="mo-ms-auto mo-flex mo-items-center">
+
+
+
+  <!-- <div class="zoom-select d-none d-md-flex">
+  <mat-icon>{{zoomLevel === 'zoom-lg' ? 'zoom_out' : 'zoom_in'}}</mat-icon>
+  <mat-form-field class="lang-select">
+    <mat-select #zoomSelect [(ngModel)]="zoomLevel" name="zoomLevel" (selectionChange)="onChangeZoom()">
+      <mat-option [value]="'zoom-sm'">
+        <span>{{'common.small' | translate}}</span>
+      </mat-option>
+      <mat-option [value]="'zoom-md'">
+        <span>{{'common.medium' | translate}}</span>
+      </mat-option>
+      <mat-option [value]="'zoom-lg'">
+        <span>{{'common.normal' | translate}}</span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div> -->
+
+<!-- <mat-form-field class="lang-select">
+<mat-select #langSelect [(ngModel)]="selectedLang" name="selectedLang" (selectionChange)="onChangeLang()">
+  <mat-option [value]="'en'">
+    <span>{{screen < 1024 ? ('common.en' | translate) : ('common.english' | translate) }}</span>
+  </mat-option>
+  <mat-option [value]="'ar'">
+    <span>{{screen < 1024 ? ('common.ar' | translate) : ('common.arabic' | translate) }}</span>
+  </mat-option>
+</mat-select>
+</mat-form-field> -->
+
+<app-day-night-switcher></app-day-night-switcher>
+
+<button class="d-none d-md-block"
+  [matTooltip]="common.isFullScreen ? ('common.exitFullScreenMode' | translate) :  ('common.fullScreenMode' | translate)"
+  (click)="common.onFullScreen()" mat-icon-button>
+  <mat-icon>{{common.isFullScreen ? 'close_fullscreen' : 'fullscreen'}}</mat-icon>
+</button>
+
+@if (selectedLang == 'en') {
+  <button class="!mo-leading-3" [matTooltip]="'header.switchToArabic' | translate"
+    (click)="onChangeLang('ar')" mat-icon-button>
+    <span class="mo-text-sm mo-font-bold">{{'common.ar' | translate}}</span>
+  </button>
+}
+@if (selectedLang == 'ar') {
+  <button class="!mo-leading-3" [matTooltip]="'header.switchToEnglish' | translate"
+    (click)="onChangeLang('en')" mat-icon-button>
+    <span class="mo-text-sm mo-font-bold">{{'common.en' | translate}}</span>
+  </button>
+}
+
+<app-user-notifications></app-user-notifications>
+
+<app-user-menu></app-user-menu>
+
+</div>
+</div>

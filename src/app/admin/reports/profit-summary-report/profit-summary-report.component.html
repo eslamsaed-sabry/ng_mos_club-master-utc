@@ -1,0 +1,115 @@
+<app-reports-page-header [permissions]="['profitSummaryReport','tsb_Print', 'Export']"
+  [reportName]="'reports.profitSummary' | translate" [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-profit-summary-report-filters [filters]="filters"></app-profit-summary-report-filters>
+  </div>
+
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div class="row">
+        <div class="card p-2 mb-3">
+          <ul class="row">
+            <li class="col-md-6 col-12">
+              <label class="mo-font-bold mo-me-2">{{'reports.table.fromDate' | translate}}</label>
+              <span>{{filters.fromDate| date:'MMM d, y, h:mm a'}}</span>
+            </li>
+            <li class="col-md-6 col-12">
+              <label class="mo-font-bold mo-me-2">{{'reports.table.toDate' | translate}} </label>
+              <span>{{filters.toDate| date:'MMM d, y, h:mm a'}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="reports-tabs-container col-md-6 mb-3">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped ">
+              <thead>
+                <tr>
+                  <th colspan="2">{{ 'members.totalIncome' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports.income; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.type}}</td>
+                    <td>{{el.amount | number:'1.0'}}</td>
+                  </tr>
+                }
+                @if (reports && reports.income.length === 0) {
+                  <tr>
+                    <td colspan="2">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>{{'reports.table.total' | translate}}</td>
+                  <td>{{calcTotal(reports.income, 'amount') | number:'1.0'}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="reports-tabs-container col-md-6 mb-3">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th colspan="2">{{ 'members.totalExpenses' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports.expenses; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.type}}</td>
+                    <td>{{el.amount | number:'1.0'}}</td>
+                  </tr>
+                }
+                @if (reports && reports.income.length === 0) {
+                  <tr>
+                    <td colspan="2">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>{{'reports.table.total' | translate}}</td>
+                  <td>{{calcTotal(reports.expenses, 'amount') | number:'1.0'}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="reports-tabs-container col-md-12">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.owners' | translate }}</th>
+                  <th>{{'reports.table.percentage' | translate }}</th>
+                  <th>{{'reports.table.amount' | translate }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports.owners; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.name}}</td>
+                    <td>{{el.percentage}}</td>
+                    <td>{{el.amount | number:'1.0'}}</td>
+                  </tr>
+                }
+                @if (reports && reports.income.length === 0) {
+                  <tr>
+                    <td colspan="2">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

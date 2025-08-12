@@ -1,0 +1,64 @@
+<div class="page-title">
+  <div>
+    <h4 class="mo-font-bold mo-m-0"> {{'classSchedule.bookingList' | translate}} </h4>
+    <button mat-button color="primary" routerLink="/admin/scheduler">
+      <mat-icon>arrow_back_ios</mat-icon>
+      <small>{{'classSchedule.backToScheduler' | translate}}</small>
+    </button>
+  </div>
+
+  <div class="mo-flex mo-items-center">
+    <div>
+      <mat-form-field class="mo-w-full" (click)="fromDatepicker.open()">
+        <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+        <input (dateChange)="getSchedule()" matInput [matDatepicker]="fromDatepicker" [(ngModel)]="filters.fromDate"
+          name="fromDate" required />
+          <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromDatepicker startView="year"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="mo-px-3">
+        <mat-form-field class="mo-w-full" (click)="toDatepicker.open()">
+          <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+          <input (dateChange)="getSchedule()" matInput [matDatepicker]="toDatepicker" [(ngModel)]="filters.toDate"
+            name="toDate" required />
+            <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #toDatepicker startView="year"></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="mo-pe-3">
+          <mat-form-field class="mo-w-full">
+            <mat-label>{{'classSchedule.className' | translate}}</mat-label>
+            <mat-select (selectionChange)="getSchedule()" [(ngModel)]="filters.classTypeId" name="classTypeId">
+              <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+              @for (c of classTypes; track c) {
+                <mat-option [value]="c.id">{{c.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <button mat-raised-button class="mo-me-3" (click)="publishAll()">
+          <mat-icon>published_with_changes</mat-icon> {{'classSchedule.publishClasses' | translate}}
+        </button>
+
+        <button color="primary" mat-raised-button (click)="addClass()">
+          <mat-icon>add</mat-icon> {{'classSchedule.addClass' | translate}}
+        </button>
+      </div>
+    </div>
+
+
+    @if (selectedClassId) {
+      <button mat-button color="primary" (click)="showAllOtherClasses()">{{'classSchedule.showOthers' | translate}}</button>
+    }
+    <ngx-masonry [options]="{ gutter: 10, fitWidth:true, resize:true, initLayout:true }">
+      @for (item of classesSchedule; track item) {
+        <div ngxMasonryItem class="mason-item" [ngClass]="{'opacity-25': selectedClassId && item.id != selectedClassId}"
+          >
+          <app-class-booking-list-item (onAction)="getSchedule()" [classSchedule]="item"></app-class-booking-list-item>
+        </div>
+      }
+    </ngx-masonry>

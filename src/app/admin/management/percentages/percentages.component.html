@@ -1,0 +1,145 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{this.filters.symbol == 'SalesPerson' ? ('navigation.salesPercentages' | translate)
+  : ('navigation.coachPercentages' | translate) }} </h4>
+  <div class="actions">
+
+    <div class="mo-flex mo-flex-wrap mo-items-baseline mo-pe-3">
+
+
+      <div>
+        <mat-form-field class="mo-w-full" (click)="fullDatepicker.open()">
+          <mat-label>{{'reports.table.month' | translate}}</mat-label>
+          <input matInput (dateChange)="applyFilter()" [matDatepicker]="fullDatepicker" [(ngModel)]="filters.fullDate"
+            name="fullDate" required />
+            <mat-datepicker-toggle matSuffix [for]="fullDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #fullDatepicker startView="year"></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="mo-px-2">
+          <mat-form-field class="mo-w-full">
+            <mat-label>{{'staff.staffMember' | translate}}</mat-label>
+            <mat-select (selectionChange)="applyFilter()" [(ngModel)]="filters.staffMemberId" name="staffMemberId">
+              <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+              @for (c of staffMembers; track c) {
+                <mat-option [value]="c.id">{{c.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      @if (filters.symbol == 'SalesPerson') {
+        <div>
+          <button color="primary" *appRole="['percentages','tsb_Add']" (click)="addPercentage()" mat-raised-button>
+            <mat-icon>add</mat-icon> {{'members.add' | translate}}
+          </button>
+        </div>
+      }
+
+      @if (filters.symbol == 'Coach') {
+        <div>
+          <button color="primary" *appRole="['trainersPercentages','tsb_Add']" (click)="addPercentage()" mat-raised-button>
+            <mat-icon>add</mat-icon> {{'members.add' | translate}}
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+
+  <div>
+    <div class="table-responsive card p-3">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="staffMemberName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'staff.staffMember' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.staffMemberName}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="percentageMonth">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.month' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.percentageMonth }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="percentageYear">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.year' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.percentageYear }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="concatenatedPercentages">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'navigation.percentages' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="white-space mo-py-2">{{row.concatenatedPercentages}}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="mo-text-center">
+            <mat-icon>settings</mat-icon>
+          </th>
+          <td mat-cell *matCellDef="let row" class="mo-text-center">
+            <button mat-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="actionMenu">
+              <mat-icon>more_horiz</mat-icon>
+            </button>
+            <mat-menu #actionMenu="matMenu" class="action-menu">
+
+              @if (filters.symbol == 'SalesPerson') {
+                <div>
+                  <button (click)="editPercentage(row)" *appRole="['percentages','tsb_Save']" mat-menu-item>
+                    <mat-icon>edit_note</mat-icon>
+                    {{'members.edit' | translate}}
+                  </button>
+                </div>
+              }
+
+              @if (filters.symbol == 'Coach') {
+                <div>
+                  <button (click)="editPercentage(row)" *appRole="['trainersRanges','tsb_Save']" mat-menu-item>
+                    <mat-icon>edit_note</mat-icon>
+                    {{'members.edit' | translate}}
+                  </button>
+                </div>
+              }
+
+              @if (filters.symbol == 'SalesPerson') {
+                <div>
+                  @if (!row.isDeleted) {
+                    <button [appRoleAttr]="['percentages','tsb_Remove']"
+                      (click)="onDeletePercentage(row)" mat-menu-item class="mo-text-error-500">
+                      <mat-icon>delete_sweep</mat-icon>
+                      {{'members.delete' | translate}}
+                    </button>
+                  }
+                </div>
+              }
+
+              @if (filters.symbol == 'Coach') {
+                <div>
+                  @if (!row.isDeleted) {
+                    <button [appRoleAttr]="['trainersRanges','tsb_Remove']"
+                      (click)="onDeletePercentage(row)" mat-menu-item class="mo-text-error-500">
+                      <mat-icon>delete_sweep</mat-icon>
+                      {{'members.delete' | translate}}
+                    </button>
+                  }
+                </div>
+              }
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+        </tr>
+      </table>
+
+      <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+        [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+      </mat-paginator>
+
+    </div>
+  </div>

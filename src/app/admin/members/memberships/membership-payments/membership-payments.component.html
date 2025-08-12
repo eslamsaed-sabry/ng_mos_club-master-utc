@@ -1,0 +1,78 @@
+<div class="mo-my-3 page-title print:!mo-hidden">
+    <h4 class="mo-font-bold mo-m-0"> {{'members.payments' | translate}} </h4>
+    <button (click)="print()" type="button" color="primary" mat-flat-button>{{'reports.print' | translate}}</button>
+</div>
+
+<div class="mo-hidden print:mo-block mo-text-center">
+    <div class="mo-flex mo-justify-between">
+        <small class="mo-text-muted mo-text-xs">
+            {{'receiptPrint.printedBy' | translate}} {{membership.userName}}
+        </small>
+        <small class="mo-text-muted mo-text-xs">
+            {{'receiptPrint.createdAt' | translate}} {{today | date:'MMM d, y, h:mm a'}}
+        </small>
+    </div>
+    <img [src]="logo" width="100" alt="">
+
+    <div class="mo-my-3 p-3 border rounded mo-flex mo-justify-between">
+        <div>
+            <label for="name">{{'members.memberName' | translate}}</label>
+            <div class="mo-font-bold">{{membership.memberEnglishName}}</div>
+        </div>
+        <div>
+            <label for="phone">{{'reports.table.memberPhone' | translate}}</label>
+            <div class="mo-font-bold">{{membership.phoneNo}}</div>
+        </div>
+        <div>
+            <label for="contractNo">{{'members.contractNo' | translate}}</label>
+            <div class="mo-font-bold">{{membership.contractNo}}</div>
+        </div>
+    </div>
+
+    <h5 class="mo-font-bold mo-text-center">{{'receiptPrint.paymentRed' | translate}}</h5>
+</div>
+
+
+<div class="card">
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="paymentDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.paymentDate' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{ row.paymentDate | date:'MMM d, y, h:mm a' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="cashAmount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'receiptPrint.cashAmount' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{ row.cashAmount }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="visaAmount">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'receiptPrint.visaAmount' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{ row.visaAmount }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="purpose">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'receiptPrint.purpose' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{ row.purpose }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'receiptPrint.description' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{ row.description }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+            </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="perPage" [pageIndex]="page"
+            [length]="totalElements">
+        </mat-paginator>
+    </div>
+
+</div>

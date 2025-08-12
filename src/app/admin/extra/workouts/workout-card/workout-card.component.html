@@ -1,0 +1,32 @@
+<div class="card p-3 mo-relative">
+    <div class="mo-flex mo-justify-between mo-items-center">
+        <div>
+            <h5 class="mo-font-bold d-inline mo-pe-2">{{workout.workoutTitle}}</h5> <small>{{workout.createdByName}}</small>
+        </div>
+        <ul class="mo-flex mo-my-0">
+            <li>
+                <button (click)="onAction.emit({actionType:'edit', workout:workout})" mat-icon-button>
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </li>
+            <li>
+                <button (click)="onAction.emit({actionType:'delete', workout:workout})" class="mo-text-error-500"
+                    mat-icon-button>
+                    <mat-icon>delete_outline</mat-icon>
+                </button>
+            </li>
+        </ul>
+    </div>
+    <h6 class="mo-font-bold">{{workout.trainerName}}</h6>
+    <small>{{workout.creationDate | date:'MMM d, y, h:mm a'}}</small>
+    <ul class="mo-flex mo-justify-end mo-mt-3 mo-mb-0">
+        <li class="mo-mx-2">
+            <button (click)="onAction.emit({actionType:'viewExercises', workout:workout})" mat-raised-button>
+                {{'navigation.exercises' | translate}}
+            </button>
+        </li>
+        <li><button (click)="onAction.emit({actionType:'viewMembers', workout:workout})" mat-raised-button>
+                {{'navigation.members' | translate}}
+            </button></li>
+    </ul>
+</div>

@@ -1,0 +1,19 @@
+<h5 mat-dialog-title class="mo-font-bold mo-capitalize">{{'members.membershipBranches' | translate}}</h5>
+
+<form (ngSubmit)="submit()">
+  @for (branch of allowedBranches; track branch) {
+    <div>
+      <mat-checkbox [(ngModel)]="branch.isAllowed" [name]="'status-'+branch.id">
+        {{branch.name | translate}}
+      </mat-checkbox>
+    </div>
+  }
+
+  <div mat-dialog-actions class="mo-justify-end">
+    <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button color="primary" type="submit">
+      {{'members.save' | translate}}
+    </button>
+  </div>
+
+</form>

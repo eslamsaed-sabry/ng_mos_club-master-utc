@@ -1,0 +1,322 @@
+<h5 mat-dialog-title>
+  {{data.isInstructor ? ('staff.insData' | translate) :data.isTrainer ? ('navigation.trainers' |
+  translate):('navigation.staffData' | translate)}}
+</h5>
+
+<form (ngSubmit)="submit(roleForm)" #roleForm="ngForm">
+
+  <div mat-dialog-content>
+    <div class="row">
+      <div class="col-md-4 col-12">
+        <div>
+          <div class="mo-text-center">
+            @if (!webcamImage) {
+              <img class="mo-w-full mo-rounded-full"
+                [src]="staffMember.imagePath ? (proxyUrl + '/Images/' +staffMember.photo) :  'assets/images/avatar.png'" />
+            }
+
+            @if (webcamImage) {
+              <img class="mo-rounded-full mo-w-full" [src]="webcamImage.imageAsDataUrl" />
+            }
+
+            <div>
+              <img [hidden]="!barcode" [src]="barcode" alt="barcode" class="w-75 mo-mx-auto mo-my-2">
+            </div>
+          </div>
+          <input #uploadField type="file" hidden (change)="upload($event)" />
+          <div class="mo-text-center mo-my-2">
+            <button class="mo-px-5" type="button" (click)="uploadField.click()" mat-raised-button color="primary">
+              <mat-icon>file_upload</mat-icon> {{'members.upload' | translate}}
+            </button>
+          </div>
+        </div>
+        <app-camera [config]="cameraConfig" (getPicture)="handleImage($event)"></app-camera>
+
+        @if (!data.isInstructor && !data.isTrainer) {
+          <div
+            class="row mo-mb-2 mo-flex mo-items-center mo-justify-between">
+            <mat-checkbox class="col-12" [(ngModel)]="staffMember.isTrainer" name="isTrainer">
+              {{'staff.isTrainer' | translate}}
+            </mat-checkbox>
+            <mat-checkbox class="col-12" [(ngModel)]="staffMember.isFitnessManager" name="isFitnessManager">
+              {{'staff.isFitnessManager' | translate}}
+            </mat-checkbox>
+            <mat-checkbox class="col-12" [(ngModel)]="staffMember.isSalesPerson" name="isSalesPerson">
+              {{'staff.isSalesPerson' | translate}}
+            </mat-checkbox>
+            <mat-checkbox class="col-12" [(ngModel)]="staffMember.isInstructor" name="isInstructor">
+              {{'staff.isInstructor' | translate}}
+            </mat-checkbox>
+            <mat-checkbox class="col-12" [(ngModel)]="staffMember.isDoctor" name="isDoctor">
+              {{'staff.isDoctor' | translate}}
+            </mat-checkbox>
+          </div>
+        }
+      </div>
+      <div class="col-md-8 col-12">
+
+        <div>
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'staff.code' | translate}}</mat-label>
+            <input matInput (blur)="validateBarcode()" [(ngModel)]="staffMember.code" name="code" />
+          </mat-form-field>
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.englishName' | translate}}</mat-label>
+            <input matInput [(ngModel)]="staffMember.englishName" (blur)="copyName()" name="nameEng" required />
+          </mat-form-field>
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.arabicName' | translate}}</mat-label>
+            <input matInput [(ngModel)]="staffMember.arabicName" name="nameAr" required />
+          </mat-form-field>
+
+          <div class="row">
+            <div class="col-md-4 col-12">
+              <mat-form-field class="mo-w-full" appearance="outline">
+                <mat-label>{{'members.countryCode'|translate}}</mat-label>
+                <mat-select
+                  (selectionChange)="commonService.validatePhoneNumber(staffMember.phoneNo,staffMember.phoneFormatId,countryCodes)"
+                  [(ngModel)]="staffMember.phoneFormatId" name="phoneFormatId" required>
+                  @for (c of countryCodes; track c) {
+                    <mat-option [value]="c.id">{{c.displayName}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-8 col-12">
+              <mat-form-field class="mo-w-full" appearance="outline">
+                <mat-label>{{'members.phone' | translate}}</mat-label>
+                <input
+                  (blur)="commonService.validatePhoneNumber(staffMember.phoneNo,staffMember.phoneFormatId,countryCodes)"
+                  matInput [(ngModel)]="staffMember.phoneNo" name="phone" required />
+                </mat-form-field>
+              </div>
+            </div>
+
+            @if (!data.isInstructor && !data.isTrainer) {
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'staff.jobTitle' | translate}}</mat-label>
+                <mat-select [(ngModel)]="staffMember.jobTitleId" name="jobId" required>
+                  @for (j of jobTitles; track j) {
+                    <mat-option [value]="j.id">{{j.nameENG + ' (' + j.nameAR + ')'}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+
+            @if (!data.isInstructor) {
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'staff.shift' | translate}}</mat-label>
+                <mat-select [(ngModel)]="staffMember.shiftId" name="shiftId" required>
+                  @for (s of shifts; track s) {
+                    <mat-option [value]="s.id">{{s.nameEng + ' (' + s.nameAR + ')'}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.team' | translate}}</mat-label>
+              <mat-select [(ngModel)]="staffMember.teamId" name="teamId">
+                <mat-option [value]="null"> {{'reports.table.none' | translate}} </mat-option>
+                @for (el of teams; track el) {
+                  <mat-option [value]="el.id">
+                    {{el.name}}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.mainBranch' | translate}}</mat-label>
+              <mat-select [(ngModel)]="staffMember.mainBranchId" name="mainBranchId" required>
+                @for (el of branches; track el) {
+                  <mat-option [value]="el.id">
+                    {{el.name}}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.nationalId' | translate}}</mat-label>
+              <input matInput [(ngModel)]="staffMember.nationalId" (blur)="validateNationalID()" name="nationalId" />
+            </mat-form-field>
+
+            @if (!data.isInstructor) {
+              <mat-form-field class="mo-w-full" appearance="outline">
+                <mat-label>{{'staff.salary' | translate}}</mat-label>
+                <input matInput [(ngModel)]="staffMember.salary" name="salary" />
+              </mat-form-field>
+            }
+
+            @if (data.isInstructor || staffMember.isInstructor) {
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'members.branches' | translate}}</mat-label>
+                <mat-select [(ngModel)]="staffMember.branches" name="branches" multiple
+                  [required]="branches.length>0 && staffMember.isInstructor">
+                  <mat-option [value]="0" (click)="onSelect('instructor')">{{'common.selectAll' | translate}}</mat-option>
+                  @for (el of branches; track el) {
+                    <mat-option [value]="el.id">
+                      {{el.name}}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+
+            @if (data.isInstructor || staffMember.isInstructor) {
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'classSchedule.classProgram' | translate}}</mat-label>
+                <mat-select [(ngModel)]="staffMember.programs" name="programs" multiple>
+                  @for ( c of classProgram$ | async; track $index) {
+                    <mat-option [value]="c.id">{{c.name}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+
+            <!-- <mat-form-field appearance="outline">
+            <mat-label>{{'staff.classes' | translate}}</mat-label>
+            <mat-select [(ngModel)]="staffMember.classes" name="classes" multiple>
+              <mat-option *ngFor="let c of classTypes" [value]="c.id">{{c.name}}</mat-option>
+            </mat-select>
+          </mat-form-field> -->
+
+          @if (data.isInstructor) {
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'staff.classPrice' | translate}}</mat-label>
+              <input matInput [(ngModel)]="staffMember.classPrice" name="classPrice" />
+            </mat-form-field>
+          }
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'staff.address' | translate}}</mat-label>
+            <input matInput [(ngModel)]="staffMember.staffAddress" name="address" />
+          </mat-form-field>
+
+          @if (!data.isInstructor) {
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'staff.manager' | translate}}</mat-label>
+              <mat-select [(ngModel)]="staffMember.managerId" name="managerId">
+                @for (m of managers; track m) {
+                  <mat-option [value]="m.id">{{m.name}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
+
+          <mat-form-field class="mo-w-full" appearance="outline" (click)="DOBpicker.open()">
+            <mat-label>{{'staff.birthDate' | translate}}</mat-label>
+            <input matInput [matDatepicker]="DOBpicker" [(ngModel)]="staffMember.birthDate" name="birthDate" />
+            <mat-datepicker-toggle matSuffix [for]="DOBpicker"></mat-datepicker-toggle>
+            <mat-datepicker #DOBpicker startView="year"></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'staff.email' | translate}}</mat-label>
+            <input matInput type="email" [(ngModel)]="staffMember.email" name="email" />
+          </mat-form-field>
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'staff.instgramUrl' | translate}}</mat-label>
+            <input matInput [(ngModel)]="staffMember.instgramUrl" name="instgramUrl" />
+          </mat-form-field>
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'staff.emergencyContact' | translate}}</mat-label>
+            <input matInput [(ngModel)]="staffMember.emergencyContactName" name="emergencyContactName" />
+          </mat-form-field>
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'staff.emergencyPhone' | translate}}</mat-label>
+            <input matInput [(ngModel)]="staffMember.emergencyContactPhone" name="emergencyContactPhone" />
+          </mat-form-field>
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'staff.desc' | translate}}</mat-label>
+            <input matInput [(ngModel)]="staffMember.description" name="description" />
+          </mat-form-field>
+
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'management.viewOrder' | translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="staffMember.viewOrder" name="viewOrder">
+          </mat-form-field>
+
+          <mat-checkbox class="mo-w-full" [(ngModel)]="staffMember.isOutsider" name="isOutsider">
+            {{'staff.isOutsider' | translate}}
+          </mat-checkbox>
+
+          @if (!data.isInstructor && !data.isTrainer) {
+            <mat-checkbox [(ngModel)]="staffMember.isNotifyForPtRotation"
+              name="isNotifyForPtRotation">
+              {{'staff.notifyForPtRotation' | translate}}
+            </mat-checkbox>
+          }
+
+          @if (!data.isInstructor) {
+            <div class="mo-my-2">
+              <mat-checkbox [(ngModel)]="hasLoginAccess" name="canLogin">{{'staff.giveLoginAccess' | translate}}
+              </mat-checkbox>
+            </div>
+          }
+
+          @if (hasLoginAccess) {
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.username' | translate}}</mat-label>
+              <input matInput [(ngModel)]="staffMember.userName" name="username" [disabled]="!!staffMember.userId"
+                required />
+              </mat-form-field>
+            }
+
+            @if (hasLoginAccess) {
+              <mat-form-field class="mo-w-full" appearance="outline"
+                [ngClass]="{'d-none':staffMember.userId}">
+                <mat-label>{{'administration.password' | translate}}</mat-label>
+                <input type="password" matInput [(ngModel)]="staffMember.password" [disabled]="!!staffMember.userId"
+                  name="password" required />
+                </mat-form-field>
+              }
+
+              @if (hasLoginAccess && !data.isTrainer) {
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'administration.role' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="staffMember.roleId" name="roleId" [required]="!data.isTrainer"
+                    [disabled]="!!staffMember.userId">
+                    @for (r of roles; track r) {
+                      <mat-option [value]="r.id">{{r.nameEng + ' (' + r.nameAr + ')'}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              }
+
+              @if (hasLoginAccess) {
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.branches' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="branchesIds" name="branchesIds" multiple [required]="branches.length>0"
+                    [disabled]="!!staffMember.userId">
+                    <mat-option [value]="0" (click)="onSelect('login')">{{'common.selectAll' | translate}}</mat-option>
+                    @for (el of branches; track el) {
+                      <mat-option [value]="el.id">
+                        {{el.name}}
+                      </mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              }
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div mat-dialog-actions class="mo-justify-end">
+        <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+        <button mat-raised-button color="primary" type="submit">
+          {{'members.save' | translate}}
+        </button>
+      </div>
+
+    </form>

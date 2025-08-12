@@ -1,0 +1,13 @@
+<div class="mo-w-fit mo-flex mo-h-[40px]">
+  <input type="radio" class="mo-hidden" name="btnradio" (click)="onClick('table')" id="btnradio1"
+    autocomplete="off" [checked]="view === 'table'">
+  <label class="mo-cursor-pointer mo-px-3 mo-py-2 mo-bg-white mo-shadow-md mo-rounded-l-md" [ngClass]="{'!mo-bg-primary-500 mo-text-white': view === 'table'}" for="btnradio1">
+    <mat-icon class="!mo-text-[19px] mo-leading-6">view_comfortable</mat-icon>
+  </label>
+
+  <input type="radio" class="mo-hidden" name="btnradio" (click)="onClick('card')" id="btnradio2" autocomplete="off"
+    [checked]="view === 'card'">
+  <label class="mo-cursor-pointer mo-px-3 mo-py-2 mo-bg-white mo-shadow-md mo-rounded-r-md" [ngClass]="{'!mo-bg-primary-500 mo-text-white': view === 'card'}" for="btnradio2">
+    <mat-icon class="!mo-text-[19px] mo-leading-6">featured_play_list</mat-icon>
+  </label>
+</div>

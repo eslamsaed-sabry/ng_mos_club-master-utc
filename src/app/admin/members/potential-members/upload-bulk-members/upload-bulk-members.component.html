@@ -1,0 +1,64 @@
+<h3 mat-dialog-title>{{'members.uploadBulk' | translate}}</h3>
+
+<form #uploadForm="ngForm" (ngSubmit)="submit(uploadForm)">
+  <mat-dialog-content>
+    <p></p>
+    <p>
+      {{'members.bulkUploadNotice' | translate}}
+
+      <a [href]="proxyUrl+'/Attachments/Potentials.xlsx'" target="_blank" mat-button color="primary">
+        <div class="mo-flex mo-items-center">
+          <mat-icon class="!mo-text-xs">file_download</mat-icon>
+          <span>{{'members.downloadTemplate' | translate}}</span>
+        </div>
+      </a>
+    </p>
+    @if (lookup$ | async; as _helper) {
+      <div class="mo-pt-2">
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'members.countryCode'|translate}}</mat-label>
+          <mat-select [(ngModel)]="bulkPotentialForm.phoneFormatId" name="phoneFormatId" required>
+            @for (c of _helper.countryCodes.data; track c) {
+              <mat-option
+              [value]="c.id">{{c.displayName}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'members.source' | translate}}</mat-label>
+          <mat-select [(ngModel)]="bulkPotentialForm.sourceOfKnowledgeId" name="sourceOfKnowledge" required>
+            @for (el of _helper.sources; track el) {
+              <mat-option [value]="el.id">{{el.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+          <mat-select [(ngModel)]="bulkPotentialForm.salesPersonId" name="salesPerson" required>
+            @for (el of _helper.sales; track el) {
+              <mat-option [value]="el.id">{{el.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'members.gender' | translate}}</mat-label>
+          <mat-select [(ngModel)]="bulkPotentialForm.gender" name="gender" required>
+            <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+            <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.uploadFile' | translate}}</mat-label>
+          <input matInput (click)="fileUpload.click()" [(ngModel)]="bulkPotentialForm.fileName" name="fileName"
+            type="text" required>
+            <input type="file" #fileUpload hidden (change)="onFileUpload($event)" name="file">
+            <mat-hint>{{'members.allowedFormats' | translate}}</mat-hint>
+          </mat-form-field>
+        </div>
+      }
+    </mat-dialog-content>
+
+    <div mat-dialog-actions>
+      <button mat-flat-button color="primary">{{'members.save' | translate}}</button>
+    </div>
+  </form>

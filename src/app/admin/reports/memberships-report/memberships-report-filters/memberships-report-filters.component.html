@@ -1,0 +1,306 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  @if (dataType === 'all' || dataType === 'privateMemberships') {
+    <form>
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.contractNo' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.contractNo" name="contractNo" type="text"
+          placeholder="{{'members.contractNo' | translate}}" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.accessCode' | translate}}</mat-label>
+          <input matInput [(ngModel)]="filters.accessCode" name="accessCode" type="text"
+            placeholder="{{'members.contractNo' | translate}}" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'members.memberName' | translate}}</mat-label>
+            <input matInput [(ngModel)]="filters.memberName" name="memberName" type="text"
+              placeholder="{{'members.memberName' | translate}}" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'reports.table.memberPhone' | translate}}</mat-label>
+              <input matInput [(ngModel)]="filters.phoneNo" name="phoneNo" type="text"
+                placeholder="{{'reports.table.memberPhone' | translate}}" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'members.gender' | translate}}</mat-label>
+                <mat-select [(ngModel)]="filters.gender" name="gender">
+                  <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                  <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+                  <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="mo-w-full" appearance="outline">
+                <mat-label>{{'members.sourceOfK' | translate}}</mat-label>
+                <mat-select [(ngModel)]="filters.sourceOfKnowledgeId" name="sourceOfKnowledge">
+                  <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                  @for (el of sources; track el) {
+                    <mat-option [value]="el.id">{{el.name}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              @if (dataType === 'all') {
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.packageCategory' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.packageCategory" name="packageCategory" (selectionChange)="changePackageType()">
+                    <mat-option [value]="0">{{'members.all' | translate}}</mat-option>
+                    <mat-option [value]="1">{{'members.gym' | translate}}</mat-option>
+                    <mat-option [value]="2">{{'members.private' | translate}}</mat-option>
+                    <mat-option [value]="3">{{'members.other' | translate}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              }
+              @if (dataType === 'all') {
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.packageType' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.packageType" name="packageType" (selectionChange)="changePackageType()">
+                    <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                    @for (pack of packageType; track pack) {
+                      <mat-option [value]="pack.id">{{pack.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              }
+              <mat-form-field appearance="outline" class="mo-w-full">
+                <mat-label>{{'members.package' | translate}}</mat-label>
+                <mat-select [(ngModel)]="filters.packageId" name="packageId">
+                  <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                  @for (pack of packages; track pack) {
+                    <mat-option [value]="pack.id">{{pack.nameEng}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+              <div class="mo-flex mo-items-center">
+                <mat-checkbox [(ngModel)]="filters!!.paymentDateFrom" name="paymentDateFrom"
+                (change)="onChange('paymentDateFrom', $event)" class="mo-me-1"></mat-checkbox>
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'reports.table.paymentDateFrom' | translate}}</mat-label>
+                  <input matInput type="datetime-local" [(ngModel)]="filters.paymentDateFrom" name="paymentDateFrom">
+                </mat-form-field>
+              </div>
+              <div class="mo-flex mo-items-center">
+                <mat-checkbox [(ngModel)]="filters!!.paymentDateTo" name="paymentDateTo"
+                (change)="onChange('paymentDateTo', $event)" class="mo-me-1"></mat-checkbox>
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'reports.table.paymentDateTo' | translate}}</mat-label>
+                  <input matInput type="datetime-local" [(ngModel)]="filters.paymentDateTo" name="paymentDateTo">
+                </mat-form-field>
+              </div>
+              <div class="mo-flex mo-items-center">
+                <mat-checkbox [(ngModel)]="filters!!.startFromDate" name="startFromDate"
+                (change)="onChange('startFromDate', $event)" class="mo-me-1"></mat-checkbox>
+                <mat-form-field appearance="outline" class="mo-w-full" (click)="startFromDate.open()">
+                  <mat-label>{{'reports.table.startDateFrom' | translate}}</mat-label>
+                  <input matInput [matDatepicker]="startFromDate" [(ngModel)]="filters.startFromDate" name="startFromDate" />
+                  <mat-datepicker-toggle matSuffix [for]="startFromDate"></mat-datepicker-toggle>
+                  <mat-datepicker #startFromDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="mo-flex mo-items-center">
+                <mat-checkbox [(ngModel)]="filters!!.startToDate" name="startToDate" (change)="onChange('startToDate', $event)"
+                class="mo-me-1"></mat-checkbox>
+                <mat-form-field appearance="outline" class="mo-w-full mo-my-2" (click)="startToDate.open()">
+                  <mat-label>{{'reports.table.startDateTo' | translate}}</mat-label>
+                  <input matInput [matDatepicker]="startToDate" [(ngModel)]="filters.startToDate" name="startToDate" />
+                  <mat-datepicker-toggle matSuffix [for]="startToDate"></mat-datepicker-toggle>
+                  <mat-datepicker #startToDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="mo-flex mo-items-center">
+                <mat-checkbox [(ngModel)]="filters!!.endFromDate" name="endFromDate" (change)="onChange('endFromDate', $event)"
+                class="mo-me-1"></mat-checkbox>
+                <mat-form-field appearance="outline" class="mo-w-full" (click)="endFromDate.open()">
+                  <mat-label>{{'reports.table.expDateFrom' | translate}}</mat-label>
+                  <input matInput [matDatepicker]="endFromDate" [(ngModel)]="filters.endFromDate" name="endFromDate" />
+                  <mat-datepicker-toggle matSuffix [for]="endFromDate"></mat-datepicker-toggle>
+                  <mat-datepicker #endFromDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="mo-flex mo-items-center">
+                <mat-checkbox [(ngModel)]="filters!!.endToDate" name="endToDate" (change)="onChange('endToDate', $event)"
+                class="mo-me-1"></mat-checkbox>
+                <mat-form-field appearance="outline" class="mo-w-full mo-my-2" (click)="endToDate.open()">
+                  <mat-label>{{'reports.table.expDateTo' | translate}}</mat-label>
+                  <input matInput [matDatepicker]="endToDate" [(ngModel)]="filters.endToDate" name="endToDate" />
+                  <mat-datepicker-toggle matSuffix [for]="endToDate"></mat-datepicker-toggle>
+                  <mat-datepicker #endToDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="mo-flex mo-items-center">
+                <mat-checkbox [(ngModel)]="filters!!.upgradeDeadlineFromDate" name="upgradeDeadlineFromDate"
+                (change)="onChange('upgradeDeadlineFromDate', $event)" class="mo-me-1"></mat-checkbox>
+                <mat-form-field appearance="outline" class="mo-w-full" (click)="upgradeDeadlineFromDate.open()">
+                  <mat-label>{{'reports.table.upgradeDeadlineFrom' | translate}}</mat-label>
+                  <input matInput [matDatepicker]="upgradeDeadlineFromDate" [(ngModel)]="filters.upgradeDeadlineFromDate"
+                    name="upgradeDeadlineFromDate" />
+                    <mat-datepicker-toggle matSuffix [for]="upgradeDeadlineFromDate"></mat-datepicker-toggle>
+                    <mat-datepicker #upgradeDeadlineFromDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div class="mo-flex mo-items-center">
+                  <mat-checkbox [(ngModel)]="filters!!.upgradeDeadlineToDate" name="upgradeDeadlineToDate"
+                  (change)="onChange('upgradeDeadlineToDate', $event)" class="mo-me-1"></mat-checkbox>
+                  <mat-form-field appearance="outline" class="mo-w-full mo-my-2" (click)="upgradeDeadlineToDate.open()">
+                    <mat-label>{{'reports.table.upgradeDeadlineTo' | translate}}</mat-label>
+                    <input matInput [matDatepicker]="upgradeDeadlineToDate" [(ngModel)]="filters.upgradeDeadlineToDate"
+                      name="upgradeDeadlineToDate" />
+                      <mat-datepicker-toggle matSuffix [for]="upgradeDeadlineToDate"></mat-datepicker-toggle>
+                      <mat-datepicker #upgradeDeadlineToDate></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <mat-checkbox [(ngModel)]="isActive" (change)="getSales()" name="isActive">{{'staff.activeSalesOnly' |
+                    translate}}
+                  </mat-checkbox>
+                  <mat-form-field appearance="outline" class="mo-w-full">
+                    <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+                    <mat-select [(ngModel)]="filters.salesPersonId" name="salesPersonId">
+                      <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                      @for (el of sales; track el) {
+                        <mat-option [value]="el.id">{{el.name}}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="mo-w-full">
+                    <mat-label>{{'reports.table.coach' | translate}}</mat-label>
+                    <mat-select [(ngModel)]="filters.coachId" name="coachId">
+                      <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                      @for (el of coaches; track el) {
+                        <mat-option [value]="el.id">{{el.name}}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="mo-w-full">
+                    <mat-label>{{'reports.table.status' | translate}}</mat-label>
+                    <mat-select [(ngModel)]="filters.status" name="status">
+                      <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                      @for (s of statuses; track s) {
+                        <mat-option [value]="s.id">{{s.name}}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </form>
+              }
+
+              @if (dataType === 'notRenewed' || dataType === 'newRenewed') {
+                <form>
+                  <mat-form-field appearance="outline" class="mo-w-full">
+                    <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+                    <input matInput type="datetime-local" [(ngModel)]="filters.fromDate" name="fromDate">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="mo-w-full">
+                    <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+                    <input matInput type="datetime-local" [(ngModel)]="filters.toDate" name="toDate">
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="mo-w-full">
+                    <mat-label>{{'members.gender' | translate}}</mat-label>
+                    <mat-select [(ngModel)]="filters.gender" name="gender">
+                      <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                      <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+                      <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  @if (dataType != 'notRenewed') {
+                    <mat-form-field appearance="outline" class="mo-w-full">
+                      <mat-label>{{'members.package' | translate}}</mat-label>
+                      <mat-select [(ngModel)]="filters.packageId" name="packageId">
+                        <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                        @for (pack of packages; track pack) {
+                          <mat-option [value]="pack.id">{{pack.nameEng}}</mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  }
+                  @if (dataType === 'notRenewed') {
+                    <mat-form-field appearance="outline" class="mo-w-full">
+                      <mat-label>{{'members.package' | translate}}</mat-label>
+                      <mat-select [(ngModel)]="filters.packagesIds" name="packagesIds" multiple>
+                        <mat-option [value]="0" (click)="onSelect()">{{'common.selectAll' | translate}}</mat-option>
+                        @for (pack of packages; track pack) {
+                          <mat-option [value]="pack.id">
+                            {{pack.nameEng}}
+                          </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                  }
+                  <mat-checkbox [(ngModel)]="isActive" (change)="getSales()" name="isActive">{{'staff.activeSalesOnly' |
+                    translate}}
+                  </mat-checkbox>
+                  @if (dataType === 'notRenewed') {
+                    <div>
+                      <mat-form-field appearance="outline" class="mo-w-full" *appRole="['notRenewMemReport','ShowAllData']">
+                        <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+                        <mat-select [(ngModel)]="filters.salesPersonId" name="salesPersonId">
+                          <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                          @for (el of sales; track el) {
+                            <mat-option [value]="el.id">{{el.name}}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  }
+                  @if (dataType === 'newRenewed') {
+                    <div>
+                      <mat-form-field appearance="outline" class="mo-w-full" *appRole="['newRenewMemReport','ShowAllData']">
+                        <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+                        <mat-select [(ngModel)]="filters.salesPersonId" name="salesPersonId">
+                          <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                          @for (el of sales; track el) {
+                            <mat-option [value]="el.id">{{el.name}}</mat-option>
+                          }
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  }
+                </form>
+              }
+
+              @if (dataType === 'log') {
+                <form>
+                  <div class="mo-flex mo-items-center">
+                    <mat-checkbox [(ngModel)]="filters!!.fromDate" name="fromDate" (change)="onChange('fromDate', $event)"
+                    class="mo-me-1"></mat-checkbox>
+                    <mat-form-field appearance="outline" class="mo-w-full">
+                      <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+                      <input matInput type="datetime-local" [(ngModel)]="filters.fromDate" name="fromDate">
+                    </mat-form-field>
+                  </div>
+                  <div class="mo-flex mo-items-center">
+                    <mat-checkbox [(ngModel)]="filters!!.toDate" name="toDate" (change)="onChange('toDate', $event)"
+                    class="mo-me-1"></mat-checkbox>
+                    <mat-form-field appearance="outline" class="mo-w-full">
+                      <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+                      <input matInput type="datetime-local" [(ngModel)]="filters.toDate" name="toDate">
+                    </mat-form-field>
+                  </div>
+                  <mat-form-field appearance="outline" class="mo-w-full mo-mb-2">
+                    <mat-label>{{'reports.table.logData' | translate}}</mat-label>
+                    <mat-select [(ngModel)]="filters.logTypeId" name="logTypeId">
+                      <mat-option [value]="null">None</mat-option>
+                      @for (log of logTypes; track log) {
+                        <mat-option [value]="log.value">{{log.name}}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="outline" class="mo-w-full mo-mb-2">
+                    <mat-label>{{'reports.table.selectUser' | translate}}</mat-label>
+                    <mat-select [(ngModel)]="filters.userId" name="userId">
+                      <mat-option [value]="null">None</mat-option>
+                      @for (user of users; track user) {
+                        <mat-option [value]="user.id">{{user.userName}}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field class="mo-w-full" appearance="outline">
+                    <mat-label>{{'reports.table.membershipSerial' | translate}}</mat-label>
+                    <input matInput [(ngModel)]="filters.membershipId" name="membershipId" />
+                  </mat-form-field>
+                  <mat-form-field class="mo-w-full" appearance="outline">
+                    <mat-label>{{'reports.table.incTxt' | translate}}</mat-label>
+                    <input matInput [(ngModel)]="filters.includedText" name="includedText" />
+                  </mat-form-field>
+                </form>
+              }
+
+            </div>

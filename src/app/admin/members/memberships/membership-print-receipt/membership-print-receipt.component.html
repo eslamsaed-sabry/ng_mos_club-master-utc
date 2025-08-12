@@ -1,0 +1,222 @@
+@if (receiptData$ | async; as DATA) {
+  <div class="print-wrapper" [ngStyle]="{'direction': direction}">
+    <div mat-dialog-title>
+      <div class="mo-flex mo-justify-between">
+        <small class="mo-text-muted mo-text-xs">
+          {{'receiptPrint.printedBy' | translate}} {{user.userName}}
+        </small>
+        <small class="mo-text-muted mo-text-xs">
+          {{'receiptPrint.createdAt' | translate}} {{today | date:'MMM d, y, h:mm a'}}
+        </small>
+      </div>
+      <div class="img-logo" [ngStyle]="{'background-image': 'url('+ logo +')'}"></div>
+      <h5 class="mo-font-bold mo-text-center">{{'receiptPrint.paymentRed' | translate}}</h5>
+      <!-- <h6 class="mo-font-bold mo-text-center mo-text-info-500">{{'receiptPrint.membership' | translate}}
+      <span *ngIf="receiptFormat === 'LARGE'">#{{DATA.membershipId}}</span>
+    </h6> -->
+  </div>
+
+  <mat-dialog-content>
+
+    @if (receiptFormat === 'SMALL') {
+      <ul class="data-list-small">
+        <li>
+          <label>{{'receiptPrint.memContractNo' | translate }}</label>
+          <span hideIfNull>{{DATA.memberContractNo}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.memAccessCode' | translate}}</label>
+          <span hideIfNull>{{DATA.memberAccessCode}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.memName' | translate}}</label>
+          <span hideIfNull>{{DATA.memberName}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.memPhone' | translate}}</label>
+          <span hideIfNull>{{DATA.memberPhone}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.packageName' | translate}}</label>
+          <span hideIfNull>{{DATA.packageName}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.coach' | translate}}</label>
+          <span hideIfNull>{{DATA.coachName}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.salesName' | translate}}</label>
+          <span hideIfNull>{{DATA.salesPersonName}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.paymentDate' | translate}}</label>
+          <span hideIfNull>{{DATA.paymentDate | date:'MMM d, y, h:mm a'}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.startDate' | translate}}</label>
+          <span hideIfNull>{{DATA.startDate | date: 'mediumDate'}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.expDate' | translate}}</label>
+          <span hideIfNull>{{DATA.expirationDate | date: 'mediumDate'}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.totalPrice' | translate}}</label>
+          <span hideIfNull>{{DATA.price}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.amountPaidCash' | translate}}</label>
+          <span hideIfNull>{{DATA.amountPaidCash}}</span>
+        </li>
+        <li>
+          <label>{{'receiptPrint.amountPaidVisa' | translate}}</label>
+          <span hideIfNull>{{DATA.amountPaidVisa}}</span>
+        </li>
+        @if(DATA.visaTypeName){
+          <li>
+            <label>{{'members.visaType' | translate}}</label>
+            <span hideIfNull>{{DATA.visaTypeName}}</span>
+          </li>
+        }
+        <li>
+          <label>{{'receiptPrint.remainingAmount' | translate}}</label>
+          <span hideIfNull>{{DATA.remainingAmount}}</span>
+        </li>
+        <!-- <li>
+        <label>{{'receiptPrint.notes' | translate}}</label>
+        <span hideIfNull>{{DATA.notes}}</span>
+      </li> -->
+      <li class="mo-flex">
+        <label>{{'receiptPrint.benefits' | translate}}</label>
+        <span hideIfNull>{{direction === 'rtl' ? DATA?.benfitsInArabic : DATA?.benfitsInEnglish}}</span>
+      </li>
+    </ul>
+  }
+
+
+  @if (receiptFormat === 'LARGE') {
+    <ul class="data-list-wide">
+      <li>
+        <label>{{'receiptPrint.memContractNo' | translate }}</label>
+        <span hideIfNull>{{DATA.memberContractNo}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.memAccessCode' | translate}}</label>
+        <span hideIfNull>{{DATA.memberAccessCode}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.memName' | translate}}</label>
+        <span hideIfNull>{{DATA.memberName}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.memPhone' | translate}}</label>
+        <span hideIfNull>{{DATA.memberPhone}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.nationalID' | translate}}</label>
+        <span hideIfNull>{{DATA.nationalID}}</span>
+      </li>
+      <li class="separator"></li>
+      <li>
+        <label>{{'receiptPrint.packageName' | translate}}</label>
+        <span hideIfNull>{{DATA.packageName}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.coach' | translate}}</label>
+        <span hideIfNull>{{DATA.coachName}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.salesName' | translate}}</label>
+        <span hideIfNull>{{DATA.salesPersonName}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.startDate' | translate}}</label>
+        <span hideIfNull>{{DATA.startDate | date: 'mediumDate'}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.expDate' | translate}}</label>
+        <span hideIfNull>{{DATA.expirationDate | date: 'mediumDate'}}</span>
+      </li>
+      <li class="separator"></li>
+      <li>
+        <label>{{'receiptPrint.totalPrice' | translate}}</label>
+        <span hideIfNull>{{DATA.price}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.amountPaidCash' | translate}}</label>
+        <span hideIfNull>{{DATA.amountPaidCash}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.amountPaidVisa' | translate}}</label>
+        <span hideIfNull>{{DATA.amountPaidVisa}}</span>
+      </li>
+      @if(DATA.visaTypeName){
+        <li>
+          <label>{{'members.visaType' | translate}}</label>
+          <span hideIfNull>{{DATA.visaTypeName}}</span>
+        </li>
+      }
+      <li>
+        <label>{{'receiptPrint.remainingAmount' | translate}}</label>
+        <span hideIfNull>{{DATA.remainingAmount}}</span>
+      </li>
+      <li>
+        <label>{{'receiptPrint.remainingDueDate' | translate}}</label>
+        <span hideIfNull>{{DATA.nextDueDate | date :'mediumDate'}}</span>
+      </li>
+      <li class="separator"></li>
+      <li>
+        <label>{{'receiptPrint.paymentDate' | translate}}</label>
+        <span hideIfNull>{{DATA.paymentDate | date:'MMM d, y, h:mm a'}}</span>
+      </li>
+      <!-- <li class="mo-w-full">
+      <label>{{'receiptPrint.notes' | translate}}</label>
+      <span hideIfNull>{{DATA.notes}}</span>
+    </li> -->
+    <li class="mo-flex mo-w-full">
+      <label>{{'receiptPrint.benefits' | translate}}</label>
+      <span hideIfNull>{{direction === 'rtl' ? DATA?.benfitsInArabic : DATA?.benfitsInEnglish}}</span>
+    </li>
+  </ul>
+}
+
+
+<div>
+  @for (r of DATA.rules; track r) {
+    <p class="white-space-pre-line"><span class="mo-font-bold d-block">{{r.title}}</span>
+    {{r.englishDescription}}
+  </p>
+}
+</div>
+
+@if (receiptFormat === 'LARGE') {
+  <ul class="signature">
+    <li>
+      {{'receiptPrint.memSign' | translate}}
+    </li>
+    <li>
+      {{'receiptPrint.salesSign' | translate}}
+    </li>
+  </ul>
+  <div class="!mo-w-full mo-my-2">
+    <app-digital-signature></app-digital-signature>
+  </div>
+}
+
+
+<hr>
+  <p class="mo-text-muted mo-text-center">
+    {{DATA.receiptEndMessage}}<br>
+    {{'receiptPrint.poweredBy' | translate}}<br>
+    #{{DATA.systemReceiptNo}}
+  </p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions class="mo-justify-end">
+  <button mat-button color="default" type="button" (click)="dismiss()">{{'common.close' | translate}}</button>
+  <button mat-raised-button color="primary" (click)="print()" type="button">{{'reports.print' | translate}}</button>
+</mat-dialog-actions>
+
+</div>
+}

@@ -1,0 +1,107 @@
+@if (!styleMember.isButton) {
+  <button class="options-btn" mat-icon-button [matMenuTriggerFor]="actionMenu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+}
+
+@if (styleMember.isButton) {
+  <button [color]="styleMember.color" [class]="'options-btn '+ styleMember.styleClass"
+    mat-raised-button [matMenuTriggerFor]="actionMenu">
+    <mat-icon class="adjust-icon">{{styleMember.iconName}}</mat-icon> {{styleMember.mainTitle}}
+  </button>
+}
+
+<mat-menu #actionMenu="matMenu" class="action-menu">
+
+  @if (member && !member.isBlocked) {
+    <button mat-menu-item (click)="blockMember()" [appRoleAttr]="['profile', 'Block']">
+      <mat-icon>block</mat-icon> <span>{{ 'members.block' | translate}}</span>
+    </button>
+  }
+
+  @if (member && member.isBlocked) {
+    <button mat-menu-item (click)="blockMember()" [appRoleAttr]="['profile', 'Unblock']">
+      <mat-icon>check</mat-icon> <span>{{ 'members.unblock' | translate}}</span>
+    </button>
+  }
+
+  <button mat-menu-item (click)="addCall()">
+    <mat-icon>add_ic_call</mat-icon> <span>{{'members.addCall' | translate}}</span>
+  </button>
+
+  @if (member && member.phoneNo) {
+    <button mat-menu-item (click)="directCall()">
+      <mat-icon>call</mat-icon> <span>{{'members.directCall' | translate}}</span>
+    </button>
+  }
+
+  @if (member && member.phoneNo) {
+    <button mat-menu-item (click)="openWhatsapp()">
+      <img src="assets/images/whatsapp-ico.svg" width="20" class="mo-me-3" alt=""> <span>{{'classSchedule.whatsapp' | translate}}</span>
+    </button>
+  }
+
+  <button mat-menu-item (click)="changePassword()" *appRole="['profile', 'ChangePassword']">
+    <mat-icon>password</mat-icon> <span>{{'members.changePW' | translate}}</span>
+  </button>
+
+  <button mat-menu-item (click)="viewMemberHistory()">
+    <mat-icon>history_toggle_off</mat-icon> <span>{{'members.showHis' | translate}}</span>
+  </button>
+
+  <button mat-menu-item (click)="addNote()">
+    <mat-icon>notes</mat-icon> <span>{{'members.notes' | translate}}</span>
+  </button>
+
+  <button mat-menu-item (click)="onAttachments()" *appRole="['attachments','Show']">
+    <mat-icon> attach_file</mat-icon> {{'members.attachments' | translate}}
+  </button>
+
+  <button mat-menu-item (click)="addReminder()" *appRole="['reminders','tsb_Add']">
+    <mat-icon>notification_add</mat-icon> {{'members.addReminder' | translate}}
+  </button>
+
+  <button mat-menu-item (click)="addTask()" *appRole="['tasks','tsb_Add']">
+    <mat-icon>add</mat-icon> {{'extra.addTask' | translate}}
+  </button>
+
+  @if (member && member.isMemberChangedThePhoto) {
+    <button mat-menu-item (click)="onImgCompare()">
+      <mat-icon>check_circle_outline</mat-icon> {{'members.approveMemberPhoto' | translate}}
+    </button>
+  }
+  <button mat-menu-item class="mo-text-error-500" (click)="onDeleteMember()" *appRole="['profile','tsb_Remove']">
+    <mat-icon>person_remove</mat-icon> <span>{{'members.delMember' | translate}}</span>
+  </button>
+</mat-menu>
+
+<ng-template #historyModal>
+  <div class="p-4">
+    <h4 class="mo-font-bold">{{'members.salesHistory' | translate}}</h4>
+    <ul class="list-group">
+      @for (el of memberHistory; track el) {
+        <li class="list-group-item mo-flex mo-items-center">
+          <mat-icon>arrow_right</mat-icon> <span>{{ el }}</span>
+        </li>
+      }
+      @if (memberHistory.length === 0) {
+        <li class="mo-text-center">
+          {{'members.noHis' | translate}}
+        </li>
+      }
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #attachmentsModal>
+  <div class="p-4">
+    <div class="mo-flex mo-flex-wrap mo-items-center mo-justify-between">
+      <h4 class="mo-font-bold">{{'members.attachmentsFor' | translate}} {{member.nameAR }}
+        ({{member.nameEng}})
+      </h4>
+      <button *appRole="['attachments','tsb_Add']" (click)="addAttachment()" mat-raised-button
+        color="primary"><mat-icon>attachment</mat-icon> {{'staff.addAttachment' | translate}}</button>
+      </div>
+      <app-attachments #attachmentsComp [staff]="member" [contextTypeId]="contextTypeId"></app-attachments>
+    </div>
+  </ng-template>

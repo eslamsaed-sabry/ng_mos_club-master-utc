@@ -1,0 +1,62 @@
+<h5 mat-dialog-title>{{'extra.tasksDetails' | translate}} @if (data.type!=='addNew') {
+  <button (click)="viewMemberTasks()" mat-button color="primary"
+  >{{'extra.viewMemberTasks' | translate}}</button>
+}</h5>
+
+<form (ngSubmit)="submit(itemForm)" #itemForm="ngForm">
+
+  <div mat-dialog-content>
+
+    @if (data.type==='addNew') {
+      <div class="mo-mb-2">
+        <app-advanced-search [autoPredict]="true" [config]="config"
+        (selectedMember)="getSelectedMember($event)"></app-advanced-search>
+      </div>
+    }
+
+    @if (data.memberData) {
+      <div class="main-section">
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.contractNo' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.applicationNo" name="contractNo" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.accessCode' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.code" name="accessCode" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.phone' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.phoneNo" name="phoneNo" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.memberName' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.nameEng" name="userName" required />
+        </mat-form-field>
+      </div>
+    }
+    <hr>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+        <mat-select [(ngModel)]="task.employeeId" name="employeeId" required>
+          <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+          @for (el of sales; track el) {
+            <mat-option [value]="el.id">{{el.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.notes' | translate}}</mat-label>
+        <textarea matInput [(ngModel)]="task.notes" name="notes"></textarea>
+      </mat-form-field>
+
+    </div>
+
+    <div mat-dialog-actions class="mo-justify-end">
+      <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit">
+        {{'members.save' | translate}}
+      </button>
+    </div>
+  </form>

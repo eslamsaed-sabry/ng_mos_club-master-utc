@@ -1,0 +1,153 @@
+name: Angular CI/CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select environment'
+        required: true
+        default: 'Testing2'
+        type: choice
+        options:
+          - Ramla
+          - Testing2
+          - Z10
+          - Extreme
+          - Falcon
+          - Global
+          - MDepot
+          - Quantum
+          - Snap
+          - Maadi Club
+          - Hydro
+          - Pole Room
+          - Mountain
+          - Flash
+          - FitHub
+          - Embaby
+          - Dynamic
+          - Vital
+          - Anubis99
+          - Fit90
+          - Testing3
+          - Ram
+          - Gymnation
+          - MuscleTemple
+          - Power
+          - Rougie
+          - Canopus
+          - OnatiMoon
+          - Adams
+          - BrassMonkeys
+          - Tamarin
+          - Elite
+          - Diamond
+          - AerialGrace
+          - Reform
+          - Monster
+          - IKardio
+          - Squeeze
+          - Fox
+          - Bison
+          - Hulk
+          - BeHulk
+          - Revolt
+          - HulkZayed
+          - BB
+          - BeFit
+          - Daddys
+          - IFit
+          - XFit
+          - MaxFit
+          - Gympanzee
+          - SlimFit
+          - UpTown
+          - Shakti
+          - Defender
+          - ISO
+          - Burn
+          - MyFitness
+          - Opium
+          - Club90
+          - Footfit
+          - Motion
+          - TheClub
+          - 4ma
+          - THFitness
+          - Evolution
+          - FitWay
+          - Cova
+          - Vigour
+          - XForce
+          - XCamp
+          - BeBrave
+          - Ocean
+          - T2
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
+      - name: Build Test
+        run: |
+          npm ci --force
+          npm run prebuild && ng build --configuration '${{ github.event.inputs.environment }}'
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-files
+          path: ${{ github.workspace }}/dist/${{ secrets.REPO_NAME }}/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: browser-files
+          path: ./browser-files
+
+      - name: Add SSH key to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Delete Old Files
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            powershell Remove-Item -Recurse -Force 'D:\${{ github.event.inputs.environment }}\Portal\*'
+
+      - name: Deploy to VPS
+        env:
+          SSH_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+        run: |
+          echo "Using password for SSH authentication"
+          sshpass -p "$SSH_PASSWORD" scp -r ./browser-files/* ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}:"D:\\${{ github.event.inputs.environment }}\\Portal\\"

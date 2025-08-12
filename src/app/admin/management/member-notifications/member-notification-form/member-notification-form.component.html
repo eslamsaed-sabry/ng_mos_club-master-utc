@@ -1,0 +1,31 @@
+<h5 class="mo-font-bold" mat-dialog-title>
+    {{'notifications.addNotification' | translate}}
+</h5>
+<form (ngSubmit)="submit(sendForm)" #sendForm="ngForm">
+    <div mat-dialog-content>
+        <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'management.title'|translate}}</mat-label>
+            <input matInput [(ngModel)]="memberNotification.notificationTitle" name="notificationTitle" type="text"
+                required>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'classSchedule.message'|translate}}</mat-label>
+            <textarea [(ngModel)]="memberNotification.notificationMessage" name="notificationMessage" matInput
+                required></textarea>
+        </mat-form-field>
+
+        <ul class="mo-flex mo-justify-between mo-p-0">
+            <li><mat-checkbox [(ngModel)]="memberNotification.isSMS" name="isSMS">{{'classSchedule.sms' |
+                    translate}}</mat-checkbox></li>
+            <li><mat-checkbox [(ngModel)]="memberNotification.isMobileApp"
+                    name="isMobileApp">{{'classSchedule.mobileApp' | translate}}</mat-checkbox></li>
+            <li><mat-checkbox [(ngModel)]="memberNotification.isWhatsApp" name="isWhatsApp">{{'classSchedule.whatsapp' |
+                    translate}}</mat-checkbox></li>
+        </ul>
+    </div>
+    <div mat-dialog-actions>
+        <button type="submit" color="primary" class="mo-w-full" mat-flat-button>
+            <mat-icon>notification_add</mat-icon> {{'notifications.send' | translate}}
+        </button>
+    </div>
+</form>

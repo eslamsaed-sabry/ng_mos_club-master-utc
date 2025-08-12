@@ -1,0 +1,35 @@
+
+::ng-deep {
+    .notifications-menu {
+      max-width: 420px !important;
+      margin-left: auto;
+  
+  
+      .mat-mdc-menu-content .mat-mdc-menu-item {
+        display: flex !important;
+        align-items: center !important;
+        min-height: 80px;
+  
+        >div {
+          max-width: 91%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          line-height: 20px;
+        }
+  
+        &:last-child {
+          border: 0 !important;
+        }
+      }
+    }
+  }
+  
+  .notif-badge {
+    ::ng-deep {
+      .mat-badge-content {
+        left: 75% !important;
+        top: 13px !important;
+      }
+    }
+  }

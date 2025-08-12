@@ -1,0 +1,49 @@
+<h5 mat-dialog-title>{{'navigation.advances' | translate}}
+  @if (data.type != 'edit') {
+    <div class="mo-font-bold mo-text-center">
+      <label class="fs-6">{{'common.yourCurrentBranch' | translate}}{{branchName}}</label>
+    </div>
+  }
+</h5>
+
+<form (ngSubmit)="submit(advancesForm)" #advancesForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field class="mo-w-full" appearance="outline" (click)="advancesPicker.open()">
+      <mat-label>{{'reports.table.date' | translate}}</mat-label>
+      <input matInput [matDatepicker]="advancesPicker" [(ngModel)]="advances.actionDate" name="actionDate" required />
+      <mat-datepicker-toggle matSuffix [for]="advancesPicker"></mat-datepicker-toggle>
+      <mat-datepicker #advancesPicker startView="year"></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'staff.staffMember' | translate}}</mat-label>
+      <mat-select [(ngModel)]="advances.staffMemberId" name="staffMemberId" required>
+        @for (c of staffMembers; track c) {
+          <mat-option [value]="c.id">{{c.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'accounts.amount' | translate}}</mat-label>
+      <input matInput [(ngModel)]="advances.price" name="amountCash" required />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.description' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="advances.description" name="description" required></textarea>
+    </mat-form-field>
+
+  </div>
+
+
+  <div mat-dialog-actions class="mo-justify-end">
+    <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button color="primary" type="submit">
+      {{'members.save' | translate}}
+    </button>
+  </div>
+
+</form>

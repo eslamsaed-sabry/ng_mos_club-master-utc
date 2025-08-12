@@ -1,0 +1,152 @@
+<mat-drawer-container class="example-container" autosize>
+
+  <div class="page-title">
+    <h4 class="mo-font-bold mo-m-0"> {{'navigation.staffAttendance' | translate}} </h4>
+
+    <div class="mo-flex mo-flex-wrap mo-items-center">
+
+      <div class="mo-flex mo-flex-wrap mo-pe-3">
+        <div>
+          <mat-form-field class="mo-w-full" (click)="fromDatepicker.open()">
+            <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+            <input (dateChange)="applyFilter()" matInput [matDatepicker]="fromDatepicker" [(ngModel)]="filters.fromDate"
+              name="fromDate" required />
+              <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+              <mat-datepicker #fromDatepicker startView="year"></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="mo-px-2">
+            <mat-form-field class="mo-w-full" (click)="toDatepicker.open()">
+              <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+              <input matInput (dateChange)="applyFilter()" [matDatepicker]="toDatepicker" [(ngModel)]="filters.toDate"
+                name="toDate" required />
+                <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #toDatepicker startView="year"></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div>
+              <mat-form-field class="mo-w-full">
+                <mat-label>{{'staff.staffMember' | translate}}</mat-label>
+                <mat-select (selectionChange)="applyFilter()" [(ngModel)]="filters.staffMemberId" name="staffMemberId">
+                  @for (c of staffMembers; track c) {
+                    <mat-option [value]="c.id">{{c.name}}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- <button (click)="onAddAttendance()" color="primary" mat-raised-button>
+          <mat-icon>person_add_alt</mat-icon> {{'staff.addStaff' | translate}}
+        </button> -->
+      </div>
+    </div>
+
+    <div class="col-6 m-auto">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'staff.enterEmployeeCodeToAddAttendance' | translate}}</mat-label>
+        <input (keydown.enter)="addStaffAttendanceByCode()" [(ngModel)]="staffAttendanceCode" matInput name="name"
+          type="text" placeholder="{{'staff.enterEmployeeCodeToAddAttendance' | translate}}" />
+        </mat-form-field>
+      </div>
+
+      <div>
+        <div class="table-responsive card p-3">
+          <table mat-table [dataSource]="dataSource" matSort>
+            <ng-container matColumnDef="staffMemberName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'staff.staffMember' | translate}}</th>
+              <td mat-cell *matCellDef="let row">{{ row.staffMemberName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="creationDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'staff.punchDate' | translate}}</th>
+              <td mat-cell *matCellDef="let row">{{ row.punchDate | date:'MMM d, y, h:mm a' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="operation">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'staff.operation' | translate}}</th>
+              <td mat-cell *matCellDef="let row">{{ row.operation }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="notes">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.notes' | translate}}</th>
+              <td mat-cell *matCellDef="let row">{{ row.notes}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="addNote">
+              <th mat-header-cell *matHeaderCellDef class="mo-text-center">{{'members.addNote' | translate}}</th>
+              <td mat-cell *matCellDef="let row" class="mo-text-center">
+                <button (click)="onAddNote(row)" mat-icon-button color="accent">
+                  <mat-icon>note_add</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+            </tr>
+          </table>
+
+          <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+            [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+          </mat-paginator>
+        </div>
+      </div>
+    </mat-drawer-container>
+
+
+    <ng-template #addNoteModal>
+      <h5 matDialogTitle class="mo-font-bold">
+        {{'members.addNote' | translate}}
+      </h5>
+      <div matDialogContent>
+        <form (ngSubmit)="addNote(addNoteForm)" #addNoteForm="ngForm">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.note' | translate}}</mat-label>
+            <textarea matInput required [(ngModel)]="selectedMember.notes" name="note"></textarea>
+          </mat-form-field>
+        </form>
+      </div>
+
+      <div matDialogActions>
+        <button mat-raised-button class="mo-mt-3" color="primary" type="submit">{{'members.addNote' | translate}}</button>
+      </div>
+    </ng-template>
+
+
+    <ng-template #addAttendanceModal>
+      <h5 matDialogTitle class="mo-font-bold">
+        {{'members.addAtt' | translate}}
+      </h5>
+      <div matDialogContent>
+        <form (ngSubmit)="addAtt(attForm)" #attForm="ngForm">
+
+          <div>
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'staff.staffMember' | translate}}</mat-label>
+              <mat-select [(ngModel)]="selectedMember.staffMemberId" required name="staffMemberId">
+                @for (c of staffMembers; track c) {
+                  <mat-option [value]="c.id">{{c.name}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="mo-my-3">
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'reports.table.date' | translate}}</mat-label>
+              <input matInput type="datetime-local" [(ngModel)]="selectedMember.punchDate" name="punchDate" required>
+            </mat-form-field>
+          </div>
+
+        </form>
+      </div>
+      <div matDialogActions>
+        <button type="submit" mat-raised-button color="primary">{{'members.save' | translate}}</button>
+      </div>
+    </ng-template>

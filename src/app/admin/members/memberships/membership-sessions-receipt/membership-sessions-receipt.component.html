@@ -1,0 +1,71 @@
+@if (sessionPrint) {
+  <div id="session-receipt">
+    <div class="mo-text-center mo-mb-3"><img [src]="logo" width="100"></div>
+    <div class="mo-flex">
+      <ul class="mo-p-0 mo-w-1/2">
+        <li>
+          <label class="mo-me-3">{{'members.numOfSessions' | translate}}</label>
+          <span class="mo-font-bold">{{sessionPrint.membership.attendanceCount}}</span>
+        </li>
+        <li>
+          <label class="mo-me-3">{{'members.startDate' | translate}}</label>
+          <span class="mo-font-bold">{{sessionPrint.membership.startDateAsString}}</span>
+        </li>
+        <li>
+          <label class="mo-me-3">{{'members.expDate' | translate}}</label>
+          <span class="mo-font-bold">{{sessionPrint.membership.expirationDateAsString}}</span>
+        </li>
+      </ul>
+      <ul class="mo-p-0">
+        <li>
+          <label class="mo-me-3">{{'members.contractNo' | translate}}</label>
+          <span class="mo-font-bold">{{sessionPrint.membership.contractNo}}</span>
+        </li>
+        <li>
+          <label class="mo-me-3">{{'members.memberName' | translate}}</label>
+          <span class="mo-font-bold">{{sessionPrint.membership.memberEnglishName}}</span>
+        </li>
+        <li>
+          <label class="mo-me-3">{{'members.trainerName' | translate}}</label>
+          <span class="mo-font-bold">{{sessionPrint.membership.coachName}}</span>
+        </li>
+      </ul>
+    </div>
+    <hr>
+      <div>
+        <h3 class="mo-text-center">{{sessionPrint.membership.packageName}}</h3>
+        <table class="table table-striped table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>{{'reports.table.sessionDate' | translate}}</th>
+              <th>{{'members.workout' | translate}}</th>
+              <th>{{'members.trainerSign' | translate}}</th>
+              <th>{{'members.memberSign' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of sessionPrint.attendance; track item; let i = $index) {
+              <tr>
+                <td><small>{{i+1}}</small></td>
+                <td>{{item?.attendanceDate | date:'MMM d, y, h:mm a'}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="mo-mt-2">
+        <ul class="mo-p-0 mo-flex">
+          <li class="mo-w-1/2">
+            <label class="mo-font-bold">{{'members.trainerSign' | translate}}</label>
+          </li>
+          <li>
+            <label class="mo-font-bold">{{'members.memberSign' | translate}}</label>
+          </li>
+        </ul>
+      </div>
+    </div>
+  }

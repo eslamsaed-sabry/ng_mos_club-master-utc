@@ -1,0 +1,22 @@
+.shift-time-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .shift-time-block {
+    padding: 0 10px;
+  }
+}
+
+.shift-rows {
+  ::ng-deep {
+    .mat-expansion-panel-content {
+      font: inherit !important;
+
+      .mat-expansion-panel-body {
+        padding: 0 15px 10px !important;
+      }
+    }
+  }
+}

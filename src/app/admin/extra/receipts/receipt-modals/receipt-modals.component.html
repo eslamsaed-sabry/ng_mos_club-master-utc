@@ -1,0 +1,376 @@
+<h5 mat-dialog-title class="mo-font-bold border-bottom mo-pb-2">{{modalTitle}}</h5>
+<div mat-dialog-content>
+  @if (showData && data.contextTypeId === receiptTypes.INSTALLMENT) {
+    <div>
+      <ul class="data-list">
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.memberContractNo' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberApplicationNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.memPhone' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberPhone}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.memName' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.packageName' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.packageName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.startDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.startDateAsString}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.expDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.endDateAsString}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'accounts.amount' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.amount}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.settlementDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.settlementDateAsString}}</div>
+        </li>
+      </ul>
+      <div class="mo-text-end">
+        <button mat-dialog-close color="primary" [routerLink]="['/admin/member-profile/', entityData.memberId]"
+          [queryParams]="{tab:profileTabs.DEBTS,targetId: entityData.id, membershipId:entityData.membershipId}"
+        mat-flat-button>{{'members.moreDetails' | translate}}</button>
+      </div>
+    </div>
+  }
+  @if (showData && data.contextTypeId === receiptTypes.FREEZE) {
+    <div>
+      <ul class="data-list">
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.memberContractNo' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberContractNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.memName' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.packageName' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.packageName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.freezeDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.freezeDateAsString}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.releaseDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.releaseDateAsString}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.notes' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.comment}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.paymentDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.paymentDate | date:'mediumDate'}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.amountPaid' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.amountPaid}}</div>
+        </li>
+      </ul>
+      <div class="mo-text-end">
+        <button mat-dialog-close color="primary" [routerLink]="['/admin/member-profile/', entityData.memberId]"
+          [queryParams]="{tab:profileTabs.FREEZE,targetId: entityData.id, membershipId:entityData.membershipId}"
+        mat-flat-button>{{'members.moreDetails' | translate}}</button>
+      </div>
+    </div>
+  }
+  @if (showData && data.contextTypeId === receiptTypes.UPGRADE) {
+    <div>
+      <ul class="data-list">
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.sysRecNo' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.systemReceiptNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.memPhone' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberPhoneNumber}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.memberContractNo' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberContractNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.memName' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.prevPackage' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.prevPackageName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.newPackage' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.newPackageName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.totalDiff' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.totalDifferance}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.amountPaidCash' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.amount}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.amountPaidVisa' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.amountVisa}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.createdBy' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.createdBy}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.creationDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.creationDate | date:'MMM d, y, h:mm a'}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.approvedBy' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.approvedByName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.approvedDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.approvedDate | date:'MMM d, y, h:mm a'}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.finalApprovedBy' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.finalApprovedByName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.finalApprovedDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.finalApprovedDate | date:'MMM d, y, h:mm a'}}</div>
+        </li>
+      </ul>
+      <div class="mo-text-end">
+        <button mat-dialog-close color="primary" [routerLink]="['/admin/member-profile/', entityData.memberId]"
+          [queryParams]="{tab:profileTabs.UPGRADE,targetId: entityData.id, membershipId:entityData.membershipId}"
+        mat-flat-button>{{'members.moreDetails' | translate}}</button>
+      </div>
+    </div>
+  }
+  @if (showData && data.contextTypeId === receiptTypes.SESSION) {
+    <div>
+      <ul class="data-list">
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.sessionDateTime' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.sessionDate | date:'MMM d, y, h:mm a'}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.type' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.type}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.phone' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.phone}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.name' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.name}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.salesPerson' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.salesPersonName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.price' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.price}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.paymentMethod' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.isCash ? ('receiptPrint.cash' | translate) : ('receiptPrint.visa' |
+            translate)}}
+          </div>
+        </li>
+      </ul>
+      <div class="mo-text-end">
+        <button mat-dialog-close color="primary" [routerLink]="['/admin/member-profile/', entityData.memberId]"
+          [queryParams]="{tab:profileTabs.ONE_PASS_SERVICE,targetId: entityData.sessionId}"
+        mat-flat-button>{{'members.moreDetails' | translate}}</button>
+      </div>
+    </div>
+  }
+  @if (showData && data.contextTypeId === receiptTypes.PRIVATE) {
+    <div>
+      <ul class="data-list">
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.sysRecNo' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.systemReceiptNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.memPhone' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.phoneNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.memberContractNo' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.contractNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.memName' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberEnglishName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.package' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.packageName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.att' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.attendance}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.price' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.price}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.debts' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.totalAmountRemaining}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.startDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.startDate | date: "mediumDate" }}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.endDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.expirationDate | date: "mediumDate" }}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.paymentDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.paymentDate | date: "mediumDate" }}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.status' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.statusName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.salesPerson' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.salesName}}</div>
+        </li>
+      </ul>
+      <div class="mo-text-end">
+        <button mat-dialog-close color="primary" [routerLink]="['/admin/member-profile/', entityData.memberId]"
+          [queryParams]="{tab:profileTabs.MEMBERSHIP,targetId: entityData.id}" mat-flat-button>{{'members.moreDetails' |
+        translate}}</button>
+      </div>
+    </div>
+  }
+  @if (showData && data.contextTypeId === receiptTypes.MEMBERSHIP) {
+    <div>
+      <ul class="data-list">
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.memberContractNo' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.contractNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.memPhone' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.phoneNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.memName' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.memberEnglishName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.gender' | translate}}</label>
+          <div class="mo-font-bold">{{ entityData.gender | gender }}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.nationalId' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.nationalId}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.birthDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.birthDate | date :'mediumDate'}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.package' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.packageName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.paymentDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.paymentDate | date: "mediumDate" }}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.startDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.startDate | date: "mediumDate" }}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.endDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.expirationDate | date: "mediumDate" }}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.priceBeforeDiscount' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.priceBeforeDiscount}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.discount' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.discount}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.price' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.price}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.amountCash' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.amountPaid}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'reports.table.amountVisa' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.amountPaidVisa}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.status' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.statusName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.salesPerson' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.salesName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.trainer' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.coachName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.creationDate' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.creationDate | date:'MMM d, y, h:mm a'}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.createdBy' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.userName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.manualRecNo' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.receiptNo}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receiptPrint.sysRecNo' | translate}}</label>
+          <div class="mo-font-bold">{{entityData.systemReceiptNo}}</div>
+        </li>
+      </ul>
+      <div class="mo-flex mo-justify-end">
+        <button mat-dialog-close color="primary" class="mo-mx-1"
+          [routerLink]="['/admin/member-profile/', entityData.memberId]"
+          [queryParams]="{tab:profileTabs.MEMBERSHIP,targetId: entityData.id}" mat-flat-button>
+          {{'members.edit' | translate}}
+        </button>
+        @if (data.approveStatus < 2) {
+          <button color="primary" class="mo-mx-1" (click)="onApprove($event)"
+            mat-flat-button>
+            {{'common.approve' | translate}}
+          </button>
+        }
+        @if (data.approveStatus < 2) {
+          <button color="primary" class="mo-mx-1" (click)="onReject($event)" mat-flat-button>
+            {{'common.decline' | translate}}
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>

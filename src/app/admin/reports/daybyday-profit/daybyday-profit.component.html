@@ -1,0 +1,83 @@
+<app-reports-page-header [reportName]="'reports.daybydayProfitReport'|translate" [isResult]="isResult"
+  (onAction)="getAction($event)" [permissions]="['dayByDayReport', 'tsb_Print', 'Export']">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-daybyday-profit-report-filters [filters]="filters"></app-daybyday-profit-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{filters.onClosing ? ('reports.onClosing' | translate) : ('reports.daybydayTill' | translate)}}
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'reports.table.date' | translate}}</th>
+                  <th>{{'members.memberships' | translate}}</th>
+                  <th>{{'reports.table.moniMemberships' | translate}}</th>
+                  <th>{{'members.debts' | translate}}</th>
+                  <th>{{'members.upgrade' | translate}}</th>
+                  <th>{{'members.transfer' | translate}}</th>
+                  <th>{{'members.freeze' | translate}}</th>
+                  <th>{{'reports.table.sessions' | translate}}</th>
+                  <th>{{'reports.table.reservations' | translate}}</th>
+                  <th>{{'reports.table.cafeteria' | translate}}</th>
+                  <th>{{'reports.table.otherReven' | translate}}</th>
+                  <th>{{'members.downgrade' | translate}}</th>
+                  <th>{{'reports.table.refund' | translate}}</th>
+                  <th>{{'reports.table.expenses' | translate}}</th>
+                  <th>{{'reports.table.total' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of profit; track el) {
+                  <tr>
+                    <td>{{el.atDate | date : 'mediumDate'}}</td>
+                    <td>{{el.memberships}}</td>
+                    <td>{{el.monnitoringMemberships}}</td>
+                    <td>{{el.debts}}</td>
+                    <td>{{el.upgrade}}</td>
+                    <td>{{el.transfer}}</td>
+                    <td>{{el.freeze}}</td>
+                    <td>{{el.sessions}}</td>
+                    <td>{{el.reservations}}</td>
+                    <td>{{el.cafeteria}}</td>
+                    <td>{{el.otherRevenue}}</td>
+                    <td>{{el.downgrade}}</td>
+                    <td>{{el.refund}}</td>
+                    <td>{{el.expenses}}</td>
+                    <td>{{el.total}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="1"></td>
+                  <td>{{calcTotal(profit, 'memberships') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'monnitoringMemberships') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'debts') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'upgrade') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'transfer') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'freeze') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'sessions') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'reservations') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'cafeteria') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'otherRevenue') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'downgrade') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'refund') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'expenses') | number:'1.2'}}</td>
+                  <td>{{calcTotal(profit, 'total') | number:'1.2'}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

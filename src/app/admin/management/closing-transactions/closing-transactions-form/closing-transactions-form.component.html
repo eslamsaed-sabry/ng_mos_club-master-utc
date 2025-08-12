@@ -1,0 +1,129 @@
+<h5 mat-dialog-title>{{'management.closingTransaction' | translate}}</h5>
+<form #itemForm="ngForm">
+
+  <div mat-dialog-content>
+    <div class="row">
+
+      <div class="col-12 mo-mb-2">
+        <button mat-button color="primary" [routerLink]="['/admin/reports/profit']" [queryParams]="{
+          startDate:closingTransactionData.fromDate,
+          closingDate: closingTransaction.to}" (click)="openProfitReport()">
+          <small>{{'extra.viewDetails' | translate}}</small>
+        </button>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'management.startDate' | translate}}</mat-label>
+          <input matInput type="datetime-local" [(ngModel)]="closingTransactionData.fromDate" name="fromDate" disabled>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'management.closingDate' | translate}}</mat-label>
+          <input matInput type="datetime-local" [(ngModel)]="closingTransaction.to" (change)="getEndOfDayAmount()"
+            name="to" [min]="closingTransactionData.fromDate" [max]="maxDateTime">
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'reports.table.totalCash' | translate}}</mat-label>
+          <input type="text" matInput [(ngModel)]="closingTransactionData.cashAmount" name="totalCash" disabled>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'reports.table.totalVisa' | translate}}</mat-label>
+          <input type="text" matInput [(ngModel)]="closingTransactionData.visaAmount" name="totalVisa" disabled>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.membershipCount' | translate}}: </label>
+        <span>{{closingTransactionData.membershipsCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.monitoringMembershipsCount' | translate}}: </label>
+        <span>{{closingTransactionData.monitoringMembershipsCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.sessionsCount' | translate}}: </label>
+        <span>{{closingTransactionData.sessionsCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.debtsCount' | translate}}: </label>
+        <span>{{closingTransactionData.debtsCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.upgradeCount' | translate}}: </label>
+        <span>{{closingTransactionData.upgradeCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.transferCount' | translate}}: </label>
+        <span>{{closingTransactionData.transferCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.freezeCount' | translate}}: </label>
+        <span>{{closingTransactionData.freezeCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.otherRevenuesCount' | translate}}: </label>
+        <span>{{closingTransactionData.otherRevenuesCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.expensesCount' | translate}}: </label>
+        <span>{{closingTransactionData.expensesCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="mo-font-bold">{{'reports.table.refundCount' | translate}}: </label>
+        <span>{{closingTransactionData.refundCount}}</span>
+      </div>
+
+      <div class="col-md-6 mo-mb-2">
+        <label class="mo-font-bold">{{'reports.table.downgradeCount' | translate}}: </label>
+        <span>{{closingTransactionData.downgradeCount}}</span>
+      </div>
+
+      <div class="col-md-6 mo-mb-2">
+        <label class="mo-font-bold">{{'reports.table.staffFinancialsCount' | translate}}: </label>
+        <span>{{closingTransactionData.staffFinancialsCount}}</span>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'reports.table.amountInHand' | translate}}</mat-label>
+          <input type="number" (input)="changeAmountInHand()" matInput [(ngModel)]="closingTransaction.amountInHand"
+            name="amountInHand" required>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'reports.table.storageOver' | translate}}</mat-label>
+          <input type="number" disabled matInput [(ngModel)]="storageOver" name="storageOver">
+        </mat-form-field>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div mat-dialog-actions class="mo-justify-end">
+    <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button color="primary" type="submit" (click)="submit(itemForm)">
+      {{'members.save' | translate}}
+    </button>
+  </div>
+</form>

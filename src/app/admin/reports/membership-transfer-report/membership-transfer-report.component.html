@@ -1,0 +1,50 @@
+<app-reports-page-header [permissions]="['membershipTransferReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.membershipTransfer' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-membership-transfer-filters [filters]="filters"></app-membership-transfer-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'reports.table.transferDate' | translate}}</th>
+                  <th>{{'reports.table.transferedFrom' | translate}}</th>
+                  <th>{{'reports.table.transferedTo' | translate}}</th>
+                  <th>{{'reports.table.packageName' | translate}}</th>
+                  <th>{{'members.username' | translate}}</th>
+                  <th>{{'reports.table.amountCash' | translate}}</th>
+                  <th>{{'reports.table.amountVisa' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.transferDate| date:'MMM d, y, h:mm a' }}</td>
+                    <td>{{el.transferedFrom}}</td>
+                    <td>{{el.transferedTo}}</td>
+                    <td>{{el.periodName}}</td>
+                    <td>{{el.createdByName}}</td>
+                    <td>{{el.cashAmount}}</td>
+                    <td>{{el.visaAmount}}</td>
+                  </tr>
+                }
+                @if (reports&&reports.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

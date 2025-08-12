@@ -1,0 +1,90 @@
+<div mat-dialog-title class="!mo-mt-3 remove">
+  <h5 class="mo-font-bold mo-m-0 mo-flex mo-items-center mo-justify-between">
+    <span>{{'classSchedule.roomDetails' | translate}}</span>
+    @if (data.type != 'Add') {
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    }
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item type="button" *appRole="['classSchedule', 'tsb_Remove']"
+        (click)="deleteClass()"><mat-icon>delete</mat-icon> {{'classSchedule.deleteClass' | translate}}</button>
+      </mat-menu>
+    </h5>
+  </div>
+
+  <form (ngSubmit)="submit(scheduleForm)" #scheduleForm="ngForm">
+
+    <div mat-dialog-content>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'classSchedule.room' | translate}}</mat-label>
+        <mat-select [(ngModel)]="selectedClass.roomId" name="roomId">
+          @for (r of rooms; track r) {
+            <mat-option [value]="r.id">{{r.englishName}} ({{r.arabicName}})</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'classSchedule.startDate' | translate}}</mat-label>
+        <input matInput type="datetime-local" [(ngModel)]="selectedClass.fromDate" name="startDate" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'classSchedule.endDate' | translate}}</mat-label>
+        <input matInput type="datetime-local" [(ngModel)]="selectedClass.toDate" name="endDate" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.paymentDate' | translate}}</mat-label>
+        <input matInput type="datetime-local" [(ngModel)]="selectedClass.paymentDate" name="paymentDate" required>
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'reports.table.amountPaid' | translate}}</mat-label>
+        <input matInput [(ngModel)]="selectedClass.amountPaid" name="amountPaid" type="number" required />
+      </mat-form-field>
+
+      <div class="mo-w-full">
+        <label class="mo-font-bold">{{'receiptPrint.paymentMethod' | translate}}</label>
+        <mat-radio-group aria-label="Select Payment method" [(ngModel)]="selectedClass.isCash"
+          (change)="getVisaTypes()" name="isCash">
+          <mat-radio-button [value]="true" selected>{{'receiptPrint.cash' | translate}}</mat-radio-button>
+          <mat-radio-button [value]="false" selected>{{'receiptPrint.visa' | translate}}</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      @if(!selectedClass.isCash){
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'members.visaType' | translate}}</mat-label>
+          <mat-select [(ngModel)]="selectedClass.visaTypeId" name="visaTypeId" required>
+            @for (v of visaTypes; track v) {
+              <mat-option [value]="v.id">{{v.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.notes' | translate}}</mat-label>
+        <textarea matInput [(ngModel)]="selectedClass.notes" name="notes"></textarea>
+      </mat-form-field>
+
+    </div>
+
+    <div mat-dialog-actions class="mo-flex mo-justify-between mo-w-full">
+      <div class="mo-ms-auto">
+        <button mat-raised-button type="button" (click)="dismiss()">{{'common.close' | translate}}</button>
+        @if (data.type === 'Add') {
+          <button mat-raised-button type="submit"
+          [appRoleAttr]="['classSchedule', 'tsb_Add']" color="primary">{{'members.save' | translate}}</button>
+        }
+        @if (data.type === 'Save') {
+          <button mat-raised-button type="submit"
+          [appRoleAttr]="['classSchedule', 'tsb_Save']" color="primary">{{'members.save' | translate}}</button>
+        }
+      </div>
+    </div>
+
+  </form>

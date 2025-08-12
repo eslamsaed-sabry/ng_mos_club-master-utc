@@ -1,0 +1,25 @@
+<h5 mat-dialog-title>{{'administration.roleForm' | translate}}</h5>
+
+<form (ngSubmit)="submit(roleForm)" #roleForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.arabicName' | translate}}</mat-label>
+      <input matInput [(ngModel)]="role.nameAr" name="nameAr" required />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.englishName' | translate}}</mat-label>
+      <input matInput [(ngModel)]="role.nameEng" name="nameEng" required />
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions class="mo-justify-end">
+    <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button color="primary" type="submit">
+      {{'members.save' | translate}}
+    </button>
+  </div>
+
+</form>

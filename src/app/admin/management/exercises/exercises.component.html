@@ -1,0 +1,61 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.exercises' | translate}} </h4>
+
+  <div class="actions">
+    <mat-form-field class="mo-mx-2">
+      <mat-label>{{'management.workOutType' | translate}}</mat-label>
+      <mat-select [(ngModel)]="filters.typeId" name="typeId" (selectionChange)="getExercises(false)">
+        <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+        @for (w of workOuts; track w) {
+          <mat-option [value]="w.id">{{w.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button (click)="openExerciseModal('add')" *appRole="['exercises', 'tsb_Add']" color="primary" mat-raised-button>
+      <mat-icon>add</mat-icon> {{'members.add' | translate}}
+    </button>
+  </div>
+</div>
+
+<div>
+  <ul class="gallery row">
+    @for (ex of exercises; track ex) {
+      <li class="col-lg-3 col-md-4 col-12 hover">
+        <div class="gal-item">
+          <div class="gal-img-wrapper" (click)="pictureZoom(ex)"
+            [ngStyle]="{'background-image':'url('+proxyUrl +ex.imagePath+')'}">
+          </div>
+          <div class="image-info">
+            <caption class="mo-w-full">{{ex.exerciseName}}</caption>
+            <ul class="gal-controls">
+              <li>{{ex.workoutTypeName}}</li>
+              <li class="mo-ms-auto">
+                <button (click)="openExerciseModal('edit', ex)" mat-icon-button>
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </li>
+              <li><button (click)="onDeleteImage(ex)" *appRole="['exercises', 'tsb_Remove']" class="mo-text-error-500"
+                mat-icon-button>
+                <mat-icon>delete_outline</mat-icon>
+              </button></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+    }
+    @if (totalElements > exercises.length) {
+      <li class="mo-w-full mo-text-center mo-mt-5"><button (click)="loadMore()"
+      mat-flat-button>{{'common.loadMore' | translate}}</button></li>
+    }
+  </ul>
+</div>
+
+<ng-template #photoModal>
+  <div class="mo-relative">
+    <button class="modal-close-btn" type="button" mat-icon-button (click)="dialog.closeAll()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <img class="img-fluid" [src]="proxyUrl + selectedImg.imagePath">
+  </div>
+</ng-template>

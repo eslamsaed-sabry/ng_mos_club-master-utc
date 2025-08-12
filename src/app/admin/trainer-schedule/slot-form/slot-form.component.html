@@ -1,0 +1,107 @@
+<h5 mat-dialog-title class="mo-font-bold mo-my-2">{{'members.slotDetails' | translate}}</h5>
+<form (ngSubmit)="submit(slotForm)" #slotForm="ngForm">
+
+  <div mat-dialog-content class="mo-pt-0">
+
+    <div class="row">
+      @if (data.type === 'add') {
+        <div class="col-12 mo-pb-2">
+          <mat-checkbox [(ngModel)]="multipleSlot" class="mo-ps-0" name="multipleSlot">{{'classSchedule.multipleSlot'
+          | translate}}</mat-checkbox>
+        </div>
+      }
+
+      <div class="col-12" [ngClass]="{'col-md-6':multipleSlot}">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'classSchedule.startDate' | translate}}</mat-label>
+          <input matInput type="datetime-local" [(ngModel)]="slot.startDate" name="startDate" required>
+        </mat-form-field>
+      </div>
+
+      @if (multipleSlot) {
+        <div class="col-md-6 col-12">
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'classSchedule.endDate' | translate}}</mat-label>
+            <input matInput type="datetime-local" [(ngModel)]="slot.endDate" name="endDate" required>
+          </mat-form-field>
+        </div>
+      }
+
+      @if (data.scheduleType == scheduleType.trainerSchedule) {
+        <div class="col-12"
+          [appRoleAttr]="['membershipsBasic','ShowAllPrivateData']">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.createdTo' | translate}}</mat-label>
+            <mat-select [(ngModel)]="slot.trainerId" name="trainerId" required>
+              @for (el of trainers; track el) {
+                <mat-option [value]="el.id">{{el.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+
+      @if (data.scheduleType == scheduleType.DoctorsSchedule) {
+        <div class="col-12"
+          [appRoleAttr]="['membershipsBasic','ShowAllPrivateData']">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.createdTo' | translate}}</mat-label>
+            <mat-select [(ngModel)]="slot.trainerId" name="trainerId" required>
+              @for (el of doctors; track el) {
+                <mat-option [value]="el.id">{{el.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+
+      <div class="col-12">
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'packages.duration' | translate}}</mat-label>
+          <input matInput type="number" [(ngModel)]="slot.durationInMinutes" name="durationInMinutes" required>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'classSchedule.capacity' | translate}}</mat-label>
+          <input matInput type="number" [(ngModel)]="slot.capacity" name="capacity" required>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'classSchedule.minBookingCancelMin' | translate}}</mat-label>
+          <input matInput type="number" [(ngModel)]="slot.minBookingCancellationMinutes"
+            name="minBookingCancellationMinutes" required>
+          </mat-form-field>
+        </div>
+
+        @if (data.type === 'add') {
+          <div class="row mo-items-center">
+            <div class="col-auto">
+              <mat-checkbox [(ngModel)]="repeatEveryWeek" class="mo-ps-0"
+                name="repeatEveryWeek">{{'classSchedule.repeatEveryWeek'
+              | translate}}</mat-checkbox>
+            </div>
+            <div class="col">
+              @if (repeatEveryWeek) {
+                <mat-form-field>
+                  <mat-label>{{'classSchedule.numbersOfWeeks' | translate}}</mat-label>
+                  <input type="number" matInput [(ngModel)]="slot.repeatCount" name="repeatCount">
+                </mat-form-field>
+              }
+            </div>
+          </div>
+        }
+
+      </div>
+    </div>
+
+    <div mat-dialog-actions class="mo-justify-end">
+      <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit">
+        {{'members.save' | translate}}
+      </button>
+    </div>
+  </form>

@@ -1,0 +1,21 @@
+<div class="row">
+  <div class="mo-mt-2">
+    <div class="mo-text-center">
+      @if (!webcamImage) {
+        <img class="fixed-img-size mo-rounded-full"
+          [src]="photo ? photo : 'assets/images/avatar.png'" />
+      }
+
+      @if (webcamImage) {
+        <img class="mo-rounded-full fixed-img-size" [src]="webcamImage.imageAsDataUrl" />
+      }
+    </div>
+    <input #uploadField type="file" hidden (change)="upload($event)" />
+    <div class="mo-text-center mo-my-2">
+      <button class="mo-px-5" type="button" (click)="uploadField.click()" mat-raised-button color="primary">
+        <mat-icon>file_upload</mat-icon> {{'members.upload'|translate}}
+      </button>
+    </div>
+  </div>
+  <app-camera [config]="cameraConfig" (getPicture)="handleImage($event)"></app-camera>
+</div>

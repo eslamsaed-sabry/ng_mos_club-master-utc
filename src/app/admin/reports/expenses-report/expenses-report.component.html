@@ -1,0 +1,55 @@
+<app-reports-page-header [permissions]="['expenses','tsb_Print', 'Export']"
+  [reportName]="'reports.expenses' | translate" [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-expenses-report-filter [filters]="filters"></app-expenses-report-filter>
+  </div>
+
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'reports.table.date' | translate}}</th>
+                  <th>{{'reports.table.type' | translate}}</th>
+                  <th>{{'reports.table.amountCash' | translate}}</th>
+                  <th>{{'reports.table.amountVisa' | translate}}</th>
+                  <th>{{'reports.table.description' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.actionDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.typeName}}</td>
+                    <td>{{el.price}}</td>
+                    <td>{{el.amountVisa}}</td>
+                    <td>{{el.description}}</td>
+                  </tr>
+                }
+                @if (reports&&reports.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2"></td>
+                  <td>{{calcTotal(reports, 'price') | number:'1.2'}}</td>
+                  <td>{{calcTotal(reports, 'amountVisa') | number:'1.2'}}</td>
+                  <td colspan="1"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

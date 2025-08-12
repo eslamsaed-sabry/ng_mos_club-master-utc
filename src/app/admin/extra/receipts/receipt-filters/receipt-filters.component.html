@@ -1,0 +1,58 @@
+<form class="filters-container" #debtsFiltersForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+  <div class="row">
+    <!-- <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'receiptPrint.sysRecNo' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.sysRecNo" name="sysRecNo" type="text" />
+      </mat-form-field>
+    </div> -->
+
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.contractNo' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.memberContractNo" name="contractNo" type="text" />
+      </mat-form-field>
+    </div>
+
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'receiptPrint.sysRecNo' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.manualNo" name="manualRecNo" type="text" />
+      </mat-form-field>
+    </div>
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'receiptPrint.transSerialNo' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.serialNo" name="transSerialNo" type="text" />
+      </mat-form-field>
+    </div>
+
+    <div class="mo-flex mo-items-center">
+      <mat-checkbox [(ngModel)]="filters!!.paymentFromDate" name="paymentFromDate"
+        (change)="onChange('paymentFromDate', $event)" class="mo-me-1"></mat-checkbox>
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'receiptPrint.paymentFrom' | translate}}</mat-label>
+        <input matInput type="datetime-local" [(ngModel)]="filters.paymentFromDate" name="paymentFromDate">
+      </mat-form-field>
+    </div>
+
+    <div class="mo-flex mo-items-center">
+      <mat-checkbox [(ngModel)]="filters!!.paymentToDate" name="paymentToDate"
+        (change)="onChange('paymentToDate', $event)" class="mo-me-1"></mat-checkbox>
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'receiptPrint.paymentTo' | translate}}</mat-label>
+        <input matInput type="datetime-local" [(ngModel)]="filters.paymentToDate" name="paymentToDate">
+      </mat-form-field>
+    </div>
+
+
+  </div>
+
+  <div class="mo-my-3">
+    <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilter.emit()" mat-raised-button color="primary"
+      type="button">{{'members.search' | translate}}</button>
+    <button class="mo-font-bold mo-w-full" (click)="debtsFiltersForm.reset();onFilter.emit()" mat-button
+      type="button">{{'members.clearAll' | translate}}</button>
+  </div>
+</form>

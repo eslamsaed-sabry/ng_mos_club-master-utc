@@ -1,0 +1,36 @@
+<app-loader></app-loader>
+<div class="login-wrapper">
+  <div class="logo">
+    <div class="logo-container" [ngStyle]="{'background-image':'url('+ brand.shortLogo +')'}"></div>
+  </div>
+  <div class="login-form">
+    <form (ngSubmit)="login(loginForm)" #loginForm="ngForm">
+      <h5 class="mo-mb-4">{{'login.login' | translate}}</h5>
+      <mat-form-field appearance="outline">
+        <mat-label>{{'login.username' | translate}}</mat-label>
+        <input matInput type="text" [(ngModel)]="user.username" name="username" required="" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>{{'login.password' | translate}}</mat-label>
+        <input matInput type="password" [(ngModel)]="user.password" name="password" required="" />
+      </mat-form-field>
+      <div class="mo-text-end">
+        <button class="btn-block" type="submit" [disabled]="loading" mat-raised-button color="primary">
+          @if (loading) {
+            <mat-icon>
+              <mat-spinner class="white-spinner" [diameter]="20"></mat-spinner>
+            </mat-icon>
+          }
+          {{'login.login' | translate}}
+        </button>
+      </div>
+    </form>
+
+    <div class="mos-logo">
+      <img src="assets/images/mos-logo-white-bg.png" alt="">
+      <p class="mo-text-center mo-text-muted">
+        <small>V{{appVersion}}</small>
+      </p>
+    </div>
+  </div>
+</div>

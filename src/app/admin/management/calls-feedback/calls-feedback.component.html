@@ -1,0 +1,130 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.call_feedbacks' | translate}} </h4>
+
+
+  <div class="actions">
+    <button (click)="openCallFeedbackModal('add')" color="primary" mat-raised-button>
+      <mat-icon>add</mat-icon> {{'members.add' | translate}}
+    </button>
+  </div>
+</div>
+
+
+<div>
+  <div class="table-responsive card p-3">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="nameEng">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.name' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.nameEng}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="showFollowUpDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.showFollowUpDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row;let i = index">
+          <mat-checkbox (change)="onChange(row)" [(ngModel)]="row.showFollowUpDate"
+          [name]="'showFollowUpDate-'+i"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="isSummaryMandatory">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.isSummaryMandatory' | translate}}</th>
+        <td mat-cell *matCellDef="let row;let i = index">
+          <mat-checkbox (change)="onChange(row)" [(ngModel)]="row.isSummaryMandatory"
+          [name]="'isSummaryMandatory-'+i"></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="isActive">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'administration.changeStatus' | translate}}</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-slide-toggle (change)="toggleStatus(row)" color="primary" [(ngModel)]="row.isActive" name="isActive">
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="relatedMemberStatusName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.relatedMemberStatusName' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.relatedMemberStatusName}}</td>
+      </ng-container>
+
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="mo-text-center">
+          <mat-icon>settings</mat-icon>
+        </th>
+        <td mat-cell *matCellDef="let row" class="mo-text-center">
+          <button mat-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="actionMenu">
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+          <mat-menu #actionMenu="matMenu" class="action-menu">
+            <button (click)="openCallFeedbackModal('edit',row)" mat-menu-item>
+              <mat-icon>edit_note</mat-icon>
+              {{'members.edit' | translate}}
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+      </tr>
+    </table>
+
+    <mat-paginator (page)="onPaginationChange($event)" [pageSize]="perPage" [pageIndex]="page" [length]="totalElements"
+      [pageSizeOptions]="[10, 25, 100]">
+    </mat-paginator>
+  </div>
+</div>
+
+
+<ng-template #callFeedbackFormModal>
+  <div class="p-4">
+    <h5 class="mo-font-bold mo-mb-4">{{'management.callFeedbackDetails' | translate}}</h5>
+    <form (ngSubmit)="submit(callFeedbackForm)" #callFeedbackForm="ngForm">
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'reports.table.name' | translate}}</mat-label>
+        <input matInput [(ngModel)]="selectedCallFeedback.name" name="name" required>
+      </mat-form-field>
+
+      <div class="mo-w-full">
+        <mat-checkbox [(ngModel)]="selectedCallFeedback.showFollowUpDate"
+        name="showFollowUpDate">{{'management.showFollowUpDate' | translate}}</mat-checkbox>
+      </div>
+
+      <div class="mo-w-full">
+        <mat-checkbox [(ngModel)]="selectedCallFeedback.isSummaryMandatory"
+        name="isSummaryMandatory">{{'management.isSummaryMandatory' | translate}}</mat-checkbox>
+      </div>
+
+      <div class="mo-w-full">
+        <mat-checkbox [(ngModel)]="selectedCallFeedback.isActive" name="isActive">{{'management.isActive' |
+        translate}}</mat-checkbox>
+      </div>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'management.viewOrder' | translate}}</mat-label>
+        <input matInput [(ngModel)]="selectedCallFeedback.viewOrder" name="viewOrder" type="number" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'management.relatedMemberStatusName' | translate}}</mat-label>
+        <mat-select [(ngModel)]="selectedCallFeedback.relatedMemberStatusId" name="relatedMemberStatusId" required>
+          @for (r of relatedMemberStatus; track r) {
+            <mat-option [value]="r.id">{{r.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <div class="mo-text-end mo-mt-2">
+        <button class="mo-mx-2" (click)="dialog.closeAll()" mat-button type="button">{{'members.cancel' |
+        translate}}</button>
+        <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

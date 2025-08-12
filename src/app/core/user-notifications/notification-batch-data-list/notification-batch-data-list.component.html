@@ -1,0 +1,24 @@
+<h5 class="mo-font-bold mo-my-2" mat-dialog-title>{{'navigation.members' | translate}}</h5>
+
+<div mat-dialog-content>
+
+  <div>
+    <ul class="mo-my-3">
+      @for (m of members; track m) {
+        <li (click)="onSelectMember(m)"
+          class="mo-cursor-pointer mo-border-b mo-p-2 mo-flex mo-gap-2 hover:mo-bg-neutral-200">
+          <p class="mo-font-bold">{{m.nameEng}}</p>
+          @if (m.applicationNo) {
+            <p class="mo-font-bold">({{m.applicationNo}})</p>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <mat-paginator (page)="onPaginationChange($event)" [pageSize]="pageSize" [pageIndex]="pageNumber"
+    [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+  </mat-paginator>
+</div>

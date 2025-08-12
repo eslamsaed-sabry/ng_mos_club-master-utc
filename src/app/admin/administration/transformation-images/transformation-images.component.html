@@ -1,0 +1,87 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.transformationImages' | translate}} </h4>
+  <input #uploadField type="file" hidden (change)="uploadImage($event)" />
+
+  <form #uploadForm="ngForm" (ngSubmit)="onUpload(uploadField,uploadForm)" class="mo-flex mo-items-center">
+    <mat-form-field class="mo-mx-3">
+      <mat-label>{{'reports.table.coach' | translate}}</mat-label>
+      <mat-select (selectionChange)="getAttachments()" [(ngModel)]="coachId" name="coachId" required>
+        @for (c of coaches; track c) {
+          <mat-option [value]="c.id">{{c.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button *appRole="['trainersTransformations', 'tsb_Add']" color="primary" type="submit" mat-raised-button>
+      <mat-icon>file_upload</mat-icon> {{'members.add' | translate}}
+    </button>
+  </form>
+</div>
+
+<div>
+  @if (!coachId) {
+    <p class="mo-text-muted mo-text-center">{{'members.msgToSelectCoach'|translate}}</p>
+  }
+  <ul class="gallery row">
+    @for (image of images; track image) {
+      <li class="col-lg-3 col-md-4 col-12 hover">
+        <div class="gal-item">
+          <div class="gal-img-wrapper" (click)="pictureZoom(image)"
+            [ngStyle]="{'background-image':'url('+proxyUrl + '/' +image.path+')'}">
+          </div>
+          <div class="image-info">
+            <caption class="mo-w-full">{{image.attachmentName}}</caption>
+            <ul class="gal-controls">
+              <li class="mo-ms-auto">
+                <button [cdkCopyToClipboard]="proxyUrl + '/' +image.path" (click)="copyToClipboard()" mat-icon-button>
+                  <mat-icon>share</mat-icon>
+                </button>
+              </li>
+              <li>
+                <button (click)="downloadImg(image)" mat-icon-button>
+                  <mat-icon>download</mat-icon>
+                </button>
+              </li>
+              <li *appRole="['transformationImages', 'tsb_Remove']"><button (click)="onDeleteImage(image)"
+                class="mo-text-error-500" mat-icon-button>
+                <mat-icon>delete_outline</mat-icon>
+              </button></li>
+            </ul>
+          </div>
+        </div>
+      </li>
+    }
+  </ul>
+</div>
+
+<!--
+<ng-template #addImgModal>
+  <h5 mat-dialog-title>{{'administration.addLink' | translate}}</h5>
+  <form (ngSubmit)="addLink(addImgForm)" #addImgForm="ngForm">
+    <div mat-dialog-content>
+      <div class="mo-text-center mo-my-2">
+        <input #uploadField type="file" hidden (change)="uploadImage($event)" />
+        <button class="mo-px-5" type="button" (click)="uploadField.click()" mat-raised-button color="primary">
+          <mat-icon>file_upload</mat-icon> {{'members.upload' | translate}}
+        </button>
+      </div>
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'administration.link' | translate}}</mat-label>
+        <input type="text" matInput [(ngModel)]="linkName" name="linkName">
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button color="primary" type="submit">{{'members.save' | translate}}</button>
+    </div>
+  </form>
+</ng-template> -->
+
+
+<ng-template #photoModal>
+  <div class="mo-relative">
+    <button class="modal-close-btn" type="button" mat-icon-button (click)="dialog.closeAll()">
+      <mat-icon>close</mat-icon>
+    </button>
+    <img class="img-fluid" [src]="proxyUrl + '/' + selectedImg.path">
+  </div>
+</ng-template>

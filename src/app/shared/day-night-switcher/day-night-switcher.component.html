@@ -1,0 +1,27 @@
+<!-- <div class="toggleWrapper">
+<input type="checkbox" class="dn" id="dn" (change)="onSwitch()" [(ngModel)]="toggler" name="toggler" />
+<label for="dn" class="toggle">
+  <span class="toggle__handler">
+    <img *ngIf="toggler" src="assets/images/night-ico.png">
+    <img *ngIf="!toggler" src="assets/images/day-ico.png">
+  </span>
+  <span class="star star--1"></span>
+  <span class="star star--2"></span>
+  <span class="star star--3"></span>
+  <span class="star star--4"></span>
+  <span class="star star--5"></span>
+  <span class="star star--6"></span>
+</label>
+</div> -->
+
+<input type="checkbox" hidden #togglerCheckBox (change)="onSwitch()" [(ngModel)]="toggler" name="toggler" />
+
+<button [matTooltip]="toggler ? ('header.lightMode' | translate):('header.darkMode' | translate)"
+  (click)="togglerCheckBox.click()" mat-icon-button>
+  @if (!toggler) {
+    <mat-icon>nightlight</mat-icon>
+  }
+  @if (toggler) {
+    <mat-icon>sunny</mat-icon>
+  }
+</button>

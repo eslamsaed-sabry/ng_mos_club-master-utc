@@ -1,0 +1,119 @@
+<header class="mo-flex mo-items-center mo-my-3">
+  <mat-checkbox [(ngModel)]="filters.finalApprovedOnly" (change)="getDashboard()" name="finalApprovedOnly">
+    {{'reports.finalApprovedOnly' | translate}}
+  </mat-checkbox>
+
+  <div class="mo-ms-auto">
+    <mat-form-field appearance="outline">
+      <mat-label>{{'members.trainer' | translate}}</mat-label>
+      <mat-select multiple="true" (selectionChange)="onSelectTrainers()" [(ngModel)]="filters.trainersIds"
+        name="trainersIds">
+        @if (filters && filters.trainersIds) {
+        @if (filters.trainersIds.length != trainers.length) {
+        <mat-option [value]="99999">{{'common.selectAll' |
+          translate}}</mat-option>
+        }
+        @if (filters.trainersIds.length) {
+        <mat-option [value]="0">{{'common.deselectAll' |
+          translate}}</mat-option>
+        }
+        }
+        @for (trainer of trainers; track trainer) {
+        <mat-option [value]="trainer.id">{{trainer.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-ms-3" (click)="fromDate.open()">
+      <mat-label>{{'reports.table.month' | translate}}</mat-label>
+      <input matInput [matDatepicker]="fromDate" (dateChange)="getDashboard()" [(ngModel)]="filters.fromDate"
+        name="fromDate" />
+      <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+      <mat-datepicker #fromDate [startView]="'year'"></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+</header>
+<div class="row !mo-m-0">
+  <div class="col-lg-3 col-12">
+    <div class="card mo-px-2 mo-h-full">
+      @if (wholeTargetPieChart) {
+      <app-circle-chart [config]="wholeTargetPieChart"></app-circle-chart>
+      }
+    </div>
+  </div>
+  <div class="col-lg-9 col-12">
+    <div class="card mo-px-2">
+      @if (targetSalesPersonBarChart) {
+      <app-bar-chart [config]="targetSalesPersonBarChart"></app-bar-chart>
+      }
+    </div>
+  </div>
+</div>
+
+@for (trainer of trainersSummary; track trainer) {
+<div class="row !mo-mt-3 !mo-mx-0">
+  <div class="col-lg-3 col-12">
+    <div class="card mo-px-2 mo-h-full">
+      <app-circle-chart
+        [config]="chartService.generateWholeTargetPieChart(trainer, 'employeeName',filters.fromDate)"></app-circle-chart>
+    </div>
+  </div>
+  <div class="col-lg-9 col-12">
+    <div class="card mo-px-2 mo-h-full">
+      <app-line-chart
+        [config]="chartService.generateLineChart(trainer.employeeName,trainer.salesDayByDay,filters.fromDate)"></app-line-chart>
+    </div>
+  </div>
+  <div class="col-12 mo-mt-2">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <div class="text-primary mo-flex mo-items-center">
+              <mat-icon>table_chart</mat-icon><strong class="mo-mx-3">{{'dashboard.salesDayByDayTable' |
+                translate}}</strong>
+            </div>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'reports.table.date' | translate}}</th>
+                <th>{{'dashboard.salesByOperation' | translate}}</th>
+                <th>{{'dashboard.salesPerPackage' | translate}}</th>
+                <th><mat-icon>settings</mat-icon></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (day of trainer.salesDayByDay; track day) {
+              <tr>
+                <td>{{day.atDate | date:'mediumDate'}}</td>
+                <td>{{day.salesPerOperation}}</td>
+                <td>{{day.salesPerPackage}}</td>
+                <td>
+                  <button [routerLink]="['/admin/reports/trainersAchievement']" [queryParams]="{
+                                    trainersIds:day.employeeId,
+                                    date: day.atDate,
+                                    finalOnly: filters.finalApprovedOnly
+                                }" mat-button color="primary">{{'extra.viewDetails' | translate}}</button>
+                </td>
+              </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td><strong>{{'reports.table.total' | translate}}</strong></td>
+                <td>{{trainer.totalSalesPerOperation}}</td>
+                <td>{{trainer.totalSalesPerPackage}}</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>
+}

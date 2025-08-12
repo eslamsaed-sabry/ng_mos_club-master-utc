@@ -1,0 +1,31 @@
+@if (showAddBtn) {
+  <div class="mo-my-3 mo-text-end">
+    <button [appRoleAttr]="['attachments','tsb_Add']" (click)="addAttachment()"
+      mat-raised-button color="primary">
+      <mat-icon>attachment</mat-icon> {{'staff.addAttachment' | translate}}
+    </button>
+  </div>
+}
+
+<div class="row !mo-mx-0">
+  @for (attach of attachments; track attach) {
+    <div class="col-md-3 col-12 mo-mb-3">
+      <div class="attachment-card">
+        <div class="img-container" [ngStyle]="{'background-image':'url('+proxyUrl + '/' +attach.path+')'}"></div>
+        <h6 class="mo-font-bold mo-pt-2 text-truncate">{{attach.attachmentName}}</h6>
+        <div class="mo-flex-mo-flex-wrap mo-justify-center">
+          <button (click)="downloadAttachment(attach)" mat-icon-button
+            matTooltip="{{'staff.download' | translate}}"><mat-icon>download</mat-icon></button>
+            <button (click)="deleteAttachment(attach)" [appRoleAttr]="['attachments','tsb_Remove']" color="warn"
+              matTooltip="{{'staff.delete' | translate}}" mat-icon-button><mat-icon>delete_forever</mat-icon></button>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (attachments.length === 0) {
+        <div class="mo-text-center mo-my-5">
+          {{'staff.noAttachment' | translate}}
+        </div>
+      }
+    </div>

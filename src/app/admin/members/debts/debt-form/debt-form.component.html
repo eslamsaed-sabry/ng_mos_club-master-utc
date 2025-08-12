@@ -1,0 +1,144 @@
+<h5 mat-dialog-title class="mo-font-bold mo-my-2">{{'receipts.installmentDetails' | translate}}
+  @if (data.type === 'payoff') {
+    <div class="mo-font-bold mo-text-center">
+      <label class="fs-6">{{'common.yourCurrentBranch' | translate}}{{branchName}}</label>
+    </div>
+  }
+</h5>
+
+<form (ngSubmit)="payoffInstallment(installmentForm)" #installmentForm="ngForm">
+  <div mat-dialog-content>
+    @if (data.memberData) {
+      <div class="main-section">
+        <mat-form-field appearance="outline">
+          <mat-label>{{'reports.table.memberContractNo' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.applicationNo" name="contractNo" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{'reports.table.memberCode' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.code" name="accessCode" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{'reports.table.memberPhone' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.phoneNo" name="phoneNo" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{'reports.table.memberName' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="data.memberData.nameEng" name="nameEng" required />
+        </mat-form-field>
+      </div>
+    }
+    <hr>
+
+      @if (data.type === 'payoff') {
+        <div class="row">
+          <div class="col-md-6 col-12">
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.paymentDate' | translate}}</mat-label>
+              <input [disabled]="'hasNo'|permission:'debts':'dtpPaymentDate'" [max]="today" matInput type="datetime-local"
+                [(ngModel)]="installment.paymentDate" name="paymentDate">
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 col-12">
+              <mat-form-field class="mo-w-full" appearance="outline">
+                <mat-label>{{'members.paymentAmount' | translate}}</mat-label>
+                <input matInput [(ngModel)]="amount" name="amount" required />
+              </mat-form-field>
+            </div>
+          </div>
+        }
+
+        @if (installment.amount > amount) {
+          <div class="row">
+            <div class="col-md-6 col-12">
+              <mat-form-field class="mo-w-full" appearance="outline">
+                <mat-label>{{'members.nextDueDate' | translate}}</mat-label>
+                <input [required]="installment.amount > amount" [min]="today" matInput type="datetime-local"
+                [(ngModel)]="installment.nextDueDate" name="nextDueDate">
+              </mat-form-field>
+            </div>
+          </div>
+        }
+
+        <div class="row">
+          @if (data.type === 'editInstallment' || installment.amount < dueAmount) {
+            <div class="col-12">
+              <mat-form-field class="mo-w-full" (click)="dueDatepicker.open()" appearance="outline">
+                <mat-label>{{'reports.table.dueDate' | translate}}</mat-label>
+                <input matInput [matDatepicker]="dueDatepicker" [(ngModel)]="installment.dueDate" name="dueDate" />
+                <mat-datepicker-toggle matSuffix [for]="dueDatepicker"></mat-datepicker-toggle>
+                <mat-datepicker #dueDatepicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          }
+
+          @if (data.type === 'settlementDate') {
+            <div class="col-md-6 col-12">
+              <mat-form-field class="mo-w-full" (click)="settleementDatepicker.open()" appearance="outline">
+                <mat-label>{{'reports.table.settlementDate' | translate}}</mat-label>
+                <input matInput [matDatepicker]="settleementDatepicker" [max]="today" [(ngModel)]="installment.settlementDate"
+                  name="settlementDate" />
+                  <mat-datepicker-toggle matSuffix [for]="settleementDatepicker"></mat-datepicker-toggle>
+                  <mat-datepicker #settleementDatepicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            }
+
+            @if (data.type === 'settlementDate') {
+              <div class="col-md-6 col-12">
+                <ngx-timepicker-field [defaultTime]="time" (timeChanged)="getTime($event)"></ngx-timepicker-field>
+              </div>
+            }
+          </div>
+
+          @if (data.type !== 'editInstallment') {
+            <div class="row">
+              <div class="col-12">
+                <label class="mo-font-bold" for="Select Payment Method">{{'receiptPrint.paymentMethod' |translate}}</label>
+                <mat-radio-group class="mo-mx-3" aria-label="Select Payment Method" [(ngModel)]="installment.isCash"
+                  name="isCash" required>
+                  <mat-radio-button [value]="true">{{'receiptPrint.cash' | translate}}
+                  </mat-radio-button>
+                  <mat-radio-button [value]="false">{{'receiptPrint.visa' | translate}}
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+              @if (!installment.isCash) {
+                <div class="col-12">
+                  <mat-form-field class="mo-w-full" appearance="outline">
+                    <mat-label>{{'members.visaType' | translate}}</mat-label>
+                    <mat-select [(ngModel)]="installment.visaTypeId" name="visaTypeId" required>
+                      @for (v of visaTypes; track v) {
+                        <mat-option [value]="v.id">{{v.name}}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              }
+              @if (isShowReceiptNo) {
+                <div class="col-12">
+                  <mat-form-field class="mo-w-full" appearance="outline">
+                    <mat-label>{{'members.receiptNo' | translate}}</mat-label>
+                    <input matInput [(ngModel)]="installment.receiptNo" name="receiptNo" required />
+                  </mat-form-field>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <div mat-dialog-actions class="mo-justify-end">
+          <button (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+          @if (data.type === 'payoff') {
+            <button mat-raised-button color="primary" type="submit">
+              {{'members.save' | translate}}
+            </button>
+          }
+          @if (data.type === 'editInstallment' || data.type === 'settlementDate') {
+            <button mat-raised-button color="primary"
+              type="button" (click)="editInstallment(installmentForm)">
+              {{'members.save' | translate}}
+            </button>
+          }
+        </div>
+      </form>

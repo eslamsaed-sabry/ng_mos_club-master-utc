@@ -1,0 +1,173 @@
+.personal-data-list {
+  li {
+    min-height: 50px;
+    margin-bottom: 20px;
+
+    label {
+      color: rgb(148, 148, 148);
+    }
+
+    p {
+      font-weight: bold;
+      white-space: nowrap;
+      margin: 0;
+    }
+  }
+}
+
+
+.profile-pic {
+  cursor: zoom-in;
+  transition: all .3s ease 0s;
+
+  &:hover {
+    opacity: .7;
+  }
+}
+
+.modal-close-btn {
+  background-color: #FFF;
+}
+
+.COMPACT {
+  background: #FFF;
+  box-shadow: 0 0 3px #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+
+  div:first-of-type {
+    text-align: center;
+  }
+
+  .profile-pic {
+    height: 250px;
+    border-radius: 100%;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .personal-data-list {
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: flex;
+      flex-wrap: wrap;
+      min-height: 28px;
+      margin-bottom: 5px;
+
+      label {
+        width: 155px;
+      }
+    }
+  }
+}
+
+.STANDARD {
+  .profile-pic {
+    max-height: 300px;
+    max-width: 100%;
+    height: auto;
+    width: auto !important;
+  }
+}
+
+.HORIZONTAL {
+  display: flex;
+  gap: 10px;
+  background: #FFF;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+
+  >div:first-child {
+    width: 250px;
+    text-align: center;
+  }
+
+  .personal-data-list {
+    display: grid;
+    // grid-template-columns: repeat(2, auto); 
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, auto);
+    gap: 10px;
+    width: 100%;
+
+    @media (max-width:1366px) {
+      grid-template-rows: repeat(12, auto);
+    }
+    @media (max-width:640px) {
+      grid-auto-flow: row;
+    }
+
+    li {
+      min-height: auto;
+      margin-bottom: 0px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      mat-icon {
+        font-size: 16px;
+      }
+
+      p {
+        white-space: normal;
+      }
+    }
+  }
+}
+
+ul.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: space-between;
+  margin: 15px 0 0 0;
+  padding: 0;
+}
+
+@mixin _fadeAnimation($ColorVar) {
+  border: 5px solid var($ColorVar);
+  box-shadow: 0 0 35px var($ColorVar);
+  animation: fadeInOut-#{$ColorVar} 2s infinite;
+
+  @keyframes fadeInOut-#{$ColorVar} {
+
+    0%,
+    100% {
+      box-shadow: 1px 0px 30px 4px var($ColorVar), inset 0px 0px 10px rgba(255, 255, 255, 0.5);
+    }
+
+    50% {
+      box-shadow: 0px 0px 0px 0px rgba(255, 0, 0, 0), inset 0px 0px 0px rgba(255, 255, 255, 0);
+    }
+  }
+}
+
+.status-Expired,
+.status-Cancelled,
+.status-Suspended {
+  @include _fadeAnimation(--error-color);
+}
+
+.status-Active {
+  @include _fadeAnimation(--success-color);
+}
+
+.status-Freezed {
+  @include _fadeAnimation(--info-color);
+}
+
+.status-Postponed,
+.status-Transferred,
+.status-PendingApproval {
+  @include _fadeAnimation(--warning-color);
+}
+
+.blocked-notice {
+  margin-bottom: -35px;
+  position: relative;
+  z-index: 9;
+}

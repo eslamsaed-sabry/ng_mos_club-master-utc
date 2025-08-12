@@ -1,0 +1,142 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  <form>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'members.contractNo' | translate}}</mat-label>
+      <input matInput [(ngModel)]="filters.applicationNo" name="contractNo" type="text"
+        placeholder="{{'members.contractNo' | translate}}" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.accessCode' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.code" name="accessCode" type="text"
+          placeholder="{{'members.accessCode' | translate}}" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.memberName' | translate}}</mat-label>
+          <input matInput [(ngModel)]="filters.name" name="memberName" type="text"
+            placeholder="{{'members.memberName' | translate}}" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'reports.table.memberPhone' | translate}}</mat-label>
+            <input matInput [(ngModel)]="filters.phoneNo" name="phoneNo" type="text"
+              placeholder="{{'reports.table.memberPhone' | translate}}" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.gender' | translate}}</mat-label>
+              <mat-select [(ngModel)]="filters.gender" name="gender">
+                <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+                <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-radio-group [(ngModel)]="filters.isPossibleMember" name="isPossibleMember" aria-label="Select an option">
+              <mat-radio-button class="mo-m-0 mo-d-block" [value]="null">
+                {{'members.all' | translate}}
+              </mat-radio-button>
+              <mat-radio-button class="mo-m-0 d-block" [value]="false">
+                {{'members.membersOnly' |translate}}
+              </mat-radio-button>
+              <mat-radio-button class="mo-m-0 d-block" [value]="true">
+                {{'members.potentialMembersOnly' |translate}}
+              </mat-radio-button>
+            </mat-radio-group>
+
+            <mat-form-field class="mo-w-full" (click)="joiningDateFrom.open()">
+              <mat-label>{{'reports.table.joiningDateFrom' | translate}}</mat-label>
+              <input matInput [matDatepicker]="joiningDateFrom" [(ngModel)]="filters.joiningDateFrom" name="joiningDateFrom"
+                required />
+                <mat-datepicker-toggle matSuffix [for]="joiningDateFrom"></mat-datepicker-toggle>
+                <mat-datepicker #joiningDateFrom></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field class="mo-w-full" (click)="joiningDateTo.open()">
+                <mat-label>{{'reports.table.joiningDateTo' | translate}}</mat-label>
+                <input matInput [matDatepicker]="joiningDateTo" [(ngModel)]="filters.joiningDateTo" name="joiningDateTo"
+                  required />
+                  <mat-datepicker-toggle matSuffix [for]="joiningDateTo"></mat-datepicker-toggle>
+                  <mat-datepicker #joiningDateTo></mat-datepicker>
+                </mat-form-field>
+
+                <div class="mo-flex mo-items-center">
+                  <mat-checkbox [(ngModel)]="filters!!.ageFrom" name="ageFrom" (change)="onChange('ageFrom', $event)"
+                  class="mo-me-1"></mat-checkbox>
+                  <mat-form-field appearance="outline" class="mo-w-full" (click)="ageFrom.open()">
+                    <mat-label>{{'members.birthDateFrom' | translate}}</mat-label>
+                    <input matInput [matDatepicker]="ageFrom" [(ngModel)]="filters.ageFrom" name="ageFrom" />
+                    <mat-datepicker-toggle matSuffix [for]="ageFrom"></mat-datepicker-toggle>
+                    <mat-datepicker #ageFrom></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <div class="mo-flex mo-items-center">
+                  <mat-checkbox [(ngModel)]="filters!!.ageTo" name="ageTo" (change)="onChange('ageTo', $event)"
+                  class="mo-me-1"></mat-checkbox>
+                  <mat-form-field appearance="outline" class="mo-w-full mo-my-2" (click)="ageTo.open()">
+                    <mat-label>{{'members.birthDateTo' | translate}}</mat-label>
+                    <input matInput [matDatepicker]="ageTo" [(ngModel)]="filters.ageTo" name="ageTo" />
+                    <mat-datepicker-toggle matSuffix [for]="ageTo"></mat-datepicker-toggle>
+                    <mat-datepicker #ageTo></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <mat-checkbox [(ngModel)]="isActive" (change)="getSales()" name="isActive">{{'staff.activeSalesOnly' |
+                  translate}}
+                </mat-checkbox>
+
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.salesPersonId" name="salesPersonId">
+                    <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                    @for (el of sales; track el) {
+                      <mat-option [value]="el.id">{{el.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.nationality' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.nationalityId" name="coachId">
+                    <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                    @for (el of nationality; track el) {
+                      <mat-option [value]="el.id">{{el.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.region' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.regionId" name="status">
+                    <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                    @for (s of region; track s) {
+                      <mat-option [value]="s.id">{{s.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.level' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.levelId" name="status">
+                    <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                    @for (s of level; track s) {
+                      <mat-option [value]="s.id">{{s.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="mo-w-full" appearance="outline">
+                  <mat-label>{{'members.sourceOfK' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.sourceOfKnowledgeId" name="sourceOfKnowledge">
+                    <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                    @for (el of sources; track el) {
+                      <mat-option [value]="el.id">{{el.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </form>
+            </div>

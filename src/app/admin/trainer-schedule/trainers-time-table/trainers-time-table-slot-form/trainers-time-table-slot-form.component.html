@@ -1,0 +1,65 @@
+<h5 mat-dialog-title class="mo-font-bold mo-my-2">{{'members.slotDetails' | translate}}</h5>
+<form (ngSubmit)="submit(slotForm)" #slotForm="ngForm">
+
+  <div mat-dialog-content class="mo-pt-0">
+
+    <div class="row">
+      <div class="col-12 mo-mb-2">
+        <app-advanced-search [autoPredict]="true" [config]="config"
+        (selectedMember)="getSelectedMember($event)"></app-advanced-search>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.memberName' | translate}}</mat-label>
+          <input matInput disabled [(ngModel)]="timeTableSlot.memberName" name="memberName" required />
+        </mat-form-field>
+      </div>
+      <hr>
+
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'classSchedule.startDate' | translate}}</mat-label>
+            <input matInput type="datetime-local" [(ngModel)]="timeTableSlot.startDate" name="startDate" required>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12" *appRole="['membershipsBasic','ShowAllPrivateData']">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.createdTo' | translate}}</mat-label>
+            <mat-select [(ngModel)]="timeTableSlot.employeeId" name="employeeId" required>
+              @for (el of trainers; track el) {
+                <mat-option [value]="el.id">{{el.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.reservationTypes' | translate}}</mat-label>
+            <mat-select [(ngModel)]="timeTableSlot.typeId" name="typeId" required>
+              @for (el of reservationTypes; track el) {
+                <mat-option [value]="el.id">{{el.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'packages.durationInMinutes' | translate}}</mat-label>
+            <input matInput type="number" [(ngModel)]="timeTableSlot.durationInMinutes" name="durationInMinutes" required>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </div>
+
+    <div mat-dialog-actions class="mo-justify-end">
+      <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit">
+        {{'members.save' | translate}}
+      </button>
+    </div>
+  </form>

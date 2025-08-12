@@ -1,0 +1,15 @@
+.ranges-list {
+  margin: 10px 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    >div {
+      margin: 0 5px;
+      width: 30%;
+    }
+  }
+}

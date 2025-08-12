@@ -1,0 +1,56 @@
+<h5 mat-dialog-title>{{'navigation.machines' | translate}}</h5>
+<form (ngSubmit)="submit(itemForm)" #itemForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'management.machineName' | translate}}</mat-label>
+      <input type="text" matInput [(ngModel)]="machine.machineName" name="machineName" required>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'classSchedule.location' | translate}}</mat-label>
+      <mat-select [(ngModel)]="machine.locationId" name="locationId" required>
+        <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+        @for (l of locations; track l) {
+          <mat-option [value]="l.id">{{l.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'management.model' | translate}}</mat-label>
+      <mat-select [(ngModel)]="machine.modelId" name="modelId" required>
+        <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+        @for (m of machinesModels; track m) {
+          <mat-option [value]="m.id">{{m.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline" (click)="purchaseDatePicker.open()">
+      <mat-label>{{'management.purchaseDate' | translate}}</mat-label>
+      <input matInput [matDatepicker]="purchaseDatePicker" [(ngModel)]="machine.purchaseDate" name="purchaseDate"
+        required />
+        <mat-datepicker-toggle matSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #purchaseDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'management.purchasePrice' | translate}}</mat-label>
+        <input type="number" matInput [(ngModel)]="machine.purchasePrice" name="purchasePrice" required>
+      </mat-form-field>
+
+      <div>
+        <mat-checkbox [(ngModel)]="machine.isNew" name="isNew">{{'management.isNew' | translate}}</mat-checkbox>
+      </div>
+
+    </div>
+
+    <div mat-dialog-actions class="mo-justify-end">
+      <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit">
+        {{'members.save' | translate}}
+      </button>
+    </div>
+  </form>

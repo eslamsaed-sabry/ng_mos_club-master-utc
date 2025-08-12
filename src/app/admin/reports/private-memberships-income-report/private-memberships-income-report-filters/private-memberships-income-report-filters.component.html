@@ -1,0 +1,70 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  <form>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+      <input [disabled]="'hasNo' | permission : 'privateMembershipsIncome':'dtp_Date'" matInput type="datetime-local"
+        [(ngModel)]="filters.fromDate" name="fromDate" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+        <input [disabled]="'hasNo' | permission : 'privateMembershipsIncome':'dtp_Date'" matInput type="datetime-local"
+          [(ngModel)]="filters.toDate" name="toDate" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.branches' | translate}}</mat-label>
+          <mat-select [(ngModel)]="filters.branchesIds" name="branchesIds" multiple>
+            <mat-option [value]="0" (click)="onSelect()">{{'common.selectAll' | translate}}</mat-option>
+            @for (el of branches; track el) {
+              <mat-option [value]="el.id">
+                {{el.name}}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full mo-mb-2">
+          <mat-label>{{'reports.table.selectUser' | translate}}</mat-label>
+          <mat-select [disabled]="'hasNo' | permission : 'privateMembershipsIncome':'ShowAllData'"
+            [(ngModel)]="filters.userId" name="userId">
+            <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+            @for (user of users; track user) {
+              <mat-option [value]="user.id">{{user.userName}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <ul>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.finalApprovedOnly" name="finalApprovedOnly">
+            {{'reports.finalApprovedOnly' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeMemberships" name="includeMemberships">
+            {{'reports.includePrivateMemberships' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeDebts" name="includeDebts">{{'reports.includeDebts' | translate}}
+            </mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeUpgrade" name="includeUpgrade">
+              {{'reports.includeUpgrade' | translate}}
+            </mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeDowngrade" name="includeDowngrade">
+            {{'reports.includeDowngrade' | translate}}</mat-checkbox>
+          </li>
+          <li>
+            <mat-checkbox [(ngModel)]="filters.includeRefunds" name="includeRefunds">
+              {{'reports.includeRefunds' | translate}}
+            </mat-checkbox>
+          </li>
+        </ul>
+      </form>
+
+    </div>

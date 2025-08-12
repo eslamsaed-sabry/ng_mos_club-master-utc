@@ -1,0 +1,23 @@
+.compare-list {
+  display: flex;
+  align-items: flex-start;
+
+  li {
+    // background-size: cover;
+    // border: 1px solid #ccc;
+    padding: 10px;
+    width: 50%;
+    overflow: hidden;
+    margin: 10px;
+    max-height: 450px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+
+    img {
+      width: 100%;
+      max-height: 92%;
+      border-radius: 5px;
+    }
+
+  }
+}

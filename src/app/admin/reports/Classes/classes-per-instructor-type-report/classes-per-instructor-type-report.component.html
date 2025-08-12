@@ -1,0 +1,51 @@
+<app-reports-page-header [permissions]="['classesPerInstructorAndTypeReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.classesPerInstructorType' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-classes-report-filter [filters]="filters"
+    [nameOfReport]="classesReportsName.CLASSES_PER_INS_AND_TYPE_REPORT"></app-classes-report-filter>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'classSchedule.instructor' | translate}}</th>
+                  <th>{{'classSchedule.className' | translate}}</th>
+                  <th>{{'classSchedule.heldCount' | translate}}</th>
+                  <th>{{'classSchedule.attendedCount' | translate}}</th>
+                  <th>{{'classSchedule.notAttendedCount' | translate}}</th>
+                  <th>{{'classSchedule.waitingList' | translate}}</th>
+                  <th>{{'reports.table.total' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.instructorName }}</td>
+                    <td>{{el.className}}</td>
+                    <td>{{el.classCount}}</td>
+                    <td>{{el.attendedCount}}</td>
+                    <td>{{el.bookingCount}}</td>
+                    <td>{{el.watingListCount}}</td>
+                    <td>{{el.memberCount}}</td>
+                  </tr>
+                }
+                @if (reports&&reports.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

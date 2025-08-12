@@ -1,0 +1,53 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.permissions' | translate}} </h4>
+  <div class="actions">
+    <mat-form-field class="mo-mx-2">
+      <mat-label>{{'members.search' | translate}} ...</mat-label>
+      <input type="text" matInput placeholder="find page name" (keyup)="onSearch($event)">
+    </mat-form-field>
+    <button *appRole="['roles','tsb_Save']" color="primary" (click)="save()" mat-raised-button>
+      <mat-icon>save_as</mat-icon> {{'administration.save' | translate}}
+    </button>
+  </div>
+</div>
+
+
+<div class="card p-3">
+  <div class="mo-flex mo-items-baseline">
+    <span class="mo-me-3">{{'administration.permissionsFor' | translate}}:</span>
+    <mat-form-field class="w-25" appearance="outline">
+      <mat-label>Role</mat-label>
+      <mat-select [(ngModel)]="selectedRole" name="selectedRole" (selectionChange)="getPermissions()">
+        @for (r of roles; track r) {
+          <mat-option [value]="r.id">{{r.nameEng + ' (' + r.nameAr + ')'}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div class="mo-ms-auto">
+      <button color="primary" class="mo-mx-1" mat-raised-button (click)="accordion.openAll()">
+        <mat-icon>playlist_add</mat-icon>{{'administration.openAll' | translate}}</button>
+        <button color="primary" class="mo-mx-1" mat-raised-button (click)="accordion.closeAll()">
+          <mat-icon>close</mat-icon>{{'administration.closeAll' |translate}}</button>
+        </div>
+      </div>
+
+      <mat-accordion multi>
+        @for (panel of permissionsList; track panel) {
+          <mat-expansion-panel [ngClass]="{'d-none': panel.hide}">
+            <mat-expansion-panel-header>
+              <mat-panel-title><strong>{{panel.pageName}}</strong></mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul class="permissions-list">
+              @for (p of panel.permissions; track p; let i = $index) {
+                <li>
+                  <mat-checkbox (change)="onChange(p)" [(ngModel)]="p.isAllowed"
+                  name="ctrlID-{{i}}">{{p.controlName}}</mat-checkbox>
+                </li>
+              }
+            </ul>
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+
+    </div>

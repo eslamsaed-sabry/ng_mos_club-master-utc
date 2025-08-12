@@ -1,0 +1,104 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0">{{'navigation.branchesVisits' | translate}}</h4>
+</div>
+
+<div class="card mo-pb-0 mo-mb-4">
+  <form (ngSubmit)="submit(searchMemberForm)" #searchMemberForm="ngForm">
+    @if (getCountryCode$ | async) {
+    }
+    <h4 class="mo-mb-3 mo-font-bold">{{'members.search' | translate}} {{'members.member' | translate}}</h4>
+    <div class="mo-flex mo-items-start mo-gap-3 max-sm:mo-flex-col">
+      <mat-form-field appearance="outline">
+        <mat-label>{{'members.countryCode'|translate}}</mat-label>
+        <mat-select [(ngModel)]="phoneFormatId" name="phoneFormatId" required>
+          @for (c of countryCodes; track c) {
+            <mat-option [value]="c.id">{{c.displayName}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- pattern="[0]{1}[0-9]{10}" -->
+      <mat-form-field appearance="outline">
+        <mat-label>{{'members.phone' | translate}}</mat-label>
+        <input matInput [(ngModel)]="phoneNumber" autocomplete="disableitPlease" name="phoneNumber" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{'members.branch' | translate}}</mat-label>
+        <mat-select name="branchId" [(ngModel)]="branchId" required>
+          @for (branch of branches$ | async; track branch) {
+            <mat-option
+            [value]="branch.id">{{branch.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <button type="submit" class="!mo-h-[56px] !mo-px-10" mat-flat-button color="primary">{{'members.search' |
+      translate}}</button>
+    </div>
+
+  </form>
+</div>
+@if (memberData) {
+  <div class="card mo-mb-3">
+    <h3 class="mo-mb-3 mo-font-bold">{{'members.memberInfo' | translate}}</h3>
+    <div class="mo-flex mo-gap-3">
+      <div class="mo-h-[250px] mo-w-[250px] mo-overflow-hidden mo-rounded-lg">
+        @if (memberData.confirmedPhoto) {
+          <img class="mo-w-full mo-max-h-full"
+            [ngClass]="'status-' + (memberData.statusCode | membershipStatus)"
+            [src]="proxyUrl + '/Images/' + memberData.confirmedPhoto">
+          }
+        </div>
+        <div>
+          <ul>
+            <li class="mo-flex mo-gap-3 mo-items-center mo-mb-2">
+              <div class="mo-w-[130px] mo-text-neutral-600">{{'members.memberName' | translate}}</div>
+              <span class="mo-font-bold">{{memberData.memberName}}</span>
+            </li>
+            <li class="mo-flex mo-gap-3 mo-items-center mo-mb-2">
+              <div class="mo-w-[130px] mo-text-neutral-600">{{'staff.phone' | translate}}</div>
+              <span class="mo-font-bold">{{memberData.phoneNo}}</span>
+            </li>
+            <li class="mo-flex mo-gap-3 mo-items-center mo-mb-2">
+              <div class="mo-w-[130px] mo-text-neutral-600">{{'members.gender' | translate}}</div>
+              <span class="mo-font-bold">{{'members.'+(memberData.genderName | lowercase) | translate}}</span>
+            </li>
+            <li class="mo-flex mo-gap-3 mo-items-center mo-mb-2">
+              <div class="mo-w-[130px] mo-text-neutral-600">{{'members.packageName' | translate}}</div>
+              <span class="mo-font-bold">{{memberData.packageName}}</span>
+              <div class="!mo-my-0 status-badge {{memberData.statusCode | membershipStatus}}">
+                {{'membershipStatus.'+(memberData.statusCode | membershipStatus | lowercase) | translate}}
+              </div>
+            </li>
+            <li class="mo-flex mo-gap-3 mo-items-center mo-mb-2">
+              <div class="mo-w-[130px] mo-text-neutral-600">{{'members.startDate' | translate}}</div>
+              <span class="mo-font-bold">{{memberData.startDate | date}}</span>
+            </li>
+            <li class="mo-flex mo-gap-3 mo-items-center mo-mb-2">
+              <div class="mo-w-[130px] mo-text-neutral-600">{{'notifications.expirationDate' | translate}}
+              </div>
+              <span class="mo-font-bold">{{memberData.expirationDate | date}}</span>
+            </li>
+            <li class="mo-flex mo-gap-3 mo-items-center mo-mb-2">
+              <div class="mo-w-[130px] mo-text-neutral-600">{{'members.visits' | translate}}</div>
+              <span class="mo-font-bold">{{memberData.visits.consumedCount}} /
+              {{memberData.visits.count}}</span>
+              <button (click)="showVisits()" color="primary" mat-flat-button>{{onShowVisits ? ('extra.hide' |
+              translate) : ('members.show' | translate)}}</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    @if (onShowVisits) {
+      <div>
+        <app-material-table [dataTable]="visits" [cols]="displayedCols" [defaultSearch]="false">
+          <div tableHeader class="mo-text-end mo-w-full mo-mb-3">
+            <button mat-flat-button color="primary" (click)="onAddVisit()">{{'members.addVisit' |
+            translate}}</button>
+          </div>
+        </app-material-table>
+      </div>
+    }
+  }

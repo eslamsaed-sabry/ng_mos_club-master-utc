@@ -1,0 +1,82 @@
+<div class="print-wrapper" [ngStyle]="{'direction': direction}">
+  <div mat-dialog-title>
+    <div class="mo-flex mo-justify-between">
+      <small class="mo-text-muted mo-text-xs">
+        {{'receiptPrint.printedBy' | translate}} {{user.userName}}
+      </small>
+      <small class="mo-text-muted mo-text-xs">
+        {{'receiptPrint.createdAt' | translate}} {{today | date:'MMM d, y, h:mm a'}}
+      </small>
+    </div>
+    <div class="img-logo" [ngStyle]="{'background-image': 'url('+ logo +')'}"></div>
+    <h5 class="mo-font-bold mo-text-center">{{'receiptPrint.paymentRed' | translate}}</h5>
+  </div>
+
+  <mat-dialog-content>
+    @if (receiptFormat === 'SMALL') {
+      <ul class="data-list-small">
+        <li>
+          <label>{{'reports.table.date' | translate }}</label>
+          <span>{{data.actionDate | date:'MMM d, y, h:mm a'}}</span>
+        </li>
+        <li>
+          <label>{{'staff.staffMember' | translate}}</label>
+          <span>{{data.staffMemberName}}</span>
+        </li>
+        <li>
+          <label>{{'accounts.amount' | translate}}</label>
+          <span>{{data.price}}</span>
+        </li>
+        <li>
+          <label>{{'reports.table.description' | translate}}</label>
+          <span>{{data.description}}</span>
+        </li>
+      </ul>
+    }
+
+
+    @if (receiptFormat === 'LARGE') {
+      <ul class="data-list-wide">
+        <li>
+          <label>{{'reports.table.date' | translate }}</label>
+          <span>{{data.actionDate | date:'MMM d, y, h:mm a'}}</span>
+        </li>
+        <li>
+          <label>{{'staff.staffMember' | translate}}</label>
+          <span>{{data.staffMemberName}}</span>
+        </li>
+        <li>
+          <label>{{'accounts.amount' | translate}}</label>
+          <span>{{data.price}}</span>
+        </li>
+        <li>
+          <label>{{'reports.table.description' | translate}}</label>
+          <span>{{data.description}}</span>
+        </li>
+      </ul>
+    }
+
+    @if (receiptFormat === 'LARGE') {
+      <ul class="signature">
+        <li>
+          {{'receiptPrint.memSign' | translate}}
+        </li>
+        <li>
+          {{'receiptPrint.salesSign' | translate}}
+        </li>
+      </ul>
+    }
+
+    <hr>
+      <p class="mo-text-muted mo-text-center">
+        {{endMsg}}<br>
+        {{'receiptPrint.poweredBy' | translate}}<br>
+      </p>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="mo-justify-end">
+      <button mat-button color="default" type="button" (click)="dismiss()">{{'common.close' | translate}}</button>
+      <button mat-raised-button color="primary" (click)="print()" type="button">{{'reports.print' | translate}}</button>
+    </mat-dialog-actions>
+
+  </div>

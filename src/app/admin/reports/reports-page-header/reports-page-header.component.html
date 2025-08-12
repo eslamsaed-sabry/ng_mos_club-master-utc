@@ -1,0 +1,31 @@
+<div class="page-title">
+  <div class="mo-flex mo-items-center mo-gap-4">
+    <h4 class="mo-font-bold mo-m-0"> {{reportName}} </h4>
+    <ng-content></ng-content>
+  </div>
+
+  <div class="actions">
+    @if (isResult) {
+      <app-export-excel [appRoleAttr]="[permissions[0],permissions[2]]" [fileName]="reportName"
+      ></app-export-excel>
+    }
+
+    @if (isResult) {
+      <button type="button" mat-raised-button [appRoleAttr]="[permissions[0],permissions[1]]"
+        color="accent" (click)="emitAction('print')">
+        <mat-icon>print</mat-icon>
+        {{'reports.print' | translate}}
+      </button>
+    }
+    @if(!hideGenerateBtn()){
+      <button class="mo-mx-2" type="button" (click)="emitAction('generate')" mat-raised-button color="primary">
+        <mat-icon>insert_drive_file</mat-icon>
+      {{'reports.genReport' | translate}} </button>
+    }
+    @if(!hideClearBtn()){
+      <button color="primary" type="button" (click)="emitAction('clear')" mat-raised-button color="default">
+        <mat-icon>clear</mat-icon>
+      {{'reports.clear' | translate}} </button>
+    }
+  </div>
+</div>

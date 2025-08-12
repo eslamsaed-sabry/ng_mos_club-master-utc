@@ -1,0 +1,48 @@
+<form class="filters-container" #callFiltersForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+  <div class="row">
+    <div class="mo-flex mo-items-center">
+      <mat-form-field appearance="outline" class="mo-w-full" (click)="reminderDateFrom.open()">
+        <mat-label>{{'reports.table.reminderDateFrom' | translate}}</mat-label>
+        <input matInput [matDatepicker]="reminderDateFrom" [(ngModel)]="filters.reminderDateFrom"
+          name="reminderDateFrom" />
+          <mat-datepicker-toggle matSuffix [for]="reminderDateFrom"></mat-datepicker-toggle>
+          <mat-datepicker #reminderDateFrom></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="mo-flex mo-items-center">
+        <mat-checkbox [(ngModel)]="filters!!.reminderDateTo" name="reminderDateTo"
+        (change)="onChange('reminderDateTo', $event)" class="mo-mo-me-1"></mat-checkbox>
+        <mat-form-field appearance="outline" class="mo-w-full mo-my-2" (click)="reminderDateTo.open()">
+          <mat-label>{{'reports.table.reminderDateTo' | translate}}</mat-label>
+          <input matInput [matDatepicker]="reminderDateTo" [(ngModel)]="filters.reminderDateTo" name="reminderDateTo" />
+          <mat-datepicker-toggle matSuffix [for]="reminderDateTo"></mat-datepicker-toggle>
+          <mat-datepicker #reminderDateTo></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+          <mat-select [(ngModel)]="filters.salesPersonId" name="salesPersonId">
+            @for (sale of sales; track sale) {
+              <mat-option [value]="sale.id">{{sale.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-checkbox [(ngModel)]="filters.notDismissedOnly" name="notDismissedOnly">{{'members.notDismissedOnly' |
+          translate}}
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <div class="mo-my-3">
+      <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilter.emit()" mat-raised-button color="primary"
+      type="button">{{'members.search' | translate}}</button>
+      <!-- <button class="mo-font-bold mo-w-full" (click)="callFiltersForm.reset();onFilter.emit()" mat-button
+    type="button">{{'members.clearAll' | translate}}</button> -->
+  </div>
+</form>

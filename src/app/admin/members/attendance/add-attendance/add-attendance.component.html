@@ -1,0 +1,46 @@
+<span mat-dialog-title>{{'members.addAtt' | translate}}
+  <div class="mo-font-bold mo-text-center">
+    <label class="fs-6">{{'common.yourCurrentBranch' | translate}}{{branchName}}</label>
+  </div>
+</span>
+<form (ngSubmit)="addAttendance(addAttForm)" #addAttForm="ngForm">
+  <div class="mo-mt-3" mat-dialog-content>
+
+    @if (data.membership.packageCategory > 1) {
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'reports.table.coach' | translate}}</mat-label>
+        <mat-select [(ngModel)]="selectedCoach" (selectionChange)="getRates()" name="selectedCoach"
+          [required]="!!coaches.length">
+          @for (c of coaches; track c) {
+            <mat-option [value]="c.id">{{c.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
+
+    <!-- <mat-form-field *ngIf="selectedCoach" appearance="outline" class="mo-w-full">
+    <mat-label>{{'members.rate' | translate}}</mat-label>
+    <mat-select [(ngModel)]="selectedRate" name="selectedRate">
+      <mat-option *ngFor="let r of rates" [value]="r.id">{{r.name}}</mat-option>
+    </mat-select>
+  </mat-form-field> -->
+
+  <mat-form-field class="mo-w-full" (click)="attDatepicker.open()" appearance="outline">
+    <mat-label>{{'members.attDate' | translate}}</mat-label>
+    <input matInput [matDatepicker]="attDatepicker" [(ngModel)]="attDate" name="attDate" required />
+    <mat-datepicker-toggle matSuffix [for]="attDatepicker"></mat-datepicker-toggle>
+    <mat-datepicker #attDatepicker></mat-datepicker>
+  </mat-form-field>
+
+  @if (attDate) {
+    <div class="mo-w-full">
+      <ngx-timepicker-field [defaultTime]="currentTime" (timeChanged)="getTime($event)"></ngx-timepicker-field>
+    </div>
+  }
+</div>
+
+<div mat-dialog-actions class="mo-justify-end">
+  <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+  <button mat-raised-button type="submit" color="primary">{{'members.add' | translate}}</button>
+</div>
+</form>

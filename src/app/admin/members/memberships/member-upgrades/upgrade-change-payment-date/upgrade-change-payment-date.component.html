@@ -1,0 +1,19 @@
+<h5 mat-dialog-title class="mo-font-bold mo-capitalize">{{'members.changePaymentDate' | translate}}</h5>
+
+<form #cancelForm="ngForm" (ngSubmit)="submit(cancelForm)">
+  <div mat-dialog-content>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.paymentDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="membershipUpgrade.paymentDate" name="paymentDate" required>
+    </mat-form-field>
+
+  </div>
+  <div mat-dialog-actions class="mo-text-end mo-mt-3">
+    <button type="button" (click)="dismiss()" mat-button>{{'members.cancel' | translate}}</button>
+    <button type="submit" class="mo-capitalize" mat-raised-button color="primary">{{'members.save' |
+      translate}}</button>
+  </div>
+
+
+</form>

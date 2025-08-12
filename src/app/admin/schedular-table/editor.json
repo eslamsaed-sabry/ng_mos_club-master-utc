@@ -1,0 +1,20 @@
+{
+    "en":{
+        "schedule":{
+            "saveButton":"Save",
+            "cancelButton":"Cancel",
+            "deleteButton":"Delete Event",
+            "newEvent":"Add Event",
+            "editEvent":"Edit Event"
+        }
+    },
+    "ar":{
+        "schedule":{
+            "saveButton":"حفظ",
+            "cancelButton":"الغاء",
+            "deleteButton":"حذف",
+            "newEvent":"اضافة",
+            "editEvent":"تعديل"
+        }
+    }
+}

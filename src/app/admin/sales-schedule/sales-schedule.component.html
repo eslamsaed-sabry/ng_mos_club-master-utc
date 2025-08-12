@@ -1,0 +1,86 @@
+<mat-drawer-container class="example-container" autosize>
+
+  <div class="page-title" [ngStyle]="{'margin-right': drawer.opened ? '15px' : 0}">
+    <h4 class="mo-font-bold mo-m-0"> {{'navigation.salesSchedule' | translate}}</h4>
+
+    <div class="actions">
+      <button class="mo-mx-2" (click)="drawer.toggle()" mat-raised-button color="default">
+        <mat-icon>{{drawer.opened ? 'filter_alt_off' : 'filter_alt'}}</mat-icon>
+        {{drawer.opened ? 'Hide' : 'Show'}} {{'members.filters' | translate}}
+      </button>
+
+      <button color="primary" (click)="addReminder()" *appRole="['reminders', 'tsb_Add']" mat-raised-button>
+        <mat-icon>notification_add</mat-icon> {{'members.addReminder' | translate}}
+      </button>
+    </div>
+  </div>
+
+  <mat-drawer #drawer [mode]="width < 600 ? 'over':'side'" [dir]="'ltr'" [position]="'end'">
+    <div class="filters-drawer">
+      <div class="inner">
+        <h4 class="mo-font-bold"> {{'members.filters' | translate}}</h4>
+        <app-schedule-filters [filters]="filters" (onFilter)="getSchedule()"></app-schedule-filters>
+      </div>
+    </div>
+  </mat-drawer>
+
+  <div [ngStyle]="{'margin-right': drawer.opened ? '15px' : 0}">
+
+    <ejs-schedule #scheduleObj (actionComplete)="onNavigation()" (eventRendered)="onEventRendered($event)" (cellClick)="onPopupOpen($event)"
+      (eventClick)="onPopupOpen($event)" width="100%" height="900"
+      [eventSettings]="eventSettings" [(currentView)]="currentView"
+      [enableRtl]="currentLang === 'ar'? true : false">
+      <e-views>
+        <e-view option="Agenda"></e-view>
+        <e-view option="Month"></e-view>
+        <e-view option="Week"></e-view>
+        <e-view option="Day"></e-view>
+        <e-view option="Today"></e-view>
+      </e-views>
+      <!-- Header template -->
+      <ng-template #quickInfoTemplatesHeader let-data>
+        <div>
+          <div class="e-popup-header" [ngStyle]="{'background-color':data.colorHex}">
+            <div class="e-header-icon-wrapper">
+              <!-- <button class="btns del-btn" (click)="deleteEvent(data)" title="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button class="btns edit-btn" (click)="$event.preventDefault();onEdit(data)" title="Edit">
+              <mat-icon>edit</mat-icon>
+            </button> -->
+            <button class="btns close-btn" (click)="closePopUp()" title="Close">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+          <h6 class="mo-font-bold mo-text-white p-3 mo-m-0">
+            @if (data.contextTypeId === 1) {
+              <span>{{'members.reminder' | translate}}</span>
+            }
+            ({{data.happeningDate | date:'MMM d, y, h:mm a'}})
+          </h6>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #quickInfoTemplatesContent let-data>
+      <ul class="mo-p-0">
+        <li class="mo-flex mo-justify-between mo-w-full mo-items-center mo-mb-1">
+          <strong>{{data.memberName}}</strong>
+          <a mat-button color="primary" target="_blank"
+            [routerLink]="['/admin/member-profile/', data.memberId]">{{'members.view' | translate}}
+          {{'members.profile' | translate}}</a>
+        </li>
+        <li class="mo-mb-1">
+          <p>{{data.summary}}</p>
+        </li>
+        @if (data.contextTypeId === 1) {
+          <li class="mo-flex mo-justify-end mo-w-full" (click)="dismiss(data.contextId)">
+            <button mat-flat-button color="accent">{{'members.dismiss' | translate}}</button>
+          </li>
+        }
+      </ul>
+
+    </ng-template>
+  </ejs-schedule>
+
+</div>
+</mat-drawer-container>

@@ -1,0 +1,59 @@
+<app-reports-page-header [permissions]="['otherEntitiesBookings', 'tsb_Print', 'Export']"
+  [reportName]="'reports.otherEntitiesBookings' | translate" [isResult]="isResult"
+  (onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-classes-report-filter [filters]="filters"
+      [nameOfReport]="classesReportsName.OTHER_ENTITIES_BOOKINGS_REPORT"></app-classes-report-filter>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+    <div>
+      <div class="reports-tabs-container">
+        <div class="table-responsive" id="receipts">
+          <div>
+            <span>{{'reports.table.total' | translate}}: &nbsp;</span>
+            <strong>{{reports.length}}</strong>
+          </div>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'administration.externalMemberId' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'classSchedule.classStartDate' | translate}}</th>
+                <th>{{'classSchedule.classEndDate' | translate}}</th>
+                <th>{{'classSchedule.instructor' | translate}}</th>
+                <th>{{'members.status' | translate}}</th>
+                <th>{{'administration.acceptedEntityName' | translate}}</th>
+                <th>{{'reports.table.dueAmount' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports; track el) {
+              <tr>
+                <td>{{el.acceptedEntityMemberId }}</td>
+                <td><a class="hover:mo-font-bold" href="/admin/member-profile/{{el.memberId}}"
+                    target="_blank">{{el.memberName}}</a></td>
+                <td>{{el.classStartDate | date : 'mediumDate'}}</td>
+                <td>{{el.classEndDate | date : 'mediumDate'}}</td>
+                <td>{{el.instructorName}}</td>
+                <td>{{el.bookingStatusName}}</td>
+                <td>{{el.acceptedEntityName}}</td>
+                <td>{{el.acceptedEntityName}}</td>
+                <td>{{el.dueAmount}}</td>
+              </tr>
+              }
+              @if (reports&&reports.length === 0) {
+              <tr>
+                <td colspan="9">{{'members.noData' | translate}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

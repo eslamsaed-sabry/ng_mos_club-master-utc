@@ -1,0 +1,509 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0">
+    {{'management.setUpNewNotification' | translate}}
+  </h4>
+</div>
+
+
+<div class="row">
+
+  <div class="col-lg-4 col-md-6 col-12 mo-mb-3">
+    <form #filtersForm="ngForm" (ngSubmit)="applyFilters(filtersForm)">
+      <div class="mo-flex mo-items-center mo-justify-between mo-w-full mo-mb-2">
+        <h6 class="mo-font-bold mo-text-muted mo-p-0">1. {{'notifications.filters' | translate}}</h6>
+        <button type="submit" mat-raised-button color="primary">{{'notifications.apply' |
+        translate}}</button>
+      </div>
+
+      <mat-accordion class="example-headers-align" multi>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title class="mo-font-bold">
+              <mat-radio-button checked name="commonFilters">{{'notifications.commonFilters' |
+              translate}}</mat-radio-button>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'reports.table.memberName' | translate}}</mat-label>
+              <input matInput [(ngModel)]="filters.memberGetCommand.name" name="name" />
+            </mat-form-field>
+
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.gender' | translate}}</mat-label>
+              <mat-select [(ngModel)]="filters.memberGetCommand.gender" name="gender">
+                <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+                <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.source' | translate}}</mat-label>
+              <mat-select [(ngModel)]="filters.memberGetCommand.sourceOfKnowledgeId"
+                name="sourceOfKnowledge">
+                @for (el of sources; track el) {
+                  <mat-option [value]="el.id">{{el.name}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.phone' | translate}}</mat-label>
+              <input matInput [(ngModel)]="filters.memberGetCommand.phoneNo" name="phoneNo" />
+            </mat-form-field>
+
+            <mat-checkbox [(ngModel)]="filters.memberGetCommand.isPossibleMember" name="isPossibleMember">
+              {{'notifications.isPotentialMember' | translate}}
+            </mat-checkbox>
+
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+              <mat-select [(ngModel)]="filters.memberGetCommand.salesPersonId" name="salesPersonId">
+                @for (el of sales; track el) {
+                  <mat-option [value]="el.id">{{el.name}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="mo-w-full" (click)="joiningDateFromPicker.open()" appearance="outline">
+              <mat-label>{{'staff.joiningDateFrom' | translate}}</mat-label>
+              <input matInput [matDatepicker]="joiningDateFromPicker"
+                [(ngModel)]="filters.memberGetCommand.joiningDateFrom" name="joiningDateFrom" />
+                <mat-datepicker-toggle matSuffix [for]="joiningDateFromPicker"></mat-datepicker-toggle>
+                <mat-datepicker #joiningDateFromPicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field class="mo-w-full" (click)="joiningDateToPicker.open()" appearance="outline">
+                <mat-label>{{'staff.joiningDateTo' | translate}}</mat-label>
+                <input matInput [matDatepicker]="joiningDateToPicker"
+                  [(ngModel)]="filters.memberGetCommand.joiningDateTo" name="joiningDateTo" />
+                  <mat-datepicker-toggle matSuffix [for]="joiningDateToPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #joiningDateToPicker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="mo-w-full" appearance="outline">
+                  <mat-label>{{'members.region' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.memberGetCommand.regionId" name="regionId">
+                    @for (el of regions; track el) {
+                      <mat-option [value]="el.id">{{el.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="mo-w-full" appearance="outline">
+                  <mat-label>{{'members.nationality' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.memberGetCommand.nationalityId" name="nationalityId">
+                    @for (el of nationalities; track el) {
+                      <mat-option [value]="el.id">{{el.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-checkbox [(ngModel)]="filters.memberGetCommand.isDataCompleted" name="isDataCompleted">
+                  {{'notifications.incompleteDataOnly' | translate}}
+                </mat-checkbox>
+
+                <mat-checkbox [(ngModel)]="filters.memberGetCommand.isMemberLogedOnApplication"
+                  name="isMemberLogedOnApplication">
+                  {{'notifications.loggedMembersOnly' | translate}}
+                </mat-checkbox>
+
+                <mat-form-field class="mo-w-full" appearance="outline">
+                  <mat-label>{{'notifications.interestPercentage' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.memberGetCommand.memberInterestPercentageId"
+                    name="memberInterestPercentageId">
+                    @for (el of nationalities; track el) {
+                      <mat-option [value]="el.id">{{el.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field class="mo-w-full" appearance="outline">
+                  <mat-label>{{'notifications.countryCode' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.memberGetCommand.phoneFormatId" name="phoneFormatId">
+                    @for (el of nationalities; track el) {
+                      <mat-option [value]="el.id">{{el.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="mo-w-full" (click)="ageFromSelector.open()">
+                  <mat-label>{{'notifications.ageFrom' | translate}}</mat-label>
+                  <input matInput [matDatepicker]="ageFromSelector"
+                    [(ngModel)]="filters.memberGetCommand.birthDateFrom" name="birthDateFrom" />
+                    <mat-datepicker-toggle matSuffix [for]="ageFromSelector"></mat-datepicker-toggle>
+                    <mat-datepicker #ageFromSelector></mat-datepicker>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="mo-w-full" (click)="ageToSelector.open()">
+                    <mat-label>{{'notifications.ageTo' | translate}}</mat-label>
+                    <input matInput [matDatepicker]="ageToSelector"
+                      [(ngModel)]="filters.memberGetCommand.birthDateTo" name="birthDateTo" />
+                      <mat-datepicker-toggle matSuffix [for]="ageToSelector"></mat-datepicker-toggle>
+                      <mat-datepicker #ageToSelector></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel (afterExpand)="afterExpand(filterGroup.NotRenewed)">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title class="mo-font-bold">
+                      <mat-radio-button (change)="getGroup($event)"
+                        [checked]="filters.memberGroup === filterGroup.NotRenewed"
+                        [value]="filterGroup.NotRenewed">
+                      {{'notifications.expiredFilters' | translate}}</mat-radio-button>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div>
+                    <mat-form-field appearance="outline" class="mo-w-full"
+                      (click)="expirationDateFromNotRenewedSelector.open()">
+                      <mat-label>{{'notifications.expirationDateFrom' | translate}}</mat-label>
+                      <input matInput [matDatepicker]="expirationDateFromNotRenewedSelector"
+                        [(ngModel)]="notRenewedFilters.fromDate" [max]="getMonthAgo(notRenewedFilters.toDate)"
+                        name="expirationDateFrom" />
+                        <mat-datepicker-toggle matSuffix
+                        [for]="expirationDateFromNotRenewedSelector"></mat-datepicker-toggle>
+                        <mat-datepicker #expirationDateFromNotRenewedSelector></mat-datepicker>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="mo-w-full" (click)="expirationDateToSelector.open()">
+                        <mat-label>{{'notifications.expirationDateTo' | translate}}</mat-label>
+                        <input matInput [matDatepicker]="expirationDateToSelector"
+                          [(ngModel)]="notRenewedFilters.toDate"
+                          (dateChange)="getMonthAgo(notRenewedFilters.toDate)" [max]="yesterday"
+                          name="expirationDateTo" />
+                          <mat-datepicker-toggle matSuffix [for]="expirationDateToSelector"></mat-datepicker-toggle>
+                          <mat-datepicker #expirationDateToSelector></mat-datepicker>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="mo-w-full">
+                          <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+                          <mat-select [(ngModel)]="notRenewedFilters.salesPersonId" name="salesPersonId">
+                            <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+                            @for (el of sales; track el) {
+                              <mat-option [value]="el.id">{{el.name}}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="mo-w-full" appearance="outline">
+                          <mat-label>{{'members.packageType' | translate}}</mat-label>
+                          <mat-select [(ngModel)]="notRenewedFilters.packageCategory" name="packageCategory"
+                            (selectionChange)="onSelectPackageType(notRenewedFilters.packageCategory)">
+                            <mat-option [value]="packageTypesEnum.ALL">{{'members.all' | translate}}</mat-option>
+                            <mat-option [value]="packageTypesEnum.GYM">{{'members.gym' | translate}}</mat-option>
+                            <mat-option [value]="packageTypesEnum.PRIVATE">{{'members.private' |
+                            translate}}</mat-option>
+                            <mat-option [value]="packageTypesEnum.OTHER">{{'members.other' |
+                            translate}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field class="mo-w-full" appearance="outline">
+                          <mat-label class="mo-capitalize">{{'members.package' | translate}}</mat-label>
+                          <mat-select [(ngModel)]="notRenewedFilters.packageId"
+                            [disabled]="!notRenewedFilters.packageCategory" name="packageId">
+                            @for (p of packages; track p) {
+                              <mat-option [value]="p.id">{{p.nameEng}}</mat-option>
+                            }
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel (afterExpand)="afterExpand(filterGroup.WillExpire)">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title class="mo-font-bold">
+                          <mat-radio-button (change)="getGroup($event)"
+                            [checked]="filters.memberGroup === filterGroup.WillExpire"
+                            [value]="filterGroup.WillExpire">{{'notifications.willExpire' |
+                          translate}}</mat-radio-button>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div>
+                        <mat-form-field appearance="outline" class="mo-w-full"
+                          (click)="expirationDateFromWillExpireSelector.open()">
+                          <mat-label>{{'notifications.expirationDateFrom' | translate}}</mat-label>
+                          <input matInput [matDatepicker]="expirationDateFromWillExpireSelector"
+                            [(ngModel)]="willExpireFilters.fromDate" [min]="today"
+                            name="willExpireExpirationDateFrom" />
+                            <mat-datepicker-toggle matSuffix
+                            [for]="expirationDateFromWillExpireSelector"></mat-datepicker-toggle>
+                            <mat-datepicker #expirationDateFromWillExpireSelector></mat-datepicker>
+                          </mat-form-field>
+
+                          <mat-form-field appearance="outline" class="mo-w-full"
+                            (click)="expirationDateToWillExpireSelector.open()">
+                            <mat-label>{{'notifications.expirationDateTo' | translate}}</mat-label>
+                            <input matInput [matDatepicker]="expirationDateToWillExpireSelector"
+                              [(ngModel)]="willExpireFilters.toDate"
+                              (dateChange)="getMonthAgo(willExpireFilters.toDate)" [min]="willExpireFilters.fromDate"
+                              name="willExpireExpirationDateTo" />
+                              <mat-datepicker-toggle matSuffix
+                              [for]="expirationDateToWillExpireSelector"></mat-datepicker-toggle>
+                              <mat-datepicker #expirationDateToWillExpireSelector></mat-datepicker>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="mo-w-full">
+                              <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+                              <mat-select [(ngModel)]="willExpireFilters.salesPersonId" name="willExpireSalesPersonId">
+                                @for (el of sales; track el) {
+                                  <mat-option [value]="el.id">{{el.name}}</mat-option>
+                                }
+                              </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="mo-w-full" appearance="outline">
+                              <mat-label>{{'members.packageType' | translate}}</mat-label>
+                              <mat-select [(ngModel)]="willExpireFilters.packageCategory" name="willExpirePackageCategory"
+                                (selectionChange)="onSelectPackageType(willExpireFilters.packageCategory)">
+                                <mat-option [value]="packageTypesEnum.ALL">{{'members.all' | translate}}</mat-option>
+                                <mat-option [value]="packageTypesEnum.GYM">{{'members.gym' | translate}}</mat-option>
+                                <mat-option [value]="packageTypesEnum.PRIVATE">{{'members.private' |
+                                translate}}</mat-option>
+                                <mat-option [value]="packageTypesEnum.OTHER">{{'members.other' |
+                                translate}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="mo-w-full" appearance="outline">
+                              <mat-label class="mo-capitalize">{{'members.package' | translate}}</mat-label>
+                              <mat-select [(ngModel)]="willExpireFilters.packageId"
+                                [disabled]="!willExpireFilters.packageCategory" name="willExpirePackageId">
+                                @for (p of packages; track p) {
+                                  <mat-option [value]="p.id">{{p.nameEng}}</mat-option>
+                                }
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel (afterExpand)="afterExpand(filterGroup.Debtors)">
+                          <mat-expansion-panel-header>
+                            <mat-panel-title class="mo-font-bold">
+                              <mat-radio-button (change)="getGroup($event)"
+                                [checked]="filters.memberGroup === filterGroup.Debtors"
+                              [value]="filterGroup.Debtors">{{'notifications.debtors' | translate}}</mat-radio-button>
+                            </mat-panel-title>
+                          </mat-expansion-panel-header>
+                          <div>
+                            <mat-form-field appearance="outline" class="mo-w-full"
+                              (click)="expirationDateFromDebtorsSelector.open()">
+                              <mat-label>{{'notifications.expirationDateFrom' | translate}}</mat-label>
+                              <input matInput [matDatepicker]="expirationDateFromDebtorsSelector"
+                                [(ngModel)]="debtorsFilters.endFromDate" name="endFromDate" />
+                                <mat-datepicker-toggle matSuffix
+                                [for]="expirationDateFromDebtorsSelector"></mat-datepicker-toggle>
+                                <mat-datepicker #expirationDateFromDebtorsSelector></mat-datepicker>
+                              </mat-form-field>
+
+                              <mat-form-field appearance="outline" class="mo-w-full"
+                                (click)="expirationDateToDebtorsSelector.open()">
+                                <mat-label>{{'notifications.expirationDateTo' | translate}}</mat-label>
+                                <input matInput [matDatepicker]="expirationDateToDebtorsSelector"
+                                  [(ngModel)]="debtorsFilters.endToDate" name="endToDate" />
+                                  <mat-datepicker-toggle matSuffix
+                                  [for]="expirationDateToDebtorsSelector"></mat-datepicker-toggle>
+                                  <mat-datepicker #expirationDateToDebtorsSelector></mat-datepicker>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" class="mo-w-full" (click)="startDateFromSelector.open()">
+                                  <mat-label>{{'reports.table.startDateFrom' | translate}}</mat-label>
+                                  <input matInput [matDatepicker]="startDateFromSelector"
+                                    [(ngModel)]="debtorsFilters.startFromDate" name="startFromDate" />
+                                    <mat-datepicker-toggle matSuffix [for]="startDateFromSelector"></mat-datepicker-toggle>
+                                    <mat-datepicker #startDateFromSelector></mat-datepicker>
+                                  </mat-form-field>
+
+                                  <mat-form-field appearance="outline" class="mo-w-full" (click)="startDateToSelector.open()">
+                                    <mat-label>{{'reports.table.startDateTo' | translate}}</mat-label>
+                                    <input matInput [matDatepicker]="startDateToSelector"
+                                      [(ngModel)]="debtorsFilters.startToDate" name="startToDate" />
+                                      <mat-datepicker-toggle matSuffix [for]="startDateToSelector"></mat-datepicker-toggle>
+                                      <mat-datepicker #startDateToSelector></mat-datepicker>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="mo-w-full">
+                                      <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+                                      <mat-select [(ngModel)]="debtorsFilters.salesPersonId" name="salesPersonId">
+                                        @for (el of sales; track el) {
+                                          <mat-option [value]="el.id">{{el.name}}</mat-option>
+                                        }
+                                      </mat-select>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" class="mo-w-full" (click)="dueDateFromSelector.open()">
+                                      <mat-label>{{'reports.table.dueDateFrom' | translate}}</mat-label>
+                                      <input matInput [matDatepicker]="dueDateFromSelector"
+                                        [(ngModel)]="debtorsFilters.debtFromDueDate" name="debtFromDueDate" />
+                                        <mat-datepicker-toggle matSuffix [for]="dueDateFromSelector"></mat-datepicker-toggle>
+                                        <mat-datepicker #dueDateFromSelector></mat-datepicker>
+                                      </mat-form-field>
+
+                                      <mat-form-field appearance="outline" class="mo-w-full" (click)="dueDateToSelector.open()">
+                                        <mat-label>{{'reports.table.dueDateTo' | translate}}</mat-label>
+                                        <input matInput [matDatepicker]="dueDateToSelector"
+                                          [(ngModel)]="debtorsFilters.debtToDueDate" name="debtToDueDate" />
+                                          <mat-datepicker-toggle matSuffix [for]="dueDateToSelector"></mat-datepicker-toggle>
+                                          <mat-datepicker #dueDateToSelector></mat-datepicker>
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" class="mo-w-full" (click)="settlementDateFromSelector.open()">
+                                          <mat-label>{{'notifications.settlementDateFrom' | translate}}</mat-label>
+                                          <input matInput [matDatepicker]="settlementDateFromSelector"
+                                            [(ngModel)]="debtorsFilters.settlementFrom" name="settlementFrom" />
+                                            <mat-datepicker-toggle matSuffix [for]="settlementDateFromSelector"></mat-datepicker-toggle>
+                                            <mat-datepicker #settlementDateFromSelector></mat-datepicker>
+                                          </mat-form-field>
+
+                                          <mat-form-field appearance="outline" class="mo-w-full" (click)="settlementDateToSelector.open()">
+                                            <mat-label>{{'notifications.settlementDateTo' | translate}}</mat-label>
+                                            <input matInput [matDatepicker]="settlementDateToSelector"
+                                              [(ngModel)]="debtorsFilters.settlementTo" name="settlementTo" />
+                                              <mat-datepicker-toggle matSuffix [for]="settlementDateToSelector"></mat-datepicker-toggle>
+                                              <mat-datepicker #settlementDateToSelector></mat-datepicker>
+                                            </mat-form-field>
+
+                                            <mat-form-field appearance="outline" class="mo-w-full">
+                                              <mat-label>{{'members.status' | translate}}</mat-label>
+                                              <mat-select [(ngModel)]="debtorsFilters.status" name="status">
+                                                @for (s of statuses; track s) {
+                                                  <mat-option [value]="s.id">{{s.name}}</mat-option>
+                                                }
+                                              </mat-select>
+                                            </mat-form-field>
+                                          </div>
+                                        </mat-expansion-panel>
+
+                                        <mat-expansion-panel (afterExpand)="afterExpand(filterGroup.NotActive)">
+                                          <mat-expansion-panel-header>
+                                            <mat-panel-title class="mo-font-bold">
+                                              <mat-radio-button (change)="getGroup($event)"
+                                                [checked]="filters.memberGroup === filterGroup.NotActive"
+                                                [value]="filterGroup.NotActive">{{'notifications.notActiveMembers' |
+                                              translate}}</mat-radio-button>
+                                            </mat-panel-title>
+                                          </mat-expansion-panel-header>
+                                          <div>
+                                            <mat-form-field class="mo-w-full" appearance="outline">
+                                              <mat-label>{{'notifications.minDays' | translate}}</mat-label>
+                                              <input matInput [(ngModel)]="notActiveFilters.leastNoDays" name="leastNoDays"
+                                                type="number" />
+                                              </mat-form-field>
+                                              <mat-form-field class="mo-w-full" appearance="outline">
+                                                <mat-label>{{'notifications.maxDays' | translate}}</mat-label>
+                                                <input matInput [(ngModel)]="notActiveFilters.maxNoDays" name="maxNoDays" type="number" />
+                                              </mat-form-field>
+                                            </div>
+                                          </mat-expansion-panel>
+                                        </mat-accordion>
+                                      </form>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-6 col-12 mo-mb-3">
+                                      <h6 class="mo-font-bold mo-text-muted">2. {{'notifications.membersToNotify' | translate}} ({{totalMembers}}
+                                      {{'staff.member' | translate}})</h6>
+                                      <div class="card p-3 members-list">
+                                        <ul class="mo-p-0">
+                                          @for (m of members; track m; let last = $last) {
+                                            <li class="border-bottom mo-pb-2 mo-mb-3 mo-flex mo-items-center">
+                                              <mat-checkbox [value]="m.id" (change)="onCheckMember($event)" checked></mat-checkbox>
+                                              <div>
+                                                <h6 class="mo-font-bold">{{m.nameEng}} ({{m.nameAR}})</h6>
+                                                <div class="sub-content mo-flex align-item-center">
+                                                  <small class="mo-flex mo-items-center">
+                                                    <mat-icon>grid_3x3</mat-icon>
+                                                    <span>{{m.applicationNo}}</span>
+                                                  </small>
+                                                  <span class="dot mo-mx-2">-</span>
+                                                  <small class="mo-flex mo-items-center">
+                                                    <mat-icon>smartphone</mat-icon>
+                                                    <span>{{m.phoneNo}}</span>
+                                                  </small>
+                                                </div>
+                                              </div>
+                                            </li>
+                                          }
+                                          @if (totalElements > members.length) {
+                                            <li class="mo-text-center">
+                                              <button mat-button color="primary" (click)="onPagination()">{{'common.showMore'|translate}}</button>
+                                            </li>
+                                          }
+                                          @if (members.length === 0 && !valueIsChanged) {
+                                            <li class="mo-text-center mo-text-muted">
+                                              {{'notifications.noMembers' | translate}}
+                                            </li>
+                                          }
+                                          @if (members.length === 0 && valueIsChanged) {
+                                            <li class="mo-text-center mo-text-muted">
+                                              {{'notifications.applyAgain' | translate}}
+                                            </li>
+                                          }
+                                        </ul>
+                                      </div>
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-12 col-12">
+                                      <h6 class="mo-font-bold mo-text-muted">3. {{'notifications.notificationDetails' | translate}}</h6>
+
+                                      <div class="card p-3">
+                                        <form (ngSubmit)="addNotification(sendForm)" #sendForm="ngForm">
+
+                                          <mat-form-field appearance="outline" class="mo-w-full">
+                                            <mat-label>{{'management.title'|translate}}</mat-label>
+                                            <input matInput [(ngModel)]="memberNotification.title" name="title" type="text" required>
+                                          </mat-form-field>
+
+                                          <div class="mo-relative">
+                                            <!-- <div class="mo-mb-2" *ngIf="memberNotification.message">
+                                            <small class="mo-text-muted">{{'common.preview' | translate}}</small>
+                                            <div class="p-3 border">{{memberNotification.message | emoji}}</div>
+                                          </div> -->
+                                          <mat-form-field appearance="outline" class="mo-w-full">
+                                            <mat-label>{{'classSchedule.message'|translate}}</mat-label>
+                                            <textarea rows="5" [(ngModel)]="memberNotification.message"
+                                            name="message" matInput required></textarea>
+                                            <!-- <button type="button" (click)="$event.stopPropagation();showEmojiList = !showEmojiList"
+                                            matSuffix mat-icon-button><mat-icon>insert_emoticon</mat-icon></button> -->
+                                          </mat-form-field>
+
+                                          <!-- <emoji-mart set="facebook" *ngIf="showEmojiList"
+                                          [style]="{position: 'absolute', top: '17px', right: '50px', zIndex: '99'}"
+                                          [enableSearch]="false" [i18n]="{categories:{custom:''}}" [include]="['custom']"
+                                        [custom]="custom" (emojiClick)="addEmoji($event)"></emoji-mart> -->
+                                      </div>
+
+                                      <div class="mo-flex mo-items-center gap-2">
+                                        @if ( memberNotification.imageName) {
+                                          <img class="object-fit-cover" [src]="proxyUrl + '/images/' + memberNotification.imageName" width="70" height="70"
+                                            alt="">
+                                        }
+                                        <div>
+                                          <input type="file" hidden #uploadInput (change)="upload($event)">
+                                          <button type="button" mat-raised-button (click)="uploadInput.click()">{{'common.uploadImage' |
+                                          translate}}</button>
+                                        </div>
+                                      </div>
+
+
+
+
+                                      <ul class="mo-flex mo-justify-between mo-p-0">
+                                        <li><mat-checkbox [(ngModel)]="memberNotification.isSMS" name="isSMS">{{'classSchedule.sms' |
+                                        translate}}</mat-checkbox></li>
+                                        <li><mat-checkbox [(ngModel)]="memberNotification.isMobileApp"
+                                        name="isMobileApp">{{'classSchedule.mobileApp' | translate}}</mat-checkbox></li>
+                                        <li><mat-checkbox [(ngModel)]="memberNotification.isWhatsApp"
+                                        name="isWhatsApp">{{'classSchedule.whatsapp' | translate}}</mat-checkbox></li>
+                                      </ul>
+                                      <button type="submit" color="primary" class="mo-w-full" mat-flat-button>
+                                        <mat-icon>notification_add</mat-icon> {{'notifications.send' | translate}}
+                                      </button>
+                                    </form>
+                                  </div>
+                                </div>
+
+
+
+
+                              </div>

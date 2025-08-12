@@ -1,0 +1,35 @@
+@if (isCameraExist) {
+  <div>
+    <div class="mo-text-center">
+      <button type="button" mat-raised-button color="primary" (click)="onOffWebCame()">
+        <mat-icon>cameraswitch</mat-icon>
+        {{showWebcam? ('members.switchOffCamera' |translate):('members.switchOnCamera' |translate)}}
+        <!-- <mat-icon>cameraswitch</mat-icon> Switch {{showWebcam ? 'Off' : 'On'}} Camera -->
+      </button>
+      <div class="camera-lens mo-mt-3">
+        @if (showWebcam) {
+          <webcam [height]="config.height" [width]="config.width" [trigger]="triggerObservable"
+          (imageCapture)="handleImage($event)" [switchCamera]="nextWebcamObservable"></webcam>
+        }
+        @if (showWebcam) {
+          <button type="button" class="mo-mt-2" mat-raised-button color="accent" (click)="takeSnapshot()">
+            <mat-icon>camera_enhance</mat-icon> Take Picture
+          </button>
+        }
+      </div>
+    </div>
+    @if (errors.length > 0) {
+      <div>
+        <h4>Error Messages:</h4>
+        @for (error of errors; track error) {
+          <ul>
+            <li>{{ error | json }}</li>
+          </ul>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  Camera device not available
+}
+

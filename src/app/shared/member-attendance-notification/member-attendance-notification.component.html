@@ -1,0 +1,52 @@
+<div class="parent">
+  @for (notification of membersNotifications; track notification) {
+    <div (click)="openMemberMonitoring(notification)"
+      class="notification-wrapper {{notification.membershipMatchedData.statusCode | membershipStatus}}">
+      <div class="alerts">
+        @if (notification.personalData.isMemberChangedThePhoto) {
+          <button (click)="onImgCompare(notification)"
+            class="photo-is-changed danger">
+            <mat-icon>switch_account</mat-icon> {{'common.imgIsChanged' | translate}}
+          </button>
+        }
+      <div class="d-block photo-is-changed mo-mt-1" [ngClass]="{'danger': notification.membershipMatchedData.messageType === 1,
+'warning': notification.membershipMatchedData.messageType === 2}">
+          {{notification.membershipMatchedData.message}}
+        </div>
+      </div>
+      <button class="dismiss-btn" (click)="dismiss($event, notification)">
+        <mat-icon>close</mat-icon>
+      </button>
+      <div class="inner">
+        @if (notification.personalData.photo) {
+          <div class="member-img"
+            [ngStyle]="{'background-image': 'url('+ proxyUrl + '/Images/' + notification.personalData.photo+')'}">
+          </div>
+        }
+        @if (!notification.personalData.photo) {
+          <div class="member-img"
+          [ngStyle]="{'background-image': 'url(assets/images/avatar.png)'}"></div>
+        }
+        <div class="member-details">
+          <ul class="mo-p-0">
+            <li class="mo-font-bold">{{notification.personalData.applicationNo}}</li>
+            <li class="mo-font-bold">{{notification.personalData.nameEng}}</li>
+            <li class="mo-font-bold">{{notification.personalData.nameAR}}</li>
+            <li>{{notification.membershipMatchedData.packageName}}</li>
+            <li>Expires on {{notification.membershipMatchedData.expirationDateAsString}}</li>
+            @if (notification.membershipMatchedData.debts) {
+              <li class="mo-font-bold"
+                [ngClass]="{'mo-text-error-500': notification.membershipMatchedData.anyLateDebts}">Debts:
+              {{notification.membershipMatchedData.debts}}</li>
+            }
+          </ul>
+          <!-- <small class="mo-text-muted">{{'common.clickToView' | translate}}</small> -->
+        </div>
+      </div>
+      <div class="text-light mo-px-2 mo-pb-2 mo-text-center">
+        <p class="mo-m-0"><small>{{notification.membershipMatchedData.classMessage}}</small></p>
+        <p class="mo-m-0"><small>{{notification.membershipMatchedData.ptMessage}}</small></p>
+      </div>
+    </div>
+  }
+</div>

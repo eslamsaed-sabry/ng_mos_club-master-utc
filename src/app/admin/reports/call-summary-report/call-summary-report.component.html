@@ -1,0 +1,46 @@
+<app-reports-page-header [reportName]="'reports.callsSummaryRep'|translate" [isResult]="isResult"
+  (onAction)="getAction($event)" [permissions]="['callsReport', 'tsb_Print', 'Export']">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-call-summary-report-filters [filters]="filters"></app-call-summary-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <!-- <h5 class="mo-font-bold">
+            {{'reports.callsSummaryRep' | translate}}
+          </h5> -->
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.username' | translate}}</th>
+                <th>{{'members.summary' | translate}}</th>
+                <th>{{'reports.table.totalCalls' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of calls; track el) {
+                <tr>
+                  <td>{{el.arabicName}}</td>
+                  <td>{{el.summary}}</td>
+                  <td>{{el.totalCalls}}</td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2"></td>
+                <td>{{calcTotal(calls, 'totalCalls')}}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+</div>

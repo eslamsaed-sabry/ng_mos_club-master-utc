@@ -1,0 +1,54 @@
+<app-reports-page-header [permissions]="['deletedReceiptsReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.deletedReceipts' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-deleted-receipts-filter [filters]="filters"></app-deleted-receipts-filter>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'receiptPrint.sysRecNo' | translate}}</th>
+                  <th>{{'receiptPrint.manualRecNo' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'receiptPrint.transType' | translate}}</th>
+                  <th>{{'receiptPrint.paymentDate' | translate}}</th>
+                  <th>{{'receiptPrint.cashAmount' | translate}}</th>
+                  <th>{{'receiptPrint.visaAmount' | translate}}</th>
+                  <th>{{'members.visaType' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.serialNo }}</td>
+                    <td>{{el.manualNo}}</td>
+                    <td>{{el.contractNo}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.contextType}}</td>
+                    <td>{{el.paymentDate| date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.cashAmount}}</td>
+                    <td>{{el.visaAmount}}</td>
+                    <td>{{el.visaTypeName}}</td>
+                  </tr>
+                }
+                @if (reports&&reports.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

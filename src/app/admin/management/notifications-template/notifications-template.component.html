@@ -1,0 +1,94 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.notificationsTemplates' | translate}} </h4>
+  <div class="actions">
+    <mat-form-field class="mo-mx-2">
+      <mat-label>{{'members.search' | translate}} ...</mat-label>
+      <input type="text" matInput placeholder="find english description" [(ngModel)]="search"
+        (keyup)="onSearch($event)">
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div>
+    <div class="table-responsive card p-3">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="englishDescription">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.englishDescription' | translate}}</th>
+          <td mat-cell *matCellDef="let row" [ngClass]="{'d-none': row.hide}">{{ row.englishDescription}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="arabicDescription">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.arabicDescription' | translate}}</th>
+          <td mat-cell *matCellDef="let row" [ngClass]="{'d-none': row.hide}">{{ row.arabicDescription }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="template">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.template' | translate}}</th>
+          <td mat-cell *matCellDef="let row" [ngClass]="{'d-none': row.hide}">{{ row.template }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="isActive">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.isActive' | translate}}</th>
+          <td mat-cell *matCellDef="let row" [ngClass]="{'d-none': row.hide}">
+            <mat-slide-toggle (change)="toggleStatus(row)" color="primary" [(ngModel)]="row.isActive" name="isActive">
+            </mat-slide-toggle>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="isWhatsUp">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.isWhatsUp' | translate}}</th>
+          <td mat-cell *matCellDef="let row" [ngClass]="{'d-none': row.hide}">
+            @if (row.isActive) {
+              <mat-slide-toggle (change)="toggleStatus(row)" color="primary"
+                [(ngModel)]="row.isWhatsUp" name="isWhatsUp">
+              </mat-slide-toggle>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="isMobileApp">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.isMobileApp' | translate}}</th>
+          <td mat-cell *matCellDef="let row" [ngClass]="{'d-none': row.hide}">
+            @if (row.isActive) {
+              <mat-slide-toggle (change)="toggleStatus(row)" color="primary"
+                [(ngModel)]="row.isMobileApp" name="isMobileApp">
+              </mat-slide-toggle>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="isSMS">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'management.isSMS' | translate}}</th>
+          <td mat-cell *matCellDef="let row" [ngClass]="{'d-none': row.hide}">
+            @if (row.isActive) {
+              <mat-slide-toggle (change)="toggleStatus(row)" color="primary" [(ngModel)]="row.isSMS"
+                name="isSMS">
+              </mat-slide-toggle>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="edit">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header><mat-icon
+          *appRole="['notificationsTemplates','Edit']">settings</mat-icon></th>
+          <td mat-cell *matCellDef="let row">
+            <button *appRole="['notificationsTemplates','Edit']" (click)="openNotificationForm(row)"
+              mat-icon-button><mat-icon>edit_note</mat-icon></button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+          </tr>
+        </table>
+
+        <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+          [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+        </mat-paginator>
+      </div>
+    </div>

@@ -1,0 +1,56 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.workouts' | translate}} </h4>
+
+  <div class="mo-flex mo-items-center">
+    <div class="mo-mx-3">
+      <mat-form-field class="mo-w-full">
+        <mat-label>{{'members.trainer' | translate}}</mat-label>
+        <mat-select [(ngModel)]="trainerId" name="trainerId">
+          <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+          @for (trainer of trainers; track trainer) {
+            <mat-option [value]="trainer.id">{{trainer.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="openWorkoutForm('add')"><mat-icon class="mo-m-0">add</mat-icon>
+  {{'members.add' | translate}}</button>
+
+</div>
+</div>
+
+
+<div class="row">
+  @for (workout of workouts; track workout) {
+    <div class="col-xl-3 col-md-4 col-12 mo-mb-3">
+      <app-workout-card [workout]="workout" (onAction)="onAction($event)"></app-workout-card>
+    </div>
+  }
+  <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+    [length]="totalElements" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+  </mat-paginator>
+</div>
+
+<ng-template #workoutTemplateModal>
+  <h5 mat-dialog-title>{{'management.workoutDetails' | translate}}</h5>
+  <form (ngSubmit)="onSubmitWorkout(workoutForm)" #workoutForm="ngForm">
+    <div mat-dialog-content>
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'management.workoutTitle' | translate}}</mat-label>
+        <input type="text" matInput [(ngModel)]="selectedWorkout.workoutTitle" name="workoutTitle" required>
+      </mat-form-field>
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'members.trainerName' | translate}}</mat-label>
+        <mat-select [(ngModel)]="selectedWorkout.trainerId" name="trainerId" required>
+          @for (trainer of trainers; track trainer) {
+            <mat-option [value]="trainer.id">{{trainer.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-raised-button color="primary" type="submit">{{'members.save' | translate}}</button>
+    </div>
+  </form>
+</ng-template>

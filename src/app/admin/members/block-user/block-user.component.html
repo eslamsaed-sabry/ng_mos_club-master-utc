@@ -1,0 +1,21 @@
+<div matDialogTitle>{{member.isBlocked ? ('members.unblock' | translate) : ('members.block' | translate)}}
+{{'members.member' | translate}}</div>
+<div matDialogContent>
+  <h6 class="mo-font-bold mo-py-1">
+    {{member.nameEng}}
+  </h6>
+  @if (!member.isBlocked) {
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>Reason</mat-label>
+      <textarea [(ngModel)]="reason" name="reason" matInput></textarea>
+    </mat-form-field>
+  }
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button matDialogClose>{{ 'members.cancel' | translate}}</button>
+  <button type="button" (click)="apply()" mat-raised-button color="warn">
+  {{member.isBlocked ? ('members.unblock' | translate) : ('members.block' | translate)}}</button>
+</div>
+
+<!-- block-user.component.html -->

@@ -1,0 +1,11 @@
+<h5 mat-dialog-title class="mo-font-bold mo-my-2"> {{'members.addMember' | translate}}</h5>
+<form (ngSubmit)="addMember()" #memberForm="ngForm">
+    <div mat-dialog-content>
+        <app-advanced-search [autoPredict]="true" [config]="config"
+            (selectedMember)="getSelectedMember($event)"></app-advanced-search>
+    </div>
+
+    <div mat-dialog-actions>
+        <button mat-raised-button color="primary" type="submit">{{'members.book' | translate}}</button>
+    </div>
+</form>

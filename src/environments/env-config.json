@@ -1,0 +1,110 @@
+{
+    "test": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.test.ts"
+            }
+        ],
+        "outputPath": "dist/testing2api"
+    },
+    "bandb": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.bandb.ts"
+            }
+        ],
+        "outputPath": "dist/bandb"
+    },
+    "extreme": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.extreme.ts"
+            }
+        ],
+        "outputPath": "dist/extreme"
+    },
+    "falcon": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.falcon.ts"
+            }
+        ],
+        "outputPath": "dist/falcon"
+    },
+    "global": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.global.ts"
+            }
+        ],
+        "outputPath": "dist/global"
+    },
+    "manialmenkerdan": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.manialmenkerdan.ts"
+            }
+        ],
+        "outputPath": "dist/manialmenkerdan"
+    },
+    "mdepot": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.mdepot.ts"
+            }
+        ],
+        "outputPath": "dist/mdepot"
+    },
+    "quantum": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.quantum.ts"
+            }
+        ],
+        "outputPath": "dist/quantum"
+    },
+    "ramla": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.ramla.ts"
+            }
+        ],
+        "outputPath": "dist/ramla"
+    },
+    "snap": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.snap.ts"
+            }
+        ],
+        "outputPath": "dist/snap"
+    },
+    "trust": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.trust.ts"
+            }
+        ],
+        "outputPath": "dist/trust"
+    },
+    "z10": {
+        "fileReplacements": [
+            {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.z10.ts"
+            }
+        ],
+        "outputPath": "dist/z10"
+    }
+}

@@ -1,0 +1,67 @@
+.bg {
+  background-size: cover;
+  background-position: center center;
+  min-height: 150px;
+}
+
+.description {
+  overflow: hidden;
+}
+
+.more-btn {
+  border: 0;
+  padding: 0;
+  margin: 0 5px;
+  color: goldenrod;
+  background: none;
+  transition: all .3s ease 0s;
+  font-size: 14px;
+
+  &:hover {
+    color: #9c7205;
+    text-decoration: underline;
+  }
+}
+
+mat-drawer-container {
+  min-height: 100vh;
+}
+
+mat-drawer {
+  max-width: 30vw;
+  overflow: hidden;
+  padding: 10px;
+
+  @media (max-width:600px) {
+    width: 200px;
+  }
+}
+
+.filters-drawer {
+  overflow-x: hidden;
+}
+
+::ng-deep {
+  .mat-drawer-opened+.mat-drawer-content {
+    padding: 0 20px !important;
+  }
+}
+
+.card-body {
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.card-date {
+  position: absolute;
+  bottom: 0;
+}
+
+.show-more-btn {
+  width: 100%;
+  background: none;
+  border: 0;
+  color: #5c5c5c;
+  padding: 10px 0;
+  margin: 10px 0;
+}

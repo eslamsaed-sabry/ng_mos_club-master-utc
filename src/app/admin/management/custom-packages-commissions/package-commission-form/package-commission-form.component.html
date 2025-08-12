@@ -1,0 +1,45 @@
+<h5 mat-dialog-title class="mo-font-bold">{{'management.packagesCommissionsMonths' | translate}}</h5>
+<form (ngSubmit)="submit(packagesCommissionsForm)" #packagesCommissionsForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.packageType' | translate}}</mat-label>
+      <mat-select [(ngModel)]="packageCommission.packageTypeId" name="packageTypeId"
+        (selectionChange)="onSelectPackageType()" required>
+        @for (type of packageTypes; track type) {
+          <mat-option [value]="type.id">{{type.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.package' | translate}}</mat-label>
+      <mat-select [(ngModel)]="packageCommission.packageId" name="packageId" required>
+        @for (pack of packages; track pack) {
+          <mat-option [value]="pack.id">{{pack.nameEng}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.salesPercentage' | translate}}</mat-label>
+      <input matInput [(ngModel)]="packageCommission.salesPercentage" name="salesPercentage" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.trainerPercentage' | translate}}</mat-label>
+      <input matInput [(ngModel)]="packageCommission.trainerPercentage" name="trainerPercentage" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.gymPercentage' | translate}}</mat-label>
+      <input matInput [(ngModel)]="packageCommission.gymPercentage" name="gymPercentage" required>
+    </mat-form-field>
+  </div>
+
+  <div class="mo-text-end mo-mt-2" mat-dialog-actions>
+    <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+  </div>
+</form>

@@ -1,0 +1,52 @@
+<app-reports-page-header [permissions]="['inactiveMembersReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.notActiveMembersRep'|translate" [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-not-active-members-report-filters [filters]="filters"></app-not-active-members-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <!-- <h5 class="mo-font-bold">
+            {{'reports.callsSummaryRep' | translate}}
+          </h5> -->
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.accessCode' | translate}}</th>
+                <th>{{'members.phone' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'members.package' | translate}}</th>
+                <th>{{'reports.table.lastAttend' | translate}}</th>
+                <th>{{'reports.table.expDate' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of inactiveMembers; track el) {
+                <tr>
+                  <td>{{el.memberContractNo}}</td>
+                  <td>{{el.memberCode}}</td>
+                  <td>{{el.memberPhoneNo}}</td>
+                  <td>{{el.memberName}}</td>
+                  <td>{{el.gender}}</td>
+                  <td>{{el.periodEnglishName}}</td>
+                  <td>{{el.lastAttendance | date:'mediumDate'}}</td>
+                  <td>{{el.membershipEndDate | date:'mediumDate'}}</td>
+                  <td>{{el.salesPerson}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+</div>

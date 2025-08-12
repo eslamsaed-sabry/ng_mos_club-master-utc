@@ -1,0 +1,52 @@
+<app-reports-page-header [permissions]="['membershipUpgradeReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.membershipUpgrade' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-membership-upgrade-filters [filters]="filters"></app-membership-upgrade-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'reports.table.paymentDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.phone' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'receipts.prevPackage' | translate}}</th>
+                  <th>{{'receipts.newPackage' | translate}}</th>
+                  <th>{{'reports.table.totalAmount' | translate}}</th>
+                  <th>{{'members.username' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.paymentDate| date:'MMM d, y, h:mm a' }}</td>
+                    <td>{{el.memberContractNo}}</td>
+                    <td>{{el.memberPhoneNumber}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.prevPackageName}}</td>
+                    <td>{{el.newPackageName}}</td>
+                    <td>{{el.totalAmountPaid}}</td>
+                    <td>{{el.username}}</td>
+                  </tr>
+                }
+                @if (reports&&reports.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<button type="button" mat-raised-button class="mo-mx-2" (click)="exportTable2Excel()">
+  @if (!loading) {
+    <img src="assets/images/excel-ico.png" width="20">
+  }
+  @if (loading) {
+    <mat-spinner class="white-spinner !mo-inline" [diameter]="20"></mat-spinner>
+  }
+  {{'members.exportExcel' | translate}}
+</button>

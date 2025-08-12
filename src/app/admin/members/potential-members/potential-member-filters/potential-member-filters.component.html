@@ -1,0 +1,112 @@
+<form class="filters-container" #potentialFiltersForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+  <div class="row">
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.memberName' | translate}}</mat-label>
+        <input matInput [(ngModel)]="filters.name" name="name" type="text"
+          placeholder="{{'members.memberName' | translate}}" />
+        </mat-form-field>
+      </div>
+
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.nationalId' | translate}}</mat-label>
+          <input matInput [(ngModel)]="filters.nationalId" name="nationalId" type="text"
+            placeholder="{{'members.nationalId' | translate}}" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'members.phone' | translate}}</mat-label>
+            <input matInput [(ngModel)]="filters.phone" name="phoneNo" type="text"
+              placeholder="{{'members.phone' | translate}}" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+              <mat-select [(ngModel)]="filters.salesPersonId" name="salesPersonId">
+                @for (sale of sales; track sale) {
+                  <mat-option [value]="sale.id">{{sale.name}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="mo-w-full" (click)="pickerDOB.open()">
+              <mat-label>{{'members.fromAndToDates' | translate}}</mat-label>
+              <mat-date-range-input [rangePicker]="pickerDOB">
+                <input matStartDate [(ngModel)]="filters.fromDate" name="fromDate" placeholder="From date">
+                <input matEndDate [(ngModel)]="filters.toDate" name="toDate" placeholder="To date">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="pickerDOB"></mat-datepicker-toggle>
+              <mat-date-range-picker startView="year" #pickerDOB></mat-date-range-picker>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="mo-w-full" (click)="lastTransferDateFrom.open()">
+              <mat-label>{{'reports.table.lastTransferDateFrom' | translate}} </mat-label>
+              <input matInput [matDatepicker]="lastTransferDateFrom" [(ngModel)]="filters.lastTransferDateFrom"
+                name="lastTransferDateFrom">
+                <mat-datepicker-toggle matIconSuffix [for]="lastTransferDateFrom"></mat-datepicker-toggle>
+                <mat-datepicker #lastTransferDateFrom></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="mo-w-full" (click)="lastTransferDateTo.open()">
+                <mat-label>{{'reports.table.lastTransferDateTo' | translate}}</mat-label>
+                <input matInput [matDatepicker]="lastTransferDateTo" [(ngModel)]="filters.lastTransferDateTo"
+                  name="lastTransferDateTo">
+                  <mat-datepicker-toggle matIconSuffix [for]="lastTransferDateTo"></mat-datepicker-toggle>
+                  <mat-datepicker #lastTransferDateTo></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="col-12">
+                <mat-form-field class="mo-w-full" appearance="outline">
+                  <mat-label>{{'members.sourceOfK' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.sourceId" name="sourceOfKnowledge">
+                    <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                    @for (el of sources; track el) {
+                      <mat-option [value]="el.id">{{el.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.guestCard' | translate}}</mat-label>
+                  <input matInput [(ngModel)]="filters.guestCardNumber" name="guestCard" type="text"
+                    placeholder="{{'members.guestCard' | translate}}" />
+                    <mat-icon matPrefix class="mo-pe-2">#</mat-icon>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12">
+                  <mat-form-field appearance="outline" class="mo-w-full">
+                    <mat-label>{{'members.systemId' | translate}}</mat-label>
+                    <input matInput [(ngModel)]="filters.id" name="id" type="text" placeholder="{{'members.id' | translate}}" />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12">
+                  <mat-checkbox [(ngModel)]="filters.isHighPotentialOnly" name="isHighPotentialOnly">
+                    {{'members.highPotentialOnly' | translate}}
+                  </mat-checkbox>
+                </div>
+
+              </div>
+
+              <div class="mo-my-3">
+                <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilterChange.emit()" mat-raised-button color="primary"
+                type="button">{{'members.search' | translate}}</button>
+                <button class="mo-font-bold mo-w-full" (click)="potentialFiltersForm.reset();onFilterChange.emit()" mat-button
+                type="button">{{'members.clearAll' | translate}}</button>
+              </div>
+            </form>

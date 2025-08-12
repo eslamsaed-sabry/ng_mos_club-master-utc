@@ -1,0 +1,82 @@
+<div class="page-title">
+    <h4 class="mo-font-bold mo-m-0"> {{'navigation.benefitsReservations' | translate}} </h4>
+
+    <div class="mo-flex mo-items-center mo-gap-2">
+        <mat-form-field appearance="outline">
+            <mat-label>{{'members.search' | translate}}</mat-label>
+            <input type="text" matInput [(ngModel)]="filters.searchKeyWord" (keyup.enter)="refresh()" (blur)="refresh()"
+                name="searchKeyWord">
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" (click)="fromDateSelector.open()">
+            <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+            <input matInput [matDatepicker]="fromDateSelector" (dateChange)="refresh()"
+                [(ngModel)]="filters.sessionDateFrom" name="fromDateDate" />
+            <mat-datepicker-toggle matSuffix [for]="fromDateSelector"></mat-datepicker-toggle>
+            <mat-datepicker #fromDateSelector></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" (click)="toDateSelector.open()">
+            <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+            <input matInput [matDatepicker]="toDateSelector" (dateChange)="refresh()" [min]="filters.sessionDateFrom"
+                [(ngModel)]="filters.sessionDateTo" name="toDateDate" />
+            <mat-datepicker-toggle matSuffix [for]="toDateSelector"></mat-datepicker-toggle>
+            <mat-datepicker #toDateSelector></mat-datepicker>
+        </mat-form-field>
+    </div>
+</div>
+
+<ul class="mo-grid mo-grid-cols-[repeat(auto-fill,_minmax(400px,_1fr))] mo-gap-3">
+    @for (benefit of benefits$ | async; track $index) {
+    <li class="card mo-flex mo-gap-2 mo-items-start">
+        <div [ngStyle]="{'background-image': 'url('+benefit.memberPhoto+')'}"
+            class="mo-w-[100px] mo-h-[100px] mo-rounded-full mo-bg-cover"></div>
+        <div class="mo-flex-1">
+            <ul>
+                <li>
+                    <span class="mo-pe-3 mo-min-w-[160px] mo-inline-block">{{'reports.table.sessionDate' |
+                        translate}}</span>
+                    <strong>{{benefit.sessionDate | date:'MMM d, y, h:mm a'}}</strong>
+                </li>
+                <li>
+                    <span class="mo-pe-3 mo-min-w-[160px] mo-inline-block">{{'reports.table.benefitName' |
+                        translate}}</span>
+                    <strong>{{benefit.benfitName}}</strong>
+                </li>
+                <li>
+                    <span class="mo-pe-3 mo-min-w-[160px] mo-inline-block">{{'reports.table.memberName' |
+                        translate}}</span>
+                    <strong><a target="_blank"
+                            [routerLink]="['/admin/member-profile', benefit.memberId]">{{benefit.memberName}}</a></strong>
+                </li>
+                <li>
+                    <span class="mo-pe-3 mo-min-w-[160px] mo-inline-block">{{'reports.table.memberPhone' |
+                        translate}}</span>
+                    <strong appHidePhoneNumber>{{benefit.memberPhone}}</strong>
+                </li>
+                <li>
+                    <span class="mo-pe-3 mo-min-w-[160px] mo-inline-block">{{'reports.table.memberContractNo' |
+                        translate}}</span>
+                    <strong>{{benefit.memberContractNo}}</strong>
+                </li>
+            </ul>
+            <div class="mo-flex mo-gap-2 mo-justify-end mo-mt-4">
+                @if(!benefit.isConfirmed){
+                <button (click)="confirmReservation(benefit.id)" mat-flat-button color="primary">{{'common.confirm' |
+                    translate}}</button>
+                }
+                <button (click)="deleteReservation(benefit.id)" *appRole="['monitoring','tsb_Remove']" mat-flat-button
+                    color="warn">{{'members.delete' | translate}}</button>
+            </div>
+        </div>
+    </li>
+    }@empty {
+    <li class="mo-text-muted mo-text-center mo-py-28">{{'members.noData' | translate}}</li>
+    }
+</ul>
+
+@if(totalElements){
+<mat-paginator class="mo-mt-5" (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+    [length]="totalElements" [pageSizeOptions]="[12, 24, 48, 100]">
+</mat-paginator>}

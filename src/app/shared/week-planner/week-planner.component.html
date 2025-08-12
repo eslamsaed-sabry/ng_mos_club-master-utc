@@ -1,0 +1,30 @@
+<form (ngSubmit)="submit()">
+  <mat-accordion multi class="planner-list">
+    @for (day of weekDays; track day) {
+      <mat-expansion-panel>
+        <mat-expansion-panel-header class="mo-ps-0">
+          <mat-panel-title>
+            <mat-checkbox [(ngModel)]="day.status" [name]="'status-'+day.id">
+              {{day.key | translate}}
+            </mat-checkbox>
+          </mat-panel-title>
+          <mat-panel-description>
+            <mat-icon>access_time</mat-icon>
+            <span class="mo-px-3">{{day.startTime ? day.startTime : ''}}  -  {{day.endTime ? day.endTime : ''}}</span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="content">
+          <div class="mo-flex mo-items-center mo-justify-between">
+            <mat-checkbox [(ngModel)]="day.isStartTime" [name]="'isStartTime-'+day.id">{{'reports.table.from'|translate}}</mat-checkbox>
+            <ngx-timepicker-field [format]="12" [(ngModel)]="day.startTime"
+            [name]="'startTime-'+day.id"></ngx-timepicker-field>
+          </div>
+          <div class="mo-flex mo-items-center mo-justify-between">
+            <mat-checkbox [(ngModel)]="day.isEndTime" [name]="'isEndTime-'+day.id">{{'reports.table.to'|translate}}</mat-checkbox>
+            <ngx-timepicker-field [(ngModel)]="day.endTime" [name]="'endTime-'+day.id"></ngx-timepicker-field>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+</form>

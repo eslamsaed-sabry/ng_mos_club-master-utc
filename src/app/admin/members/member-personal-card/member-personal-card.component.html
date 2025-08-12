@@ -1,0 +1,374 @@
+<div class="!mo-mx-0 {{style}}" [ngClass]="{'row': style !== cardStyles.horizontal}">
+  <ng-content select="[pinOnTop]"></ng-content>
+
+
+
+  @if(style === cardStyles.horizontal){
+    <div class="mo-px-0">
+      @if (personalData.isBlocked) {
+        <div [matTooltip]="'members.blocked' | translate" class="blocked-notice">
+          <mat-icon class="fs-50" color="warn">block</mat-icon>
+        </div>
+      }
+      <div class="img-loader mo-w-24 mo-h-24 mo-rounded-full mo-overflow-hidden mo-mx-auto">
+        @if (personalData.photo) {
+          <img (load)="imageLoader = false"
+            [ngClass]="'status-' + pageName + (membershipStatus | membershipStatus)"
+            class="profile-pic mo-object-cover mo-h-full" (click)="pictureZoom()"
+            [src]="proxyUrl + '/Images/' + personalData.photo">
+          }
+          @if (personalData.photo && imageLoader) {
+            <mat-spinner [color]="'accent'" [diameter]="50" class="spinner">
+            </mat-spinner>
+          }
+
+          @if (!personalData.photo) {
+            <img class="profile-pic  mo-object-cover mo-h-full"
+              [ngClass]="'status-' + pageName + (membershipStatus | membershipStatus)"
+              [src]="personalData.gender === 1 ? 'assets/images/avatar.png' : 'assets/images/female-avatar.png'">
+            }
+          </div>
+
+
+
+          <div>
+            <img [src]="barcode" alt="barcode" class="mo-w-1/2 mo-mx-auto mo-my-2">
+          </div>
+
+          <ul>
+            <li>
+              <label class="mo-text-muted mo-text-xs mo-flex mo-items-center mo-justify-center mo-gap-2">
+                <span>{{'members.englishName' | translate}}</span>
+                @if (!personalData.isIncompleteData) {
+                  <mat-icon matTooltipPosition="before"
+                    [matTooltip]="'members.dataNotCompl' | translate"
+                  class="mo-text-sm mo-text-red-500">highlight_remove</mat-icon>
+                }
+                @if (personalData.isIncompleteData) {
+                  <mat-icon matTooltipPosition="before"
+                    [matTooltip]="'members.dataCompl' | translate"
+                  class="mo-text-sm mo-text-green-600">check_circle_outline</mat-icon>
+                }
+              </label>
+              <p class="mo-font-bold">
+                <span>{{personalData.nameEng}}</span>
+              </p>
+            </li>
+            <li>
+              <label class="mo-text-muted mo-text-xs">{{'members.arabicName' | translate}}</label>
+              <p class="mo-font-bold">{{personalData.nameAR}}</p>
+            </li>
+          </ul>
+
+        </div>
+        <ng-content></ng-content>
+        <ul class="personal-data-list">
+          @if(showBtns){
+            <li><button class="mo-font-bold" mat-stroked-button
+            [routerLink]="['/admin/member-profile/'+ personalData.id]">{{'members.viewProfile' | translate}}</button></li>
+            <li><button class="mo-font-bold" mat-stroked-button (click)="editMember()">{{'members.editMember' |
+            translate}}</button>
+          </li>
+          <li><button class="mo-font-bold" mat-stroked-button (click)="viewNotes()">{{'members.viewNotes' | translate}}
+            @if (notesLength>0) {
+              <span class="mo-absolute start-100 translate-middle badge rounded-pill mo-bg-error-500">
+                {{notesLength}}
+              </span>
+            }
+          </button>
+        </li>
+      }
+
+      @if (personalData.mainBranchName) {
+        <li matTooltipPosition="before" [matTooltip]="'members.mainBranch' | translate">
+          <mat-icon>account_tree</mat-icon>
+          <p>{{personalData.mainBranchName}}</p>
+        </li>
+      }
+      <li matTooltipPosition="before" [matTooltip]="'members.phone' | translate">
+        <mat-icon>phone_android</mat-icon>
+        <p>
+          @defer (when permissionPipe.transform('has', 'profile', 'ShowPhoneNo')) {
+          {{personalData.phoneNo}}
+        }
+      </p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.contractNo' | translate">
+      <mat-icon>grid_3x3</mat-icon>
+      <p hideIfNull>{{personalData.applicationNo}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.accessCode' | translate">
+      <mat-icon>qr_code_scanner</mat-icon>
+      <p hideIfNull>{{personalData.code}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.gender' | translate">
+      <mat-icon>male</mat-icon>
+      <p hideIfNull>{{personalData.gender | gender}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.salesPerson' | translate">
+      <mat-icon>person_pin</mat-icon>
+      <p hideIfNull>{{personalData.salesName}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.landline' | translate">
+      <mat-icon>point_of_sale</mat-icon>
+      <p hideIfNull>{{personalData.homeNumber}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.nationalId' | translate">
+      <mat-icon>account_box</mat-icon>
+      <p hideIfNull>{{personalData.nationalId}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.jobTitle' | translate">
+      <mat-icon>engineering</mat-icon>
+      <p hideIfNull>{{personalData.jobTitle}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.nationality' | translate">
+      <mat-icon>language</mat-icon>
+      <p hideIfNull>{{personalData.nationalityName}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.region' | translate">
+      <mat-icon>location_pin</mat-icon>
+      <p hideIfNull>{{personalData.regionName}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.resAdd' | translate">
+      <mat-icon>home</mat-icon>
+      <p hideIfNull>{{personalData.athleticAddress}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.email' | translate">
+      <mat-icon>alternate_email</mat-icon>
+      <p hideIfNull>{{personalData.email}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.birthDate' | translate">
+      <mat-icon>cake</mat-icon>
+      <p hideIfNull>{{personalData.birthDate | date :'mediumDate'}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.emerName' | translate">
+      <mat-icon>contact_phone</mat-icon>
+      <p hideIfNull>{{personalData.emergencyContactName}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.emerPhone' | translate">
+      <mat-icon>contact_phone</mat-icon>
+      <p hideIfNull>{{personalData.emergencyContactPhone}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.source' | translate">
+      <mat-icon>share</mat-icon>
+      <p hideIfNull>{{personalData.sourceName}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.referralName' | translate">
+      <mat-icon>person_search</mat-icon>
+      <p hideIfNull>{{personalData.referralMemberName }}</p>
+      @if (personalData.referralMemberId) {
+        <p>
+          <a class="view-profile-btn mo-my-1 mo-py-1"
+            [routerLink]="['/admin/member-profile/',personalData.referralMemberId]" mat-button
+            color="primary"><small>{{'members.view' | translate }}</small>
+          </a>
+        </p>
+      }
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.preferredShift' | translate">
+      <mat-icon>nightlight_round</mat-icon>
+      <p hideIfNull>{{personalData.preferredShiftName}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.comment' | translate">
+      <mat-icon>comment</mat-icon>
+      <p hideIfNull class="text-wrap">{{personalData.comment}}</p>
+    </li>
+    <li matTooltipPosition="before" [matTooltip]="'members.creationDate' | translate">
+      <mat-icon>date_range</mat-icon>
+      <p class="text-wrap">{{personalData.creationDate | date:'MMM d, y, h:mm a'}}</p>
+    </li>
+
+
+  </ul>
+
+} @else {
+  <div class="mo-px-0" [ngClass]="{'col-md-3': style === cardStyles.standard, 'col-12': style === cardStyles.compact}">
+    @if (personalData.isBlocked) {
+      <div [matTooltip]="'members.blocked' | translate" class="blocked-notice">
+        <mat-icon class="fs-50" color="warn">block</mat-icon>
+      </div>
+    }
+    <div class="img-loader">
+      @if (personalData.photo) {
+        <img (load)="imageLoader = false"
+          [ngClass]="'status-' + pageName + (membershipStatus | membershipStatus)" class="profile-pic"
+          (click)="pictureZoom()" [src]="proxyUrl + '/Images/' + personalData.photo">
+        }
+        @if (personalData.photo && imageLoader) {
+          <mat-spinner [color]="'accent'" [diameter]="50" class="spinner">
+          </mat-spinner>
+        }
+      </div>
+
+      @if (!personalData.photo) {
+        <img class="profile-pic"
+          [ngClass]="'status-' + pageName + (membershipStatus | membershipStatus)"
+          [src]="personalData.gender === 1 ? 'assets/images/avatar.png' : 'assets/images/female-avatar.png'">
+        }
+
+        <div>
+          <img [src]="barcode" alt="barcode" class="mo-w-1/2 mo-mx-auto mo-my-2">
+        </div>
+
+      </div>
+
+      <div [ngClass]="{'col-md-4': style === cardStyles.standard, 'col-12': style === cardStyles.compact}">
+
+        <ng-content></ng-content>
+
+        @if (style === cardStyles.compact && showBtns) {
+          <ul class="mo-flex mo-flex-wrap mo-gap-1 mo-justify-between mo-my-3">
+            <li><button class="mo-font-bold" mat-stroked-button
+            [routerLink]="['/admin/member-profile/'+ personalData.id]">{{'members.viewProfile' | translate}}</button></li>
+            <li><button class="mo-font-bold" mat-stroked-button (click)="editMember()">{{'members.editMember' |
+            translate}}</button>
+          </li>
+          <li><button class="mo-font-bold" mat-stroked-button (click)="viewNotes()">{{'members.viewNotes' | translate}}
+            @if (notesLength>0) {
+              <span class="mo-absolute start-100 translate-middle badge rounded-pill mo-bg-error-500">
+                {{notesLength}}
+              </span>
+            }
+          </button>
+        </li>
+      </ul>
+    }
+
+    <ul class="personal-data-list mo-mt-3">
+      @if (personalData.mainBranchName) {
+        <li>
+          <label>{{'members.mainBranch' | translate}}</label>
+          <p>{{personalData.mainBranchName}}</p>
+        </li>
+      }
+      <li>
+        <label>{{'members.phone' | translate}}</label>
+        <p>
+          @defer (when permissionPipe.transform('has', 'profile', 'ShowPhoneNo')) {
+          {{personalData.phoneNo}}
+        }
+      </p>
+    </li>
+    <li>
+      <label>{{'members.contractNo' | translate}}</label>
+      <p>{{personalData.applicationNo}}</p>
+    </li>
+    <li>
+      <label>{{'members.accessCode' | translate}}</label>
+      <p>{{personalData.code}}</p>
+    </li>
+    <li>
+      <label>{{'members.englishName' | translate}}</label>
+      <p>{{personalData.nameEng}}</p>
+    </li>
+    <li>
+      <label>{{'members.arabicName' | translate}}</label>
+      <p>{{personalData.nameAR}}</p>
+    </li>
+    <li>
+      <label>{{'members.gender' | translate}}</label>
+      <p>{{personalData.gender | gender}}</p>
+    </li>
+    <li>
+      <label>{{'members.salesPerson' | translate}}</label>
+      <p>{{personalData.salesName}}</p>
+    </li>
+    <li>
+      <label>{{'members.landline' | translate}}</label>
+      <p>{{personalData.homeNumber}}</p>
+    </li>
+    <li>
+      <label>{{'members.nationalId' | translate}}</label>
+      <p>{{personalData.nationalId}}</p>
+    </li>
+
+  </ul>
+</div>
+
+<div [ngClass]="{'col-md-5': style === cardStyles.standard, 'col-12': style === cardStyles.compact}">
+  <ul class="personal-data-list">
+    <li>
+      <label>{{'members.jobTitle' | translate}}</label>
+      <p>{{personalData.jobTitle}}</p>
+    </li>
+    <li>
+      <label>{{'members.nationality' | translate}}</label>
+      <p>{{personalData.nationalityName}}</p>
+    </li>
+    <li>
+      <label>{{'members.region' | translate}}</label>
+      <p>{{personalData.regionName}}</p>
+    </li>
+    <li>
+      <label>{{'members.resAdd' | translate}}</label>
+      <p>{{personalData.athleticAddress}}</p>
+    </li>
+    <li>
+      <label>{{'members.email' | translate}}</label>
+      <p>{{personalData.email}}</p>
+    </li>
+    <li>
+      <label>{{'members.birthDate' | translate}}</label>
+      <p>{{personalData.birthDate | date :'mediumDate'}}</p>
+    </li>
+    <li>
+      <label>{{'members.emerName' | translate}}</label>
+      <p>{{personalData.emergencyContactName}}</p>
+    </li>
+    <li>
+      <label>{{'members.emerPhone' | translate}}</label>
+      <p>{{personalData.emergencyContactPhone}}</p>
+    </li>
+    <li>
+      <label>{{'members.source' | translate}}</label>
+      <p>{{personalData.sourceName}}</p>
+    </li>
+    <li>
+      <label>{{'members.referralName' | translate}}</label>
+      @if (personalData.referralMemberId) {
+        <p>
+          <!-- <a class="" [routerLink]="['/admin/member-profile/',personalData.referralMemberId]"
+          color="primary"><small>{{personalData.referralMemberName }}</small>
+        </a> -->
+        <a class="view-profile-btn mo-my-1 mo-py-1"
+          [routerLink]="['/admin/member-profile/',personalData.referralMemberId]" mat-button
+          color="primary"><small>{{personalData.referralMemberName }}</small>
+        </a>
+      </p>
+    }
+  </li>
+  <li>
+    <label>{{'members.preferredShift' | translate}}</label>
+    <p>{{personalData.preferredShiftName}}</p>
+  </li>
+  <li>
+    <label>{{'members.dataCompl' | translate}}</label>
+    <p>
+      @if (personalData.isIncompleteData) {
+        <mat-icon class="mo-text-error-500">highlight_remove</mat-icon>
+      }
+      @if (!personalData.isIncompleteData) {
+        <mat-icon class="text-success">check_circle_outline</mat-icon>
+      }
+    </p>
+  </li>
+  <li>
+    <label>{{'members.comment' | translate}}</label>
+    <p class="text-wrap">{{personalData.comment}}</p>
+  </li>
+  <li>
+    <label>{{'members.creationDate' | translate}}</label>
+    <p class="text-wrap">{{personalData.creationDate | date:'MMM d, y, h:mm a'}}</p>
+  </li>
+</ul>
+</div>
+}
+</div>
+
+<ng-template #photoModal>
+  <div class="mo-relative">
+    <button class="modal-close-btn" type="button" mat-icon-button
+      (click)="dialog.closeAll()"><mat-icon>close</mat-icon></button>
+      <img class="img-fluid" [src]="proxyUrl + '/Images/' + personalData.photo">
+    </div>
+  </ng-template>

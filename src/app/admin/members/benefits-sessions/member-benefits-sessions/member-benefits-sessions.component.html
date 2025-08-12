@@ -1,0 +1,69 @@
+<div class="mo-mt-3 mo-mb-0 page-title">
+
+  <!-- <h4 class="mo-font-bold">{{'classSchedule.pTSessions' | translate}}</h4> -->
+  <h4 class="mo-font-bold">{{benefit.name}}</h4>
+
+  <div class="actions">
+    @if (benefit.consumedCount < benefit.count) {
+      <button color="primary" class="mo-mb-2" (click)="addSession()"
+        mat-raised-button>
+        <mat-icon>add</mat-icon> {{'members.add' | translate}}
+      </button>
+    }
+    <!-- <mat-form-field appearance="outline">
+    <mat-label>Search...</mat-label>
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Search table" #input>
+  </mat-form-field> -->
+</div>
+</div>
+
+<div class="card p-3">
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="sessionDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.sessionDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.sessionDate | date:'MMM d, y, h:mm a' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="approveStatus">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'receipts.approveStatus' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.approvedStatus }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="approvedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'receipts.approvedDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.approvedDate | date:'MMM d, y, h:mm a' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="creationDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.creationDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.creationDate | date:'MMM d, y, h:mm a' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.edit'|translate}}</th>
+        <td mat-cell *matCellDef="let row"><button (click)="editSession(row)" mat-icon-button
+          color="accent"><mat-icon>edit_note</mat-icon></button></td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="delete">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.delete'|translate}}</th>
+          <td mat-cell *matCellDef="let row"><button (click)="onDeleteSession(row)" mat-icon-button
+            color="warn"><mat-icon>delete_sweep</mat-icon></button></td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+        </mat-paginator>
+      </div>
+    </div>

@@ -1,0 +1,49 @@
+<h5 mat-dialog-title>{{'extra.maintenanceData' | translate}}</h5>
+<form (ngSubmit)="submit(itemForm)" #itemForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'extra.maintenanceDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="maintenance.maintenanceDate" name="maintenanceDate" required>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'management.machineName' | translate}}</mat-label>
+      <mat-select [(ngModel)]="maintenance.machineId" name="machineId" required>
+        <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+        @for (m of machines; track m) {
+          <mat-option [value]="m.id">{{m.machineName}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'extra.maintenanceType' | translate}}</mat-label>
+      <mat-select [(ngModel)]="maintenance.typeId" name="typeId" required>
+        <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+        @for (t of maintenanceTypes; track t) {
+          <mat-option [value]="t.id">{{t.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'extra.cost' | translate}}</mat-label>
+      <input type="number" matInput [(ngModel)]="maintenance.cost" name="cost" required>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.notes' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="maintenance.notes" name="notes"></textarea>
+    </mat-form-field>
+
+  </div>
+
+  <div mat-dialog-actions class="mo-justify-end">
+    <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button color="primary" type="submit">
+      {{'members.save' | translate}}
+    </button>
+  </div>
+</form>

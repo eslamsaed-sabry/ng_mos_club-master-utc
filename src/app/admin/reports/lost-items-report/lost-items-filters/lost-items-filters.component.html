@@ -1,0 +1,57 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  <form>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="filters.fromDate" name="fromDate" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="filters.toDate" name="toDate" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full mo-mb-2">
+      <mat-label>{{'navigation.locations_inside_gym' | translate}}</mat-label>
+      <mat-select [(ngModel)]="filters.locationId" name="locationId">
+        <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+        @for (item of location; track item) {
+          <mat-option [value]="item.id">{{item.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full mo-mb-2">
+      <mat-label>{{'navigation.lost_category' | translate}}</mat-label>
+      <mat-select [(ngModel)]="filters.categoryId" name="categoryId">
+        <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+        @for (item of category; track item) {
+          <mat-option [value]="item.id">{{item.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="filters.isDeliverd" (change)="changeIsDeliverd()" name="isDeliverd">
+    {{'reports.isDeliverd' | translate}}</mat-checkbox>
+
+    <div class="mo-w-full mo-mb-3">
+      <mat-radio-group [(ngModel)]="filters.isFinderMember" (change)="changeIsFinder()" name="isFinderMember"
+        class="d-inline" aria-label="Select an option">
+        <mat-radio-button class="mo-m-0" [value]="true">{{'reports.isFinderMember' | translate}}</mat-radio-button>
+        <mat-radio-button class="mo-m-0" [value]="null">{{'reports.isFinderEmplyee'| translate}}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="mo-w-full mo-mb-3">
+      <mat-radio-group [(ngModel)]="filters.isRecipientMember" (change)="changeIsRecipient()" name="isRecipientMember"
+        class="d-inline" aria-label="Select an option">
+        <mat-radio-button class="mo-m-0" [value]="true">{{'reports.isRecipientMember' | translate}}</mat-radio-button>
+        <mat-radio-button class="mo-m-0" [value]="null">{{'reports.isRecipientEmployee' | translate}}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+
+  </form>
+
+</div>

@@ -1,0 +1,50 @@
+<app-reports-page-header [reportName]="'reports.absentMembersReport'|translate" [isResult]="isResult"
+  (onAction)="getAction($event)" [permissions]="['absentMembersReport', 'tsb_Print', 'Export']">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-absent-members-report-filters [filters]="filters"></app-absent-members-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <!-- <h5 class="mo-font-bold">
+            {{'reports.callsSummaryRep' | translate}}
+          </h5> -->
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'reports.table.memberPhone' | translate}}</th>
+                <th>{{'reports.table.memberName' | translate}}</th>
+                <th>{{'reports.table.membershipStartDate' | translate}}</th>
+                <th>{{'reports.table.membershipEndDate' | translate}}</th>
+                <th>{{'members.package' | translate}}</th>
+                <th>{{'members.attendance' | translate}}</th>
+                <th>{{'classSchedule.attended' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of logs; track el) {
+                <tr>
+                  <td>{{el.memberContractNo}}</td>
+                  <td>{{el.memberPhone}}</td>
+                  <td>{{el.memberName}}</td>
+                  <td>{{el.membershipStartDate | date:'MMM d, y, h:mm a'}}</td>
+                  <td>{{el.membershipEndDate | date:'MMM d, y, h:mm a'}}</td>
+                  <td>{{el.periodName}}</td>
+                  <td>{{el.attendanceCount}}</td>
+                  <td>{{el.attended}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+</div>

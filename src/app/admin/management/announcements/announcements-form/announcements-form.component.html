@@ -1,0 +1,45 @@
+<h5 mat-dialog-title>{{'navigation.announcements' | translate}}</h5>
+
+<form (ngSubmit)="submit(announcementForm)" #announcementForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field class="mo-w-full" appearance="outline" (click)="announcementPicker.open()">
+      <mat-label>{{'reports.table.date' | translate}}</mat-label>
+      <input matInput [matDatepicker]="announcementPicker" [(ngModel)]="announcement.showDate" name="showDate"
+        required />
+        <mat-datepicker-toggle matSuffix [for]="announcementPicker"></mat-datepicker-toggle>
+        <mat-datepicker #announcementPicker startView="year"></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'management.title' | translate}}</mat-label>
+        <input matInput [(ngModel)]="announcement.title" name="title" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'management.users' | translate}}</mat-label>
+        <mat-select [(ngModel)]="announcement.usersIds" name="userIds" multiple>
+          <mat-option [value]="null" (onSelectionChange)="onSelectAll($event)">{{'members.all' | translate}}</mat-option>
+          @for (u of users; track u) {
+            <mat-option [value]="u.id">{{u.userName}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'reports.table.description' | translate}}</mat-label>
+        <textarea matInput [(ngModel)]="announcement.description" name="description"></textarea>
+      </mat-form-field>
+
+    </div>
+
+
+    <div mat-dialog-actions class="mo-justify-end">
+      <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit">
+        {{'members.save' | translate}}
+      </button>
+    </div>
+
+  </form>

@@ -1,0 +1,40 @@
+<div class="page-title">
+  <h4 class="mo-font-bold mo-m-0"> {{'navigation.instructorsClassesRates' | translate}} </h4>
+
+  <button mat-raised-button color="primary" class="!mo-min-w-[150px]" (click)="submit()">
+    {{'members.save' | translate}}
+  </button>
+</div>
+
+
+<div class="card mo-pb-0 mo-mb-2">
+  <h5 class="mo-mb-2 mo-font-bold">{{'classSchedule.selectInstructor' | translate}}</h5>
+  <mat-form-field class="!mo-min-w-[40%]" appearance="outline">
+    <mat-label>{{'classSchedule.instructor' | translate}}</mat-label>
+    <mat-select (selectionChange)="getInstructorClassesPrice()" [(ngModel)]="instructorId" name="instructorId">
+      @for (instructor of instructors; track instructor) {
+        <mat-option [value]="instructor.id">{{instructor.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<h5 class="mo-mb-2 mo-font-bold">{{'classSchedule.instructorClasses' | translate}}</h5>
+<ul class="mo-grid mo-grid-cols-4 mo-gap-3 max-sm:mo-grid-cols-2">
+  @for (ins of instructorClasses; track ins; let i = $index) {
+    <li class="card mo-pb-0">
+      <div class="mo-font-bold mo-mb-2 mo-ps-1">{{ins.classTypeName}}</div>
+      <mat-radio-group [(ngModel)]="ins.isPercentage" [name]="'isPercentage' + i">
+        <mat-radio-button [value]="false">{{'reports.table.amount' | translate}}</mat-radio-button>
+        <mat-radio-button [value]="true">{{'reports.table.percentage' | translate}}</mat-radio-button>
+      </mat-radio-group>
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'members.rate' | translate}}</mat-label>
+        <input type="number" matInput [(ngModel)]="ins.rate" [name]="'rate' + i" />
+      </mat-form-field>
+    </li>
+  }
+  @if(instructorClasses&&!instructorClasses.length){
+    <li class="mo-text-muted"><small>{{'classSchedule.noClassesFound' | translate}}</small></li>
+  }
+</ul>

@@ -1,0 +1,17 @@
+<ul class="quick-info-content mo-m-0 mo-p-0">
+  <li class="mo-mb-2">
+    <mat-icon>access_time</mat-icon>
+    <span class="mo-mx-1">Start Time</span>
+    <strong>{{data.startDate | date:'hh:mm a'}}</strong>
+  </li>
+  <li class="mo-mb-2">
+    <mat-icon>access_time</mat-icon>
+    <span class="mo-mx-1">End Time</span>
+    <strong>{{data.endDate | date:'hh:mm a'}}</strong>
+  </li>
+  <li class="mo-mb-2 mo-cursor-pointer" [routerLink]="['/admin/scheduler/booking-list/class', data.id]">
+    <mat-icon>group</mat-icon>
+    <span class="mo-mx-1">Capacity</span>
+    <strong>{{data.capacity}}</strong>
+  </li>
+</ul>

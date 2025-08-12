@@ -1,0 +1,44 @@
+<h5 mat-dialog-title class="mo-font-bold mo-capitalize">{{'members.changeMoney' | translate}}</h5>
+
+<form #changeMoneyNgForm="ngForm" (ngSubmit)="submit(changeMoneyNgForm)">
+  <div mat-dialog-content>
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.totalPrice' | translate}}</mat-label>
+      <input matInput type="number" [(ngModel)]="changeMoneyForm.price" name="price" />
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.amountPaidCash' | translate}}</mat-label>
+      <input matInput type="number" (keyup)="calc()" [(ngModel)]="changeMoneyForm.cashAmountPaid"
+        name="cashAmountPaid" />
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'reports.table.amountPaidVisa' | translate}}</mat-label>
+        <input matInput type="number" (keyup)="calc()" [(ngModel)]="changeMoneyForm.visaAmountPaid"
+          name="visaAmountPaid" />
+        </mat-form-field>
+
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'members.visaType' | translate}}</mat-label>
+          <mat-select [(ngModel)]="changeMoneyForm.visaTypeId" name="visaTypeId">
+            @for (v of visaTypes; track v) {
+              <mat-option [value]="v.id">{{v.name}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'members.remainingMoney' | translate}}</mat-label>
+          <input matInput type="number" [(ngModel)]="remainingMoney" name="remainingMoney" />
+        </mat-form-field>
+      </div>
+
+      <div class="mo-text-end mo-mt-3" mat-dialog-actions>
+        <button type="button" (click)="dismiss()" mat-button>{{'members.cancel' | translate}}</button>
+        <button type="submit" class="mo-capitalize" mat-raised-button color="primary">
+        {{'members.save' | translate}}</button>
+      </div>
+
+
+    </form>

@@ -1,0 +1,140 @@
+<div class="page-title !mo-mb-2">
+  <div>
+    <h4 class="mo-font-bold mo-m-0"> {{'navigation.classesSched' | translate}} </h4>
+    <!-- <button (click)="switchView()" mat-button color="primary">
+    <mat-icon>undo</mat-icon>
+    {{showRentRooms ? ('classSchedule.switchToClassRooms' | translate) :
+  ('classSchedule.switchToRentRooms' | translate)}}</button> -->
+</div>
+
+<div class="mo-flex mo-gap-3">
+  <button mat-raised-button (click)="publishAll()">
+    <mat-icon>published_with_changes</mat-icon> {{'classSchedule.publishClasses' | translate}}
+  </button>
+
+  <button mat-raised-button [routerLink]="['/admin/scheduler/booking-list']" color="primary">
+    <mat-icon>perm_contact_calendar</mat-icon> {{'classSchedule.bookingList' | translate}}
+  </button>
+</div>
+
+</div>
+
+<div class="mo-flex mo-gap-3">
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{'classSchedule.classGenre' | translate}}</mat-label>
+    <mat-select (selectionChange)="getSchedule()" [(ngModel)]="filters.classGenreId" name="classGenreId">
+      <mat-option [value]="''">{{'members.all' | translate}}</mat-option>
+      @for ( c of classGenre$ | async; track $index) {
+        <mat-option [value]="c.id">{{c.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{'classSchedule.classProgram' | translate}}</mat-label>
+    <mat-select (selectionChange)="getSchedule()" [(ngModel)]="filters.classProgramId" name="classProgramId">
+      <mat-option [value]="''">{{'members.all' | translate}}</mat-option>
+      @for ( c of classProgram$ | async; track $index) {
+        <mat-option [value]="c.id">{{c.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{'classSchedule.className' | translate}}</mat-label>
+    <mat-select (selectionChange)="getSchedule()" [(ngModel)]="filters.classTypeId" name="classTypeId">
+      <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+      @for (c of classesTypes; track c) {
+        <mat-option [value]="c.id">{{c.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{'management.classRoom' | translate}}</mat-label>
+    <mat-select (selectionChange)="getSchedule()" [(ngModel)]="filters.roomId" name="roomId">
+      <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+      @for (r of rooms; track r) {
+        <mat-option [value]="r.id">{{r.englishName}} ({{r.arabicName}})</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>{{'classSchedule.instructor' | translate}}</mat-label>
+    <mat-select (selectionChange)="getSchedule()" [(ngModel)]="filters.instructorId" name="instructorId">
+      <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+      @for (instructor of instructors; track instructor) {
+        <mat-option [value]="instructor.id">{{instructor.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
+@if(isPresent){
+  <ejs-schedule #scheduleObj (actionBegin)="onActionBegin($event)" [firstDayOfWeek]="6"
+    (eventRendered)="onEventRendered($event)" (actionComplete)="onNavigation()" (cellClick)="onCellClick($event)"
+    (eventClick)="onEventClick($event)" (hover)="onHover($event)" width="100%" height="900"
+    [eventSettings]="eventSettings" [(currentView)]="currentView" [enableRtl]="currentLang === 'ar'? true : false"
+    [group]="currentView === 'Month' ? undefined : group">
+    <e-views>
+      <e-view option="Agenda"></e-view>
+      <e-view option="Month"></e-view>
+      <e-view option="Week"></e-view>
+      <e-view option="Day"></e-view>
+      <e-view option="Today"></e-view>
+    </e-views>
+    @if(currentView === 'Week' || currentView === 'Day'){
+      <e-resources>
+        <e-resource field='roomId' title='Room' name='Rooms' [dataSource]='rooms' textField='englishName' idField='id'
+          colorField='Color'>
+        </e-resource>
+      </e-resources>
+    }
+
+    <!-- Header template -->
+    <ng-template #quickInfoTemplatesHeader let-data>
+      <div>
+        <div class="e-popup-header" [ngStyle]="{'background-color':data.colorHex}">
+          <h5 class="mo-font-bold mo-text-white mo-p-3 mo-m-0">
+            @if (data.isRentRoom) {
+              {{'classSchedule.rentRoom' | translate}} {{data.roomName}}
+              }@else if(data.isPrivateRoom){
+              {{'classSchedule.privateRoom' | translate}} {{data.roomName}} ({{data.memberName}})
+            } @else {
+              {{data.classTypeName + ' with ' + data.instructorName + ' (' + data.roomName + ')'}}
+            }
+          </h5>
+          @if(data.isCancelled){
+            <h5 class="badge mo-bg-red-500 mo-mx-3">{{'membershipStatus.cancelled' | translate}}</h5>
+          }
+          <div class="e-header-icon-wrapper">
+            <button class="btns del-btn" (click)="deleteEvent(data)" title="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button class="btns edit-btn" (click)="$event.preventDefault();onEdit(data)" title="Edit">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button class="btns close-btn" (click)="closePopUp()" title="Close">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #quickInfoTemplatesContent let-data>
+      <app-class-schedule-quickinfo [data]="data"></app-class-schedule-quickinfo>
+    </ng-template>
+  </ejs-schedule>
+
+  <button #menuTrigger="matMenuTrigger" [matMenuTriggerFor]="menu"
+  class="mo-absolute mo-top-0 mo-left-0 mo-w-0  mo-h-0 mo-opacity-0"></button>
+
+  <!-- MatMenu Definition -->
+  <mat-menu #menu="matMenu">
+    <button (click)="openClassRoomForm()" mat-menu-item>{{'classSchedule.createClass' | translate}}</button>
+    <button (click)="openRentRoomForm()" mat-menu-item>{{'classSchedule.rentRoom' | translate}}</button>
+    <button (click)="openPrivateClassForm()" mat-menu-item>{{'classSchedule.createPrivateClass' | translate}}</button>
+  </mat-menu>
+}

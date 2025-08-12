@@ -1,0 +1,70 @@
+<app-reports-page-header [reportName]="'reports.debtsRep' | translate"
+  [permissions]="['debtsReport', 'tsb_Print', 'Export']" [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-debts-report-filters [filters]="filters"></app-debts-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.phone' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'members.package' | translate}}</th>
+                  <th>{{'members.startDate' | translate}}</th>
+                  <th>{{'members.expDate' | translate}}</th>
+                  <th>{{'reports.table.totalPrice' | translate}}</th>
+                  <th>{{'reports.table.amount' | translate}}</th>
+                  <th>{{'reports.table.dueDate' | translate}}</th>
+                  <th>{{'reports.table.totalAttend' | translate}}</th>
+                  <th>{{'reports.table.overAttend' | translate}}</th>
+                  <th>{{'reports.table.lastAttend' | translate}}</th>
+                  <th>{{'reports.table.settlementDate' | translate}}</th>
+                  <th>{{'reports.table.status' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of debts; track el) {
+                  <tr>
+                    <td>{{el.memberApplicationNo}}</td>
+                    <td>{{el.memberPhone}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.packageName}}</td>
+                    <td>{{el.startDate | date : 'mediumDate'}}</td>
+                    <td>{{el.endDate | date : 'mediumDate'}}</td>
+                    <td>{{el.totalMembershipPrice}}</td>
+                    <td>{{el.amount}}</td>
+                    <td>{{el.dueDate | date : 'mediumDate'}}</td>
+                    <td>{{el.totalAttendance}}</td>
+                    <td>{{el.overAttendance}}</td>
+                    <td>{{el.lastAttendanceDate | date : 'mediumDate'}}</td>
+                    <td>{{el.settlementDate | date : 'mediumDate'}}</td>
+                    <td>{{el.status}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="8"></td>
+                  <td>{{calcTotal(debts, 'amount') | number:'1.2'}}</td>
+                  <td colspan="7"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

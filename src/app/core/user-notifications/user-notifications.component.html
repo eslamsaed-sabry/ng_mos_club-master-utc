@@ -1,0 +1,75 @@
+<div>
+  <button [matTooltip]="'members.notifications' | translate" [matMenuTriggerFor]="notificationMenu"
+    (click)="onOpenMenu()" class="notif-badge mo-ms-2" mat-icon-button
+    [matBadge]=" unseenNotifications > 0  ? unseenNotifications : ''">
+    <mat-icon>notifications_none</mat-icon>
+  </button>
+  <button [matTooltip]="'members.reminders' | translate" [matMenuTriggerFor]="remindersMenu" class="notif-badge mo-ms-2"
+    mat-icon-button [matBadge]="unseenUserReminders.length > 0  ? unseenUserReminders.length : ''">
+    <mat-icon>calendar_month</mat-icon>
+  </button>
+</div>
+
+<mat-menu class="notifications-menu" xPosition="before" #notificationMenu="matMenu">
+
+  @for (n of notifications; track n) {
+    <button (click)="onClickNotification(n)" class="border-bottom" mat-menu-item>
+      <mat-icon class="mo-pe-2 {{(n.typeId | notification).textColorClass}}">
+      {{(n.typeId | notification).icon}}</mat-icon>
+      <div><strong>{{n.details}}</strong></div>
+      <div><small>{{n.creationDate | date:'MMM d, y, h:mm a'}}</small></div>
+    </button>
+  }
+
+  @if (loading) {
+    <div class="mo-flex mo-justify-center mo-py-1 mo-w-full">
+      <mat-spinner [diameter]="20"></mat-spinner>
+    </div>
+  }
+  @if (totalElements > notifications.length) {
+    <button (click)="$event.stopPropagation();loadMore()" mat-flat-button
+      class="mo-w-full">
+      <div class="mo-flex mo-justify-center mo-items-center mo-py-3">
+        <span class="mo-px-2">{{'common.loadMore' | translate}}</span>
+      </div>
+    </button>
+  }
+  @if (notifications.length === 0 && !loading) {
+    <p mat-menu-item class="mo-m-0" style="height: 46px;">
+      <small class="mo-text-muted">{{'header.noNotifications' | translate}}</small>
+    </p>
+  }
+</mat-menu>
+
+
+<mat-menu class="notifications-menu" xPosition="before" #remindersMenu="matMenu">
+  <div class="mo-text-center">
+    <button mat-button color="primary" routerLink="/admin/extra/reminders">
+      {{'extra.showAllReminder' | translate}}
+    </button>
+  </div>
+  @for (r of userReminders; track r) {
+    <button (click)="openUserReminder([r])" class="border-bottom" mat-menu-item>
+      <mat-icon class="mo-pe-2 text-success">call</mat-icon>
+      <div>
+        {{'header.reminder' | translate}} <strong>{{r.memberName}}</strong> {{'header.on' | translate}}
+        <strong>{{r.reminderDate| date:'MMM d, y, h:mm a'}}</strong>
+        <div>
+          <small class="mo-text-muted">{{'header.moreDetails' | translate}}</small>
+        </div>
+      </div>
+    </button>
+  }
+
+  @if (loading) {
+    <div class="mo-flex mo-justify-center mo-py-1 mo-w-full">
+      <mat-spinner [diameter]="20"></mat-spinner>
+    </div>
+  }
+
+  @if (userReminders.length === 0 && !loading) {
+    <p mat-menu-item class="mo-m-0" style="height: 46px;">
+      <small class="mo-text-muted">{{'header.noNotifications' | translate}}</small>
+    </p>
+  }
+</mat-menu>

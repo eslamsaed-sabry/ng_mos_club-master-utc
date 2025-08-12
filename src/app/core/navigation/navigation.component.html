@@ -1,0 +1,46 @@
+<div class="sidebar">
+  <div class="sitename" [ngClass]="{'isOpened' : isOpened,'isClosed' : !isOpened}">
+    <a href="/"><img [src]="theme === 'light-theme' ? brand.lightLogoPath : brand.darkLogoPath" alt="" /></a>
+  </div>
+
+  <ul class="main-nav" id="main-menu" (mouseenter)="onHover('enable')" (mouseleave)="onHover('disable')"
+    [ngClass]="{'isOpened' : isOpened,'isClosed' : !isOpened}">
+    @for(item of menuItems; track item.id){
+      <li *appRole="item.permissions" [ngClass]="{'has-sub-menu': item.children}">
+        <a [routerLink]="item.path" (click)="onNavigate(item)" routerLinkActive="active">
+          <mat-icon>{{item.icon}}</mat-icon> <span class="link-name">{{item.name | translate}}</span>
+          @if (item.children) {
+            <mat-icon class="mo-ms-auto toggler">{{item.isExpanded ? "keyboard_arrow_up":
+            "keyboard_arrow_down"}}</mat-icon>
+          }
+        </a>
+        <ul [ngClass]="{'mo-hidden': !item.isExpanded}" class="sub-menu">
+          @for (subItem of item.children; track subItem.id) {
+            <li *appRole="subItem.permissions" [ngClass]="{'has-sub-menu': subItem.children}">
+              <a [routerLink]="subItem.path" (click)="onNavigate(subItem)" routerLinkActive="active">
+                <span class="link-name">{{subItem.name | translate}}</span>
+                @if (subItem.children) {
+                  <mat-icon class="mo-ms-auto toggler">{{subItem.isExpanded ? "keyboard_arrow_up":
+                  "keyboard_arrow_down"}}</mat-icon>
+                }
+              </a>
+              <ul [ngClass]="{'mo-hidden': !subItem.isExpanded}" class="sub-menu">
+                @for (subSubItem of subItem.children; track subSubItem.id) {
+                  <li><a routerLinkActive="active" (click)="onNavigate(subSubItem)" *appRole="subSubItem.permissions"
+                    [routerLink]="subSubItem.path">
+                    <span class="link-name">{{subSubItem.name | translate}}</span>
+                  </a></li>
+                }
+              </ul>
+            </li>
+          }
+        </ul>
+      </li>
+    }
+  </ul>
+
+  <mat-form-field appearance="outline" class="sm mo-w-full">
+    <input type="text" matInput (keyup)="onFilterMenuItems($event)" [placeholder]="'members.searchMenu' | translate">
+    <mat-icon matPrefix>manage_search</mat-icon>
+  </mat-form-field>
+</div>

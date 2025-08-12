@@ -1,0 +1,51 @@
+<app-reports-page-header [permissions]="['pkgUtilReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.packagesUtilReport'|translate" [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-packages-util-report-filters [filters]="filters"></app-packages-util-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{filters.isMonitoring ? ('reports.memMonitPackages' | translate) : ('reports.memPackages' | translate)}}
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <!-- <th>{{'members.gender' | translate}}</th> -->
+                  <th>{{'reports.table.packageEngName' | translate}}</th>
+                  <th>{{'reports.table.utilization' | translate}}</th>
+                  <th>{{'reports.table.totalCash' | translate}}</th>
+                  <th>{{'reports.table.totalVisa' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of packages; track el) {
+                  <tr class="mo-cursor-pointer hover:mo-font-bold" (click)="onRowClick(el)">
+                    <!-- <td>{{el.gender | gender}}</td> -->
+                    <td>{{el.periodEnglishName}}</td>
+                    <td>{{el.utilization}}</td>
+                    <td>{{el.totalCashAmount | number:'1.2'}}</td>
+                    <td>{{el.totalVisaAmount | number:'1.2'}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="2"></td>
+                  <td>{{calcTotal(packages, 'totalCashAmount') | number:'1.2'}}</td>
+                  <td>{{calcTotal(packages, 'totalVisaAmount') | number:'1.2'}}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

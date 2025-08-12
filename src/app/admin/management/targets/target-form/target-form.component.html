@@ -1,0 +1,35 @@
+<h5 matDialogTitle class="mo-font-bold">{{'management.target' | translate}}</h5>
+
+<form (ngSubmit)="submit(targetForm)" #targetForm="ngForm">
+
+  <div matDialogContent>
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'staff.staffMember' | translate}}</mat-label>
+      <mat-select [(ngModel)]="form.staffMemberId" name="staffMemberId" required [disabled]="data.actionType==='edit'">
+        <mat-option [value]="0">{{'members.all' | translate}}</mat-option>
+        @for (c of staffMembers; track c) {
+          <mat-option [value]="c.id">{{c.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" (click)="fullDatepicker.open()">
+      <mat-label>{{'reports.table.month' | translate}} - {{'reports.table.year' | translate}}</mat-label>
+      <input matInput [matDatepicker]="fullDatepicker" [disabled]="data.actionType==='edit'" [(ngModel)]="form.fullDate"
+        name="fullDate" required />
+        <mat-datepicker-toggle matSuffix [for]="fullDatepicker"></mat-datepicker-toggle>
+        <mat-datepicker #fullDatepicker startView="year"></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'management.target' | translate}}</mat-label>
+        <input type="number" matInput [(ngModel)]="form.targetValue" name="targetValue" required>
+      </mat-form-field>
+    </div>
+
+    <div matDialogActions>
+      <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' |
+      translate}}</button>
+      <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+    </div>
+  </form>

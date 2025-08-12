@@ -1,0 +1,135 @@
+<app-reports-page-header [permissions]="['staffPayrollReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.staffPayroll' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-employee-payroll-filters [filters]="filters"></app-employee-payroll-filters>
+  </div>
+
+  @if (isResult) {
+    <div class="col-xl-9 col-md-8 col-12">
+      <div class="card p-2">
+        <ul class="row">
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.englishName' | translate}} </label>
+            <span> {{reports.personalData.englishName}} </span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.arabicName' | translate}}</label>
+            <span>{{reports.personalData.arabicName}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.phone' | translate}}</label>
+            <span>{{reports.personalData.phoneNo}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.fingerprintCode' | translate}}</label>
+            <span>{{reports.personalData.code}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.jobTitle' | translate}}</label>
+            <span>{{reports.personalData.jobTitle}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.salary' | translate}}</label>
+            <span>{{reports.personalData.salary}}</span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.managerName' | translate}}</label>
+            <span>
+              {{reports.personalData.managerName?reports.personalData.managerName: ('members.noData' | translate)}}
+            </span>
+          </li>
+          <li class="col-md-4 col-12">
+            <label class="mo-font-bold mo-me-2">{{'staff.shiftName' | translate}}</label>
+            <span>
+              {{reports.personalData.shiftName?reports.personalData.shiftName: ('members.noData' | translate)}}
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="reports-tabs-container mo-mt-4">
+        <div class="table-responsive" id="receipts">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{{'reports.table.dayName' | translate}}</th>
+                <th>{{'reports.table.date' | translate}}</th>
+                <th>{{'reports.table.shift' | translate}}</th>
+                <th>{{'reports.table.checkIn' | translate}}</th>
+                <th>{{'reports.table.checkOut' | translate}}</th>
+                <th>{{'reports.table.shortageInMinutes' | translate}}</th>
+                <th>{{'reports.table.overTimeInMinutes' | translate}}</th>
+                <th>{{'reports.table.lateDeductionsInMinutes' | translate}}</th>
+                <th>{{'reports.table.notes' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.workingDays; track el; let i = $index) {
+                <tr matTooltipPosition="left">
+                  <td>{{i+1 }}</td>
+                  <td>{{el.dayName }}</td>
+                  <td>{{el.dayDate| date : 'mediumDate'}}</td>
+                  <td>{{el.shiftTimes}}</td>
+                  <td>{{el.checkIn| date:'MMM d, y, h:mm a'}}</td>
+                  <td>{{el.checkOut| date:'MMM d, y, h:mm a'}}</td>
+                  <td>{{el.shortageInMinutes}}</td>
+                  <td>{{el.overTimeInMinutes}}</td>
+                  <td>{{el.lateDeductionsInMinutes}}</td>
+                  <td>{{el.notes}}</td>
+                </tr>
+              }
+              @if (reports && reports.workingDays.length === 0) {
+                <tr>
+                  <td colspan="10">{{'members.noData' | translate}}</td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="6">{{'reports.table.hours' | translate}}</td>
+                <td>{{calcTotal(reports.workingDays, 'shortageInMinutes') | number:'1.2'}}</td>
+                <td>{{calcTotal(reports.workingDays, 'overTimeInMinutes') | number:'1.2'}}</td>
+                <td>{{calcTotal(reports.workingDays, 'lateDeductionsInMinutes') | number:'1.2'}}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <h3 class="mo-font-bold mo-text-center mo-mt-5">
+        {{'staff.finance' | translate}}
+      </h3>
+      <div class="reports-tabs-container">
+        <div class="table-responsive" id="receipts">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'reports.table.date' | translate}}</th>
+                <th>{{'reports.table.type' | translate}}</th>
+                <th>{{'reports.table.amount' | translate}}</th>
+                <th>{{'reports.table.description' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.accounts; track el) {
+                <tr matTooltipPosition="left">
+                  <td>{{el.actionDate | date : 'mediumDate'}}</td>
+                  <td>{{el.typeName}}</td>
+                  <td>{{el.price}}</td>
+                  <td>{{el.description}}</td>
+                </tr>
+              }
+              @if (reports && reports.accounts.length === 0) {
+                <tr>
+                  <td colspan="11">{{'members.noData' | translate}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,74 @@
+<app-reports-page-header [permissions]="['OverAttReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.overAttendanceRep'|translate" [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-over-attendance-report-filters (onChangeOption)="isResult = false"
+    [filters]="filters"></app-over-attendance-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <h5 class="mo-font-bold">
+              {{filters.onRemaining ? ('reports.overAttendOnRemaining' | translate) : ('reports.overAttendOnExpire' |
+              translate)}}
+            </h5>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.phone' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.package' | translate}}</th>
+                  <th>{{'members.startDate' | translate}}</th>
+                  <th>{{'reports.table.expDate' | translate}}</th>
+                  <th>{{'members.notes' | translate}}</th>
+                  @if (!filters.onRemaining) {
+                    <th>{{'reports.table.expAttTime' | translate}}</th>
+                  }
+                  @if (filters.onRemaining) {
+                    <th>{{'reports.table.amount' | translate}}</th>
+                  }
+                  @if (filters.onRemaining) {
+                    <th>{{'reports.table.dueDate' | translate}}</th>
+                  }
+                  @if (filters.onRemaining) {
+                    <th>{{'reports.table.overAttCount' | translate}}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of attendance; track el) {
+                  <tr>
+                    <td>{{el.contractNo}}</td>
+                    <td>{{el.phoneNo}}</td>
+                    <td>{{el.memberArabicName}}</td>
+                    <td>{{el.packageName}}</td>
+                    <td>{{el.startDate | date: 'mediumDate'}}</td>
+                    <td>{{el.expirationDate | date: 'mediumDate'}}</td>
+                    <td>{{el.notes}}</td>
+                    @if (!filters.onRemaining) {
+                      <td>{{el.expiredAttendanceCount}}</td>
+                    }
+                    @if (filters.onRemaining) {
+                      <td>{{el.amount}}</td>
+                    }
+                    @if (filters.onRemaining) {
+                      <td>{{el.dueDate | date : 'mediumDate'}}</td>
+                    }
+                    @if (filters.onRemaining) {
+                      <td>{{el.overAttendanceCount}}</td>
+                    }
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<form class="filters-container mo-mt-4" #memberNotificationsForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+  <div class="row">
+    @if (pageID === 'NOTIFICATION') {
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.memberName' | translate}}</mat-label>
+          <input matInput [(ngModel)]="filters.athleticName" name="name" type="text"
+            placeholder="{{'members.memberName' | translate}}" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'members.contractNo' | translate}}</mat-label>
+            <input matInput [(ngModel)]="filters.contractNumber" name="contractNumber" type="text"
+              placeholder="{{'members.contractNo' | translate}}" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.phone' | translate}}</mat-label>
+              <input matInput [(ngModel)]="filters.phoneNumber" name="phoneNumber" type="text"
+                placeholder="{{'members.phone' | translate}}" />
+              </mat-form-field>
+            </div>
+          }
+
+          @if (pageID === 'ALL') {
+            <div class="col-12">
+              <mat-form-field class="mo-w-full" appearance="outline" (click)="fromDatepicker.open()">
+                <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+                <input matInput [matDatepicker]="fromDatepicker" [(ngModel)]="filters.fromCreationDate"
+                  name="fromCreationDate" />
+                  <mat-datepicker-toggle matSuffix [for]="fromDatepicker"></mat-datepicker-toggle>
+                  <mat-datepicker #fromDatepicker startView="year"></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field class="mo-w-full" appearance="outline" (click)="toDatepicker.open()">
+                  <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+                  <input matInput [matDatepicker]="toDatepicker" [(ngModel)]="filters.toCreationDate"
+                    name="toCreationDate" />
+                    <mat-datepicker-toggle matSuffix [for]="toDatepicker"></mat-datepicker-toggle>
+                    <mat-datepicker #toDatepicker startView="year"></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              }
+
+              <div class="col-12">
+                <mat-checkbox [(ngModel)]="filters.isSMS" name="isSMS">{{'classSchedule.sms' |
+                translate}}</mat-checkbox>
+              </div>
+              <div class="col-12">
+                <mat-checkbox [(ngModel)]="filters.isWhatsApp" name="isWhatsApp">{{'classSchedule.whatsapp' |
+                translate}}</mat-checkbox>
+              </div>
+              <div class="col-12">
+                <mat-checkbox [(ngModel)]="filters.isMobileApp" name="isMobileApp">{{'classSchedule.mobileApp' |
+                translate}}</mat-checkbox>
+              </div>
+
+            </div>
+
+            <div class="mo-my-3">
+              <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilterChange.emit()" mat-raised-button color="primary"
+              type="button">{{'members.search' | translate}}</button>
+              <button class="mo-font-bold mo-w-full" (click)="memberNotificationsForm.reset();onFilterChange.emit()" mat-button
+              type="button">{{'members.clearAll' | translate}}</button>
+            </div>
+          </form>

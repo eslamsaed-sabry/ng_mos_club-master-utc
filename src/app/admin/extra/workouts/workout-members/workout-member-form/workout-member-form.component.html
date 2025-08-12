@@ -1,0 +1,26 @@
+<h5 class="mo-font-bold" mat-dialog-title>{{'members.addMember' | translate}}</h5>
+<form (ngSubmit)="submit(memberBookForm)" #memberBookForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <app-advanced-search [autoPredict]="true" [config]="config"
+    (selectedMember)="getSelectedMember($event)"></app-advanced-search>
+
+    @if (bookedMember.memberName) {
+      <div class="mo-mt-2">
+        {{'members.memberName' | translate}} <strong>{{bookedMember.memberName}}</strong>
+      </div>
+    }
+
+    <mat-form-field appearance="outline" class="mo-w-full mo-mt-3">
+      <mat-label>{{'members.notes' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="bookedMember.notes" name="notes"></textarea>
+    </mat-form-field>
+
+  </div>
+
+  <div class="mo-text-end mo-mt-2" mat-dialog-actions>
+    <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+  </div>
+</form>

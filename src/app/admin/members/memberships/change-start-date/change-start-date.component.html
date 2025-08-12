@@ -1,0 +1,102 @@
+<div class="mo-mt-3 mo-mb-0 page-title">
+  @if (!hideSearch) {
+    <mat-form-field appearance="outline">
+      <mat-label>Search...</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Search table" #input>
+    </mat-form-field>
+  }
+
+  <div class="actions">
+    <button color="primary" *appRole="['membershipsBasic','ChangeStartDate']" (click)="changeStartDate()"
+      mat-raised-button>
+      <mat-icon>add</mat-icon> {{'members.changeStartDate' | translate}}
+    </button>
+  </div>
+</div>
+
+<div class="card p-3">
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="newValue">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.newValue' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.newValue | date: "mediumDate"}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.notes' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.notes }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.status' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdByUserName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.username' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.createdByUserName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="response">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'common.info' | translate}}</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="showResponse(row)"><mat-icon>info_outline</mat-icon></button>
+        </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [ngClass]="{'selected-row': selectedId == row.id}">
+      </tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+  </div>
+</div>
+
+<ng-template #responseModal>
+  <h5 mat-dialog-title class="mo-font-bold border-bottom mo-pb-2">{{'common.info' | translate}}</h5>
+  <div mat-dialog-content>
+    <div>
+      <ul class="data-list">
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.newValue' | translate}}</label>
+          <div class="mo-font-bold">{{changeStartDateResponse.newValue | date:'mediumDate'}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.notes' | translate}}</label>
+          <div class="mo-font-bold">{{changeStartDateResponse.notes }}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.status' | translate}}</label>
+          <div class="mo-font-bold">{{changeStartDateResponse.status}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'members.username' | translate}} </label>
+          <div class="mo-font-bold">{{changeStartDateResponse.createdByUserName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.approvedDate' | translate}}</label>
+          <div class="mo-font-bold">{{changeStartDateResponse.approvedDate | date:'MMM d, y, h:mm a'}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.finalApprovedDate' | translate}}</label>
+          <div class="mo-font-bold">{{changeStartDateResponse.finalApprovedDate | date:'MMM d, y, h:mm a'}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.approvedByUserName' | translate}}</label>
+          <div class="mo-font-bold">{{changeStartDateResponse.approvedByUserName}}</div>
+        </li>
+        <li class="border-bottom">
+          <label class="mo-text-muted">{{'receipts.finalApprovedByUserName' | translate}}</label>
+          <div class="mo-font-bold">{{changeStartDateResponse.finalApprovedByUserName}}</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-template>

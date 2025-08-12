@@ -1,0 +1,28 @@
+<div class="page-title">
+    <h4 class="mo-font-bold mo-m-0"> {{'navigation.instructorsPayroll' | translate}} </h4>
+</div>
+
+<app-material-table [dataTable]="data" [cols]="displayedCols" (getAction)="onTableAction($event)">
+    @if (filters) {
+    <div class="mo-flex mo-gap-3 mo-flex-1" tableHeader>
+        <mat-form-field appearance="outline">
+            <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+            <input matInput [(ngModel)]="filters.fromDate" name="fromDate" [matDatepicker]="fromPicker"
+                (dateChange)="getInstructors()">
+            <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+            <input matInput [(ngModel)]="filters.toDate" name="toDate" [matDatepicker]="toPicker"
+                (dateChange)="getInstructors()">
+            <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+        <div class="mo-px-3 mo-py-1 mo-rounded-md mo-h-[56px] mo-ms-auto mo-me-3 mo-bg-neutral-200 dark:mo-bg-neutral-900">
+            <div class="mo-text-muted">{{'reports.table.totalInstructorDueAmount' | translate}}</div>
+            <div class="mo-font-bold">{{totalDueAmount | number}}</div>
+        </div>
+    </div>
+    }
+</app-material-table>

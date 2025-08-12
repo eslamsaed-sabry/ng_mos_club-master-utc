@@ -1,0 +1,296 @@
+<div *appRole="['dashboard','MiddleBoard']">
+  <header class="!mo-mb-0">
+
+    <mat-form-field appearance="outline" class="mo-ms-auto">
+      <mat-select (selectionChange)="getDashboard()" [(ngModel)]="period" name="period">
+        <mat-option [value]="30">{{'dashboard.last30days' | translate}}</mat-option>
+        <mat-option [value]="60">{{'dashboard.last60days' | translate}}</mat-option>
+        <mat-option [value]="180">{{'dashboard.last6months' | translate}}</mat-option>
+        <mat-option [value]="365">{{'dashboard.lastYear' | translate}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </header>
+
+  <div class="row">
+    <div class="col-12 mo-mb-3">
+      <div class="card mo-px-2">
+        @if (z10Chart) {
+          <app-bar-chart [config]="z10Chart"></app-bar-chart>
+        }
+      </div>
+    </div>
+    <div class="col-md-6 col-12 mo-mb-3">
+      <div class="card mo-px-2">
+        @if (attendanceChart) {
+          <app-line-chart [config]="attendanceChart"></app-line-chart>
+        }
+      </div>
+    </div>
+    <div class="col-md-6 col-12 mo-mb-3">
+      <div class="card mo-px-2">
+        @if (moneyChart) {
+          <app-line-chart [config]="moneyChart"></app-line-chart>
+        }
+      </div>
+    </div>
+    <div class="col-md-4 col-12 mo-mb-3">
+      <div class="card mo-px-2">
+        @if (knowledgeChart) {
+          <app-bar-chart [config]="knowledgeChart"></app-bar-chart>
+        }
+      </div>
+    </div>
+    <div class="col-md-4 col-12 mo-mb-3">
+      <div class="card mo-px-2">
+        @if (debtsChart) {
+          <app-pie-chart [config]="debtsChart"></app-pie-chart>
+        }
+      </div>
+    </div>
+    <div class="col-md-4 col-12 mo-mb-3">
+      <div class="card mo-px-2">
+        @if (packagesChart) {
+          <app-bar-chart [config]="packagesChart"></app-bar-chart>
+        }
+      </div>
+    </div>
+    <div class="col-md-6 col-12 mo-mb-3">
+      <div class="card mo-px-2">
+        @if (incomeSummary) {
+          <app-bar-chart [config]="incomeSummary"></app-bar-chart>
+        }
+      </div>
+    </div>
+    <div class="col-md-6 col-12 mo-mb-3">
+      <div class="card mo-px-2">
+        @if (incomePerEachPackage) {
+          <app-bar-chart [config]="incomePerEachPackage"></app-bar-chart>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 mo-text-center mo-pb-3">
+      <button mat-button (click)="getMoreCharts()">{{moreCharts ? ('dashboard.hideCharts' | translate) :
+      ('dashboard.showMoreCharts' | translate)}}</button>
+    </div>
+  </div>
+
+  @if (moreCharts) {
+    <div class="row">
+      <div class="col-md-4 col-12 mo-mb-3">
+        <div class="card mo-px-2">
+          @if (cancellationReason) {
+            <app-pie-chart [config]="cancellationReason"></app-pie-chart>
+          }
+        </div>
+      </div>
+      <div class="col-md-4 col-12 mo-mb-3">
+        <div class="card mo-px-2">
+          @if (ageChart) {
+            <app-pie-chart [config]="ageChart"></app-pie-chart>
+          }
+        </div>
+      </div>
+      <div class="col-md-4 col-12 mo-mb-3">
+        <div class="card mo-px-2">
+          @if (genderChart) {
+            <app-pie-chart [config]="genderChart"></app-pie-chart>
+          }
+        </div>
+      </div>
+      <div class="col-md-4 col-12 mo-mb-3">
+        <div class="card mo-px-2">
+          @if (suitSize) {
+            <app-bar-chart [config]="suitSize"></app-bar-chart>
+          }
+        </div>
+      </div>
+      <div class="col-md-4 col-12 mo-mb-3">
+        <div class="card mo-px-2">
+          @if (memberLevels) {
+            <app-bar-chart [config]="memberLevels"></app-bar-chart>
+          }
+        </div>
+      </div>
+      <div class="col-md-4 col-12 mo-mb-3">
+        <div class="card mo-px-2">
+          @if (memberGoals) {
+            <app-bar-chart [config]="memberGoals"></app-bar-chart>
+          }
+        </div>
+      </div>
+      <div class="col-md-6 col-12 mo-mb-3">
+        <div class="card mo-px-2">
+          @if (attendancePerWeek) {
+            <app-bar-chart [config]="attendancePerWeek"></app-bar-chart>
+          }
+        </div>
+      </div>
+      <div class="col-md-6 col-12 mo-mb-3">
+        <div class="card mo-px-2">
+          @if (attendanceDayByDay) {
+            <app-bar-chart [config]="attendanceDayByDay"></app-bar-chart>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="row cards">
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon blue">
+          <mat-icon>verified_user</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalMemberships}}</div>
+        <div class="title">{{'dashboard.totalMem' | translate}}</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon blue">
+          <mat-icon>check_circle_outline</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalActiveMemberships}}</div>
+        <div class="title">{{'dashboard.totalActiveMem' | translate}}</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon blue">
+          <mat-icon>ac_unit</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalFreezedMemberships}}</div>
+        <div class="title">{{'dashboard.totalFreezeMem' | translate}}</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon orange">
+          <mat-icon>fact_check</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.averageAttendancePerDay}}</div>
+        <div class="title">{{'dashboard.avgAttPerDay' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon purple">
+          <mat-icon>group</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalMembers}}</div>
+        <div class="title">{{'dashboard.totalMembers' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon purple">
+          <mat-icon>how_to_reg</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalActiveUsers}}</div>
+        <div class="title">{{'dashboard.totalActiveUsers' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon purple">
+          <mat-icon>group_add</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalPotentialMembers}}</div>
+        <div class="title">{{'dashboard.totalPoMem' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon orange">
+          <mat-icon>shopping_cart_checkout</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalItemsSold}}</div>
+        <div class="title">{{'dashboard.totalItemsSold' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon orange">
+          <mat-icon>looks_one</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalSessions}}</div>
+        <div class="title">{{'dashboard.total1pass' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon orange">
+          <mat-icon>wallet_giftcard</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalInvitations}}</div>
+        <div class="title">{{'dashboard.totalInvs' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon orange">
+          <mat-icon>checklist</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.todaysAttendance}}</div>
+        <div class="title">{{'dashboard.totalAtt' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon purple">
+          <mat-icon>groups</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalActiveStaff}}</div>
+        <div class="title">{{'dashboard.totalActiveStaff' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon green">
+          <mat-icon>clean_hands</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.todaysClassesAttendance}}</div>
+        <div class="title">{{'dashboard.todayClasses' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon green">
+          <mat-icon>contact_phone</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalPlacedCalls}}</div>
+        <div class="title">{{'dashboard.todayCalls' | translate}}</div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-12">
+      <div class="inner">
+        <div class="icon green">
+          <mat-icon>attach_money</mat-icon>
+        </div>
+        <div class="number">{{userStatistics.totalLateDebtsCount}}</div>
+        <div class="title">{{'dashboard.todayLateDebts' | translate}}</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+@if (!permissions.entitiesList.dashboard.includes('MiddleBoard')) {
+  <div class="mo-text-center">
+    <img src="assets/images/logo.png" alt="">
+  </div>
+}

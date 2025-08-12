@@ -1,0 +1,39 @@
+<div class="cursor-pointer mo-flex align-items-end mo-mo-ms-2" [matMenuTriggerFor]="userMenu">
+  <img [src]="user.imagePath ? (proxyUrl +user.imagePath) : 'assets/images/avatar.png'" width="40"
+    class="mo-rounded-full mo-me-2" />
+    <div class="logged-in-username">
+      <div class="mo-font-bold">{{user.userName}}</div>
+      <small class="mo-text-muted">{{brandService.currentBranch ? brandService.currentBranch.name:''}}</small>
+    </div>
+    <mat-icon class="menu-trigger">arrow_drop_down</mat-icon>
+  </div>
+  <mat-menu class="user-menu" #userMenu="matMenu">
+
+    <mat-form-field (click)="$event.stopPropagation()">
+      <mat-label>{{'members.currentBranch' | translate}}</mat-label>
+      <mat-select (selectionChange)="onChangeBranch()" [(ngModel)]="branchId">
+        @for (branch of brandService.branches; track branch) {
+          <mat-option [value]="branch.id">{{branch.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-menu-item routerLink="/admin/sales-schedule">
+      <mat-icon>calendar_month</mat-icon> {{'navigation.salesSchedule' | translate}}
+    </button>
+    <button mat-menu-item routerLink="/admin/trainer-schedule">
+      <mat-icon>calendar_month</mat-icon> {{'navigation.trainerSchedule' | translate}}
+    </button>
+    <button mat-menu-item routerLink="/admin/trainer-schedule/trainers-time-table">
+      <mat-icon>calendar_month</mat-icon> {{'navigation.trainersTimeTable' | translate}}
+    </button>
+    <button mat-menu-item routerLink="/admin/trainer-schedule/doctors-schedule">
+      <mat-icon>calendar_month</mat-icon> {{'navigation.doctorsSchedule' | translate}}
+    </button>
+    <button (click)="onChangePW()" *appRole="['changePW','tsb_Clear']" mat-menu-item>
+      <mat-icon>password</mat-icon> {{'header.changePassword' | translate}}
+    </button>
+    <button (click)="logout()" mat-menu-item>
+      <mat-icon>power_settings_new</mat-icon> {{'header.logout' | translate}}
+    </button>
+  </mat-menu>

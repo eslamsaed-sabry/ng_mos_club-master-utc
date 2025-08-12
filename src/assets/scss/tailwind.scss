@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+
+@layer components {
+    .card {
+        @apply mo-bg-white mo-border mo-border-borderColor mo-rounded-lg mo-p-6 max-sm:mo-p-2;
+    }
+}
+
+@tailwind utilities;
+
+// @layer base {
+//   img{
+//     @apply mo-inline-block;
+//   }
+// }

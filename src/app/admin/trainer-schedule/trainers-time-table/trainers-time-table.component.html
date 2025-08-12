@@ -1,0 +1,64 @@
+@if (trainer$ | async; as TRAINERS) {
+  <mat-drawer-container class="example-container" autosize>
+    <div class="page-title">
+      <h4 class="mo-font-bold mo-m-0"> {{'navigation.trainersTimeTable' | translate}}</h4>
+      <div class="actions">
+        <button class="mo-me-2" (click)="drawer.toggle()" mat-raised-button color="default">
+          <mat-icon>{{drawer.opened ? 'filter_alt_off' : 'filter_alt'}}</mat-icon>
+          {{drawer.opened ? 'Hide' : 'Show'}} {{'members.filters' | translate}}
+        </button>
+      </div>
+    </div>
+    <mat-drawer #drawer [mode]="width < 600 ? 'over':'side'" [dir]="'ltr'" [position]="'end'">
+      <div class="filters-drawer">
+        <div class="inner">
+          <h4 class="mo-font-bold"> {{'members.filters' | translate}}</h4>
+          <app-trainers-time-table-filter [filters]="filters" [trainers]="trainers"
+          (onFilter)="getTrainerTimeTable()"></app-trainers-time-table-filter>
+        </div>
+      </div>
+    </mat-drawer>
+    <div>
+      @if (showSchedule) {
+        <ejs-schedule #scheduleObj (actionComplete)="onNavigation()" (eventRendered)="onEventRendered($event)"
+          (cellClick)="onPopupOpen($event)" (eventClick)="onPopupOpen($event)" width="100%"
+          height="900" [eventSettings]="eventSettings" [(currentView)]="currentView"
+          [enableRtl]="currentLang === 'ar'? true : false" [views]="views" [group]="group">
+          <e-resources>
+            <e-resource field="OwnerId" title="Owner" name="Owners" [dataSource]="trainers"
+              [allowMultiple]="allowMultipleOwner" textField='OwnerText' idField='Id' colorField='OwnerColor'>
+            </e-resource>
+          </e-resources>
+          <!-- Header template -->
+          <ng-template #quickInfoTemplatesHeader let-data>
+            <div>
+              <div class="e-popup-header" [ngStyle]="{'background-color':data.colorHex}">
+                <div class="e-header-icon-wrapper">
+                  <button class="btns close-btn" (click)="closePopUp()" title="Close">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template #quickInfoTemplatesContent let-data>
+            <ul class="mo-p-0">
+              <li class="mo-flex mo-justify-between mo-w-full mo-items-center mo-mb-1">
+                <strong>{{data.memberName}}</strong>
+                <a mat-button color="primary" target="_blank"
+                  [routerLink]="['/admin/member-profile/', data.memberId]">{{'members.view' | translate}}
+                {{'members.profile' | translate}}</a>
+              </li>
+              <li class="mo-flex mo-justify-between mo-w-full mo-items-center mo-mb-1">
+                <button mat-button color="primary" (click)="showSlotForm('edit', data)">{{'members.edit' |
+                translate}}</button>
+                <button mat-button color="warn" (click)="deleteSlot(data.id)">{{'members.delete' |
+                translate}}</button>
+              </li>
+            </ul>
+          </ng-template>
+        </ejs-schedule>
+      }
+    </div>
+  </mat-drawer-container>
+}

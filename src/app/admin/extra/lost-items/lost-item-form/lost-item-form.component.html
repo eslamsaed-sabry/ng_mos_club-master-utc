@@ -1,0 +1,66 @@
+<h5 mat-dialog-title>{{'navigation.lostItems' | translate}}</h5>
+<form (ngSubmit)="submit(itemForm)" #itemForm="ngForm">
+
+  <div mat-dialog-content>
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'classSchedule.location' | translate}}</mat-label>
+      <mat-select [(ngModel)]="item.locationId" name="locationId" required>
+        <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+        @for (l of locations; track l) {
+          <mat-option [value]="l.id">{{l.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'extra.category' | translate}}</mat-label>
+      <mat-select [(ngModel)]="item.categoryId" name="categoryId" required>
+        <mat-option [value]="null">{{'members.all' | translate}}</mat-option>
+        @for (c of categories; track c) {
+          <mat-option [value]="c.id">{{c.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.description' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="item.itemDescription" name="itemDescription" required></textarea>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.notes' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="item.notes" name="notes"></textarea>
+    </mat-form-field>
+
+    <div class="mo-w-full mo-flex mo-items-center mo-justify-between">
+      <button (click)="foundBy()" type="button" mat-raised-button>{{'extra.foundBy' | translate}}</button>
+      <div class="p-2">
+        {{finderName}}
+      </div>
+    </div>
+
+    <div class="mo-w-full mo-mt-3">
+      <div class="mo-flex mo-items-center">
+        <label>{{'extra.image'|translate}}</label>
+        @if (item.imageBase64) {
+          <button mat-icon-button color="warn"
+            (click)="removeImg()"><mat-icon>delete_outline</mat-icon></button>
+          }
+        </div>
+        <div class="mo-mt-2">
+          <input (change)="onFileChange($event)" type="file">
+          @if (item.imageBase64) {
+            <img class="img-fluid" [src]="item.imageBase64" alt="">
+          }
+        </div>
+      </div>
+    </div>
+
+    <div mat-dialog-actions class="mo-justify-end">
+      <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit">
+        {{'members.save' | translate}}
+      </button>
+    </div>
+  </form>
+

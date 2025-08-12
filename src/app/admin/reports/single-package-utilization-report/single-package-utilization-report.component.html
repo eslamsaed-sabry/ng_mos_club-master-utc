@@ -1,0 +1,312 @@
+@if(init$ | async){}
+<app-reports-page-header [permissions]="['profitReport', 'tsb_Print', 'Export']" [reportName]="('members.packageName' | translate) + ': ' + filters.packageName"
+  [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-single-package-utilization-report-filters [filters]="filters"></app-single-package-utilization-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if(isResult){
+    <div>
+      <app-report-tabs [tabs]="tabs"></app-report-tabs>
+
+      <div class="reports-tabs-container">
+        <div id="memberships" class="table-responsive">
+          <h5 class="mo-font-bold">
+            {{'members.memberships' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.paymentDate' | translate}}</th>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'members.packageName' | translate}}</th>
+                <th>{{'reports.table.receiptNo' | translate}}</th>
+                <th>{{'reports.table.totalPrice' | translate}}</th>
+                <th>{{'reports.table.amountCash' | translate}}</th>
+                <th>{{'reports.table.amountVisa' | translate}}</th>
+                <th>{{'reports.table.paymentType' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+                <th>{{'members.username' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.memberships; track $index) {
+              <tr>
+                <td>{{el.paymentDate | date:'MMM d, y, h:mm a'}}</td>
+                <td>{{el.memberApplicationNo}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.gender | gender}}</td>
+                <td>{{el.periodName}}</td>
+                <td>{{el.receiptNo}}</td>
+                <td>{{el.price}}</td>
+                <td>{{el.amountPaidCash}}</td>
+                <td>{{el.amountPaidVisa}}</td>
+                <td>{{el.visaTypeName}}</td>
+                <td>{{el.salesPersonName}}</td>
+                <td>{{el.userName}}</td>
+              </tr>
+              }
+              @if(reports.memberships.length === 0){
+              <tr>
+                <td colspan="11">{{'members.noData' | translate}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div id="debts" class="table-responsive">
+          <h5 class="mo-font-bold">
+            {{'reports.table.debtsSettl' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.paymentDate' | translate}}</th>
+                <th>{{'members.membershipPaymentDate' | translate}}</th>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'members.packageName' | translate}}</th>
+                <th>{{'reports.table.receiptNo' | translate}}</th>
+                <th>{{'reports.table.amount' | translate}}</th>
+                <th>{{'reports.table.paymentType' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+                <th>{{'members.username' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.debts; track $index) {
+              <tr>
+                <td>{{el.paymentDate | date :'medium'}}</td>
+                <td>{{el.membershipPaymentDate | date :'medium'}}</td>
+                <td>{{el.memberApplicationNo}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.gender | gender}}</td>
+                <td>{{el.packageName}}</td>
+                <td>{{el.receiptNo}}</td>
+                <td>{{el.amount}}</td>
+                <td>{{el.visaTypeName}}</td>
+                <td>{{el.salesPersonName}}</td>
+                <td>{{el.username}}</td>
+              </tr>
+              }
+              @if (reports.debts.length === 0) {
+              <tr>
+                <td colspan="10">{{'members.noData' | translate}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div id="upgrade" class="table-responsive">
+          <h5 class="mo-font-bold">
+            {{'members.membership' | translate}} {{'members.upgrade' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.paymentDate' | translate}}</th>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'reports.table.receiptNo' | translate}}</th>
+                <th>{{'reports.table.amountCash' | translate}}</th>
+                <th>{{'reports.table.amountVisa' | translate}}</th>
+                <th>{{'reports.table.paymentType' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+                <th>{{'members.username' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.upgrade; track $index) {
+              <tr>
+                <td>{{el.paymentDate | date :'medium'}}</td>
+                <td>{{el.memberContractNo}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.gender | gender}}</td>
+                <td>{{el.receiptNo}}</td>
+                <td>{{el.amount}}</td>
+                <td>{{el.amountVisa}}</td>
+                <td>{{el.visaTypeName}}</td>
+                <td>{{el.salesPersonName}}</td>
+                <td>{{el.username}}</td>
+              </tr>
+              }
+              @if (reports.upgrade.length === 0) {
+              <tr>
+                <td colspan="9">{{'members.noData' | translate}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div id="downgrade" class="table-responsive">
+          <h5 class="mo-font-bold">
+            {{'members.membership' | translate}} {{'members.downgrade' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.paymentDate' | translate}}</th>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'reports.table.receiptNo' | translate}}</th>
+                <th>{{'reports.table.amountCash' | translate}}</th>
+                <th>{{'reports.table.amountVisa' | translate}}</th>
+                <th>{{'reports.table.paymentType' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+                <th>{{'members.username' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.downgrade; track $index) {
+              <tr>
+                <td>{{el.paymentDate | date :'medium'}}</td>
+                <td>{{el.memberContractNo}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.gender | gender}}</td>
+                <td>{{el.receiptNo}}</td>
+                <td>{{el.amount}}</td>
+                <td>{{el.amountVisa}}</td>
+                <td>{{el.visaTypeName}}</td>
+                <td>{{el.salesPersonName}}</td>
+                <td>{{el.username}}</td>
+              </tr>
+              }
+              @if (reports.downgrade.length === 0) {
+              <tr>
+                <td colspan="9">{{'members.noData' | translate}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div id="freeze" class="table-responsive">
+          <h5 class="mo-font-bold">
+            {{'members.membership' | translate}} {{'members.freeze' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.paymentDate' | translate}}</th>
+                <th>{{'reports.table.membershipID' | translate}}</th>
+                <th>{{'reports.table.memberContractNo' | translate}}</th>
+                <th>{{'reports.table.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'reports.table.amount' | translate}}</th>
+                <th>{{'reports.table.paymentType' | translate}}</th>
+                <th>{{'members.username' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.freeze; track $index) {
+              <tr>
+                <td>{{el.paymentDate | date :'medium'}}</td>
+                <td>{{el.membershipId}}</td>
+                <td>{{el.memberContractNo}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.gender | gender}}</td>
+                <td>{{el.amountPaid}}</td>
+                <td>{{el.visaTypeName}}</td>
+                <td>{{el.userName}}</td>
+              </tr>
+              }
+              @if (reports.freeze.length === 0) {
+              <tr>
+                <td colspan="7">{{'members.noData' | translate}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div id="refund" class="table-responsive">
+          <h5 class="mo-font-bold">
+            {{'reports.table.refund' | translate}}
+          </h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'reports.table.refundDate' | translate}}</th>
+                <th>{{'reports.table.reason' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'members.packageName' | translate}}</th>
+                <th>{{'reports.table.amountCash' | translate}}</th>
+                <th>{{'reports.table.amountVisa' | translate}}</th>
+                <th>{{'reports.table.paymentType' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+                <th>{{'members.username' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of reports.refund; track $index) {
+              <tr>
+                <td>{{el.refundDate | date :'medium'}}</td>
+                <td>{{el.comment}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.gender | gender}}</td>
+                <td>{{el.periodName}}</td>
+                <td>{{el.amount}}</td>
+                <td>{{el.amountVisa}}</td>
+                <td>{{el.visaTypeName}}</td>
+                <td>{{el.salesPersonName}}</td>
+                <td>{{el.userName}}</td>
+              </tr>
+              }
+              @if (reports.refund.length === 0) {
+              <tr>
+                <td colspan="9">{{'members.noData' | translate}}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- <div id="summary" class="table-responsive reports-summary-list">
+          <h5 class="mo-font-bold">
+            {{'members.summary' | translate}}
+          </h5>
+
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td>{{'reports.table.totalIncome' | translate}}</td>
+                <td>{{reports.summary.totalIncome | number : '1.2'}}</td>
+              </tr>
+              <tr>
+                <td>{{'reports.table.totalVisaIncome' | translate}}</td>
+                <td>{{reports.summary.totalVisa | number : '1.2'}}</td>
+              </tr>
+              <tr>
+                <td>{{'reports.table.totalOutcome' | translate}}</td>
+                <td>{{reports.summary.totalOutcome | number : '1.2'}}</td>
+              </tr>
+              <tr>
+                <td>{{'reports.table.totalCashIncome' | translate}}</td>
+                <td>{{reports.summary.netCash | number : '1.2'}}</td>
+              </tr>
+              <tr>
+                <td>{{'reports.table.receiver' | translate}}</td>
+                <td>{{''}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div> -->
+      </div>
+
+    </div>
+    }
+
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<h5 mat-dialog-title>{{'common.confirmMemberPhoto' | translate}}</h5>
+<ul class="compare-list" mat-dialog-content>
+  <li class="mo-shadow-md">
+    <h5 class="mo-font-bold mo-text-center mo-pt-2">{{'common.new' | translate}}</h5>
+    <img [src]="proxyUrl + '/Images/' + data.newPhoto">
+  </li>
+  <li class="mo-shadow-md">
+    <h5 class="mo-font-bold mo-text-center mo-pt-2">{{'common.old' | translate}}</h5>
+    <img [src]="proxyUrl + '/Images/' + data.confirmedPhoto">
+  </li>
+</ul>
+<div mat-dialog-actions>
+  <button mat-button (click)="dismiss()">
+    {{'members.cancel' | translate}}
+  </button>
+  <button color="primary" mat-raised-button color="warn" class="mo-mx-3" (click)="decline()">
+    <mat-icon>remove_done</mat-icon> {{'common.decline' | translate}}
+  </button>
+  <button color="primary" mat-raised-button (click)="confirm()">
+    <mat-icon>check</mat-icon> {{'common.confirm' | translate}}
+  </button>
+</div>

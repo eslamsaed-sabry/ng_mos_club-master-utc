@@ -1,0 +1,179 @@
+<mat-drawer-container class="example-container" autosize>
+
+  <div class="page-title" [ngClass]="{'drawer-opened': drawer.opened}">
+    <h4 class="mo-font-bold mo-m-0"> {{'navigation.membersData' | translate}} </h4>
+
+    <div class="mo-flex mo-gap-3 mo-flex-wrap">
+
+      <app-table-card-switcher (getView)="viewMode = $event" [view]="'card'"></app-table-card-switcher>
+
+      <button (click)="drawer.toggle()" mat-raised-button color="default">
+        <mat-icon>{{drawer.opened ? 'filter_alt_off' : 'filter_alt'}}</mat-icon>
+        {{drawer.opened ? ('members.hide' | translate) : ('members.show' | translate)}}
+        {{'members.filters' | translate}}
+      </button>
+
+      <button *appRole="['members','Export']" type="button" mat-raised-button color="default"
+        (click)="getExportedData()">
+        @if (!loading) {
+          <img src="assets/images/excel-ico.png" width="20">
+        }
+        @if (loading) {
+          <mat-spinner [diameter]="20" class="d-inline-block"></mat-spinner>
+        }
+        {{'members.exportExcel'|translate}}
+      </button>
+
+      <!-- (click)="addMember()" -->
+      <button *appRole="['members','tsb_Add']" color="primary" routerLink="/admin/form/member/add"
+        [queryParams]="{fresh:true}" mat-raised-button>
+        <mat-icon>person_add_alt</mat-icon> {{'members.addMember' | translate}}
+      </button>
+    </div>
+  </div>
+
+  <mat-drawer #drawer [mode]="width < 600 ? 'over':'side'" [dir]="'ltr'" [position]="'end'">
+    <div class="filters-drawer">
+      <div class="inner">
+        <h4 class="mo-font-bold"> {{'members.filters' | translate}}</h4>
+        <app-table-filters [filters]="filters" *appRole="['members','Search']" (onFilterChange)="getFilters($event)">
+        </app-table-filters>
+      </div>
+    </div>
+  </mat-drawer>
+
+  @if (selection.selected.length) {
+    <div
+      class="mo-my-3 mo-bg-neutral-200 mo-flex mo-items-center mo-rounded-md mo-p-2 mo-flex-wrap mo-gap-3">
+      <div>
+        <button (click)="selection.clear()" mat-button color="warn">
+          <mat-icon class="!mo-text-base">close</mat-icon>
+          <small>{{'common.clearSelection' | translate}}</small>
+        </button>
+        <small class="mo-text-neutral-600">{{selection.selected.length}} {{'common.itemsSelected' | translate}}</small>
+      </div>
+      <ul class="mo-flex mo-items-center mj-gap-3">
+        <li *appRole="['profile', 'EditSalesPerson']">
+          <button (click)="changeSalesPerson()" mat-raised-button>
+            <mat-icon>published_with_changes</mat-icon>
+            <small class="mj-ps-2">{{'staff.changeSalesPerson' | translate}}</small>
+          </button>
+        </li>
+      </ul>
+    </div>
+  }
+
+  <div [ngClass]="{'drawer-opened': drawer.opened}">
+    @if (viewMode === 'table') {
+      <div class="table-responsive card p-3">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="onSelection($event, 'ALL')" [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="onSelection($event, 'ROW', row)"
+                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="applicationNo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.contractNo' | translate}}</th>
+            <td mat-cell *matCellDef="let row">{{ row.applicationNo }}</td>
+          </ng-container>
+          <ng-container matColumnDef="code">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.accessCode' | translate}}</th>
+            <td mat-cell *matCellDef="let row">{{ row.code }}</td>
+          </ng-container>
+          <ng-container matColumnDef="nameEng">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.englishName' | translate}}</th>
+            <td mat-cell *matCellDef="let row">{{ row.nameEng }}</td>
+          </ng-container>
+          <ng-container matColumnDef="nameAR">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.arabicName' | translate}}</th>
+            <td mat-cell *matCellDef="let row">{{ row.nameAR }}</td>
+          </ng-container>
+          <ng-container matColumnDef="phoneNo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.phone' | translate}}</th>
+            <td mat-cell *matCellDef="let row" class="cursor-pointer" (click)="openPhonePopup(row)">
+            {{'reports.table.phoneStars' | translate}}</td>
+          </ng-container>
+          <ng-container matColumnDef="birthDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.birthDate' | translate}}</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.birthDate | date: "mediumDate" }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="gender">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.gender' | translate}}</th>
+            <td mat-cell *matCellDef="let row">
+              {{ row.gender | gender }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="salesName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.salesPerson' | translate}}</th>
+            <td mat-cell *matCellDef="let row">{{ row.salesName }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="mo-text-center">
+              <mat-icon>settings</mat-icon>
+            </th>
+            <td mat-cell *matCellDef="let row" class="mo-text-center">
+              <app-member-actions class="options-btn" [member]="row" [styleMember]="styleMember"
+              (click)="$event.stopPropagation()"></app-member-actions>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.edit' | translate}}</th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button color="accent" *appRole="['profile','EditAfterAddition']"
+                (click)="$event.stopPropagation()" [routerLink]="['/admin/form/member/edit']"
+                [queryParams]="{memberId:row.id, backTo:'list'}">
+                <mat-icon>edit_note</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row [ngClass]="{ blocked: row.isBlocked }" (click)="viewMember(row)"
+          *matRowDef="let row; columns: displayedColumns"></tr>
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+          </tr>
+        </table>
+        <mat-paginator (page)="onPaginationChange($event)" [length]="totalElements"
+          [pageIndex]="+filters.skipCount! / +filters.takeCount!" [pageSizeOptions]="[20, 50, 100]">
+        </mat-paginator>
+      </div>
+    }
+
+    @if (viewMode === 'card') {
+      <div class="card-view-container">
+        <ul class="row !mo-px-0">
+          @for (m of cards; track m) {
+            <li class="col-xl-3 col-lg-4 col-md-6 col-12">
+              <app-member-card [member]="m" (onAction)="getCardAction($event)"></app-member-card>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </div>
+</mat-drawer-container>
+
+<ng-template #phoneModal>
+  <div class="p-4">
+    <div class="row">
+      <div class="col-md-5">
+        <h5 class="mo-font-bold">{{'reports.table.name' | translate}} : </h5>
+        <h5 class="mo-font-bold">{{'members.phone' | translate}} : </h5>
+      </div>
+      <div class="col-md-7">
+        <h5 class="">{{phoneModalData.nameEng}}</h5>
+        <h5 class="">{{phoneModalData.phoneNo}}</h5>
+      </div>
+    </div>
+  </div>
+</ng-template>

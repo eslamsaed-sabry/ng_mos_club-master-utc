@@ -1,0 +1,90 @@
+<div class="report-filters-bg mo-shadow-md">
+  <h4 class="mo-font-bold mb-4">{{'reports.filters' | translate}}</h4>
+
+  <form>
+    <div class="mo-flex mo-items-center">
+      <mat-checkbox [(ngModel)]="filters!!.membershipPaymentDateFrom" name="membershipPaymentDateFrom"
+      (change)="onChange('membershipPaymentDateFrom', $event)" class="mo-me-1"></mat-checkbox>
+      <mat-form-field appearance="outline" class="mo-w-full">
+        <mat-label>{{'reports.table.paymentDateFrom' | translate}}</mat-label>
+        <input matInput type="datetime-local" [(ngModel)]="filters.membershipPaymentDateFrom"
+          name="membershipPaymentDateFrom">
+        </mat-form-field>
+      </div>
+
+      <div class="mo-flex mo-items-center">
+        <mat-checkbox [(ngModel)]="filters!!.membershipPaymentDateTo" name="membershipPaymentDateTo"
+        (change)="onChange('membershipPaymentDateTo', $event)" class="mo-me-1"></mat-checkbox>
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'reports.table.paymentDateTo' | translate}}</mat-label>
+          <input matInput type="datetime-local" [(ngModel)]="filters.membershipPaymentDateTo"
+            name="membershipPaymentDateTo">
+          </mat-form-field>
+        </div>
+
+        <div class="mo-flex mo-items-center">
+          <mat-checkbox [(ngModel)]="filters!!.membershipStartDateFrom" name="membershipStartDateFrom"
+          (change)="onChange('membershipStartDateFrom', $event)" class="mo-me-1"></mat-checkbox>
+          <mat-form-field appearance="outline" class="mo-w-full" (click)="membershipStartDateFrom.open()">
+            <mat-label>{{'reports.table.startDateFrom' | translate}}</mat-label>
+            <input matInput [matDatepicker]="membershipStartDateFrom" [(ngModel)]="filters.membershipStartDateFrom"
+              name="membershipStartDateFrom" />
+              <mat-datepicker-toggle matSuffix [for]="membershipStartDateFrom"></mat-datepicker-toggle>
+              <mat-datepicker #membershipStartDateFrom></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div class="mo-flex mo-items-center">
+            <mat-checkbox [(ngModel)]="filters!!.membershipStartDateTo" name="membershipStartDateTo"
+            (change)="onChange('membershipStartDateTo', $event)" class="mo-me-1"></mat-checkbox>
+            <mat-form-field appearance="outline" class="mo-w-full" (click)="membershipStartDateTo.open()">
+              <mat-label>{{'reports.table.startDateTo' | translate}}</mat-label>
+              <input matInput [matDatepicker]="membershipStartDateTo" [(ngModel)]="filters.membershipStartDateTo"
+                name="membershipStartDateTo" />
+                <mat-datepicker-toggle matSuffix [for]="membershipStartDateTo"></mat-datepicker-toggle>
+                <mat-datepicker #membershipStartDateTo></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <div class="mo-flex mo-items-center">
+              <mat-checkbox [(ngModel)]="filters!!.membershipEndDateFrom" name="membershipEndDateFrom"
+              (change)="onChange('membershipEndDateFrom', $event)" class="mo-me-1"></mat-checkbox>
+              <mat-form-field appearance="outline" class="mo-w-full" (click)="membershipEndDateFrom.open()">
+                <mat-label>{{'reports.table.expDateFrom' | translate}}</mat-label>
+                <input matInput [matDatepicker]="membershipEndDateFrom" [(ngModel)]="filters.membershipEndDateFrom"
+                  name="membershipEndDateFrom" />
+                  <mat-datepicker-toggle matSuffix [for]="membershipEndDateFrom"></mat-datepicker-toggle>
+                  <mat-datepicker #membershipEndDateFrom></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="mo-flex mo-items-center">
+                <mat-checkbox [(ngModel)]="filters!!.membershipEndDateTo" name="membershipEndDateTo"
+                (change)="onChange('membershipEndDateTo', $event)" class="mo-me-1"></mat-checkbox>
+                <mat-form-field appearance="outline" class="mo-w-full" (click)="membershipEndDateTo.open()">
+                  <mat-label>{{'reports.table.expDateTo' | translate}}</mat-label>
+                  <input matInput [matDatepicker]="membershipEndDateTo" [(ngModel)]="filters.membershipEndDateTo"
+                    name="membershipEndDateTo" />
+                    <mat-datepicker-toggle matSuffix [for]="membershipEndDateTo"></mat-datepicker-toggle>
+                    <mat-datepicker #membershipEndDateTo></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'reports.table.coach' | translate}}</mat-label>
+                  <mat-select [(ngModel)]="filters.trainerId" name="trainerId" required>
+                    <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                    @for (el of trainer; track el) {
+                      <mat-option [value]="el.id">{{el.name}}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.fixedPercentage' | translate}}</mat-label>
+                  <input matInput [(ngModel)]="filters.fixedPercentage" name="fixedPercentage" type="number" required
+                    placeholder="{{'members.fixedPercentage' | translate}}" />
+                  </mat-form-field>
+
+                </form>
+              </div>

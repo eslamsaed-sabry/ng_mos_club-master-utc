@@ -1,0 +1,256 @@
+<mat-drawer-container class="example-container" autosize>
+
+  <div class="page-title" [ngClass]="{'drawer-opened': drawer.opened}">
+    <h4 class="mo-font-bold mo-m-0"> {{'extra.freePrivateTraining' | translate}} </h4>
+
+    <div class="actions">
+      <div class="mo-flex mo-flex-wrap mo-items-baseline">
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{'members.search' | translate}}</mat-label>
+          <input matInput #inputSearch [(ngModel)]="filters.searchKeyWord" name="searchKeyWord" type="text"
+            (input)="onSearchInput(inputSearch.value)" placeholder="{{'members.search' | translate}}" />
+        </mat-form-field>
+
+        <div class="mo-px-2">
+          <mat-checkbox (change)="applyFilter()" [(ngModel)]="filters.unassignedOnly"
+            name="unassignedOnly"><strong>{{'extra.unassignedOnly' |
+              translate}}</strong>
+          </mat-checkbox>
+        </div>
+
+        <div class="mo-px-2">
+          <mat-checkbox [(ngModel)]="filters!!.startDateFrom" name="startDateFrom"
+            (change)="onChange('startDateFrom', $event)"></mat-checkbox>
+          <mat-form-field appearance="outline" (click)="startDateFrom.open()">
+            <mat-label>{{'reports.table.startDateFrom' | translate}}</mat-label>
+            <input matInput (dateChange)="applyFilter()" [matDatepicker]="startDateFrom"
+              [(ngModel)]="filters.startDateFrom" name="startDateFrom" />
+            <mat-datepicker-toggle matSuffix [for]="startDateFrom"></mat-datepicker-toggle>
+            <mat-datepicker #startDateFrom></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="mo-px-2">
+          <mat-checkbox [(ngModel)]="filters!!.startDateTo" name="startDateTo"
+            (change)="onChange('startDateTo', $event)"></mat-checkbox>
+          <mat-form-field appearance="outline" (click)="startDateTo.open()">
+            <mat-label>{{'reports.table.startDateTo' | translate}}</mat-label>
+            <input matInput (dateChange)="applyFilter()" [matDatepicker]="startDateTo" [(ngModel)]="filters.startDateTo"
+              name="startDateTo" />
+            <mat-datepicker-toggle matSuffix [for]="startDateTo"></mat-datepicker-toggle>
+            <mat-datepicker #startDateTo></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <button class="mo-mx-2" (click)="drawer.toggle()" mat-raised-button color="default">
+          <mat-icon>{{drawer.opened ? 'filter_alt_off' : 'filter_alt'}}</mat-icon>
+          {{drawer.opened ? ('members.hide' | translate) : ('members.show' | translate)}}
+          {{'members.filters' | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <mat-drawer #drawer [mode]="width < 600 ? 'over':'side'" [dir]="'ltr'" [position]="'end'">
+    <div class="filters-drawer">
+      <div class="inner">
+        <h4 class="mo-font-bold"> {{'members.filters' | translate}}</h4>
+        <app-free-private-training-filters [filters]="filters"
+          (onFilter)="applyFilter()"></app-free-private-training-filters>
+      </div>
+    </div>
+  </mat-drawer>
+
+  <div [ngClass]="{'drawer-opened': drawer.opened}">
+    <div class="table-responsive card p-3">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="contractNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.contractNo' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.contractNo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.phone' | translate}}</th>
+          <td mat-cell *matCellDef="let row" class="cursor-pointer" (click)="openPhonePopup(row)">
+            {{'reports.table.phoneStars' | translate}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="memberName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.memberName' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="mo-flex">
+              <a class="view-profile-btn mo-my-1 mo-py-1" [routerLink]="['/admin/member-profile/',row.memberId]"
+                mat-button color="primary">
+                <small>{{row.memberName}}</small>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.gender' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.gender | gender }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="paymentDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.paymentDate' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.paymentDate | date:"mediumDate"}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.membershipStartDate' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.startDate | date:"mediumDate"}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="package">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.package' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.packageName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.status' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="notes">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.notes' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.notes }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="salesPersonName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.salesPerson' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.salesPerson }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="PTSessionsCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.PTSessionsCount' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.ptSessionsCount }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="ptSessionsConsumedCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.ptSessionsConsumedCount' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.ptSessionsConsumedCount }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="trainerName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.trainerName' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.trainerName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="trainerComment">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'extra.trainerComment' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.trainerComment }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <mat-icon>settings</mat-icon>
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="actionMenu">
+              <mat-icon>more_horiz</mat-icon>
+            </button>
+            <mat-menu #actionMenu="matMenu" class="action-menu">
+              <button mat-menu-item (click)="getBenefit(row)">
+                <mat-icon>health_and_safety</mat-icon> {{'reports.table.sessions' | translate}}
+              </button>
+              <button mat-menu-item (click)="changeEmployee(row,'trainer')"
+                *appRole="['freePrivateTraining','EditTrainerAfterAddition']">
+                <mat-icon>accessibility</mat-icon> {{'staff.changeTrainer' | translate}}
+              </button>
+              @if (row.trainerId) {
+              <button mat-menu-item (click)="removeTrainer(row)"
+                [appRoleAttr]="['freePrivateTraining','EditTrainerAfterAddition']">
+                <mat-icon>remove_circle_outline</mat-icon> {{'staff.removeTrainer' | translate}}
+              </button>
+              }
+              @if (!row.isHidden) {
+              <button mat-menu-item [appRoleAttr]="['freePrivateTraining', 'Hide']" (click)="hide(row)">
+                <mat-icon>highlight_off</mat-icon> {{'extra.hide' | translate}}
+              </button>
+              }
+              @if (row.isHidden) {
+              <button mat-menu-item [appRoleAttr]="['freePrivateTraining', 'UnHide']" (click)="unHide(row)">
+                <mat-icon>remove_red_eye</mat-icon> {{'extra.unHide' | translate}}
+              </button>
+              }
+
+              @if (!row.isReferralForPTRotation) {
+              <button mat-menu-item [appRoleAttr]="['freePrivateTraining', 'MarkAsReferral']"
+                (click)="markAsReferral(row)">
+                <mat-icon>check_circle</mat-icon> {{'extra.markAsReferral' | translate}}
+              </button>
+              }
+              @if (row.isReferralForPTRotation) {
+              <button mat-menu-item [appRoleAttr]="['freePrivateTraining', 'UnMarkAsReferral']"
+                (click)="unMarkAsReferral(row)">
+                <mat-icon>block </mat-icon> {{'extra.umMarkAsReferral' | translate}}
+              </button>
+              }
+              <button mat-menu-item [appRoleAttr]="['freePrivateTraining', 'UpdateTrainerComment']"
+                (click)="updateTrainerComment(row)">
+                <mat-icon>comment</mat-icon> {{'extra.updateTrainerComment' | translate}}
+              </button>
+
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+        </tr>
+      </table>
+
+      <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+        [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+      </mat-paginator>
+    </div>
+
+
+  </div>
+</mat-drawer-container>
+
+<ng-template #benefitModal>
+  <div class="p-4">
+    <app-member-benefits-sessions [membershipId]="membershipId" [benefit]="benefit" [sessions]="sessions"
+      (refresh)="getSessions(); refresh.emit()">
+    </app-member-benefits-sessions>
+  </div>
+</ng-template>
+
+<ng-template #updateTrainerCommentModal>
+  <h5 class="mo-font-bold" mat-dialog-title>{{'extra.updateTrainerComment' | translate}}</h5>
+  <div mat-dialog-content>
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'members.comment' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="freePrivateTraining.trainerComment" name="trainerComment"></textarea>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" (click)="editTrainerComment()">{{'members.save' | translate}}</button>
+  </div>
+</ng-template>
+
+
+<ng-template #phoneModal>
+  <div class="p-4">
+    <div class="row">
+      <div class="col-md-5">
+        <h5 class="mo-font-bold">{{'reports.table.name' | translate}} : </h5>
+        <h5 class="mo-font-bold">{{'members.phone' | translate}} : </h5>
+      </div>
+      <div class="col-md-7">
+        <h5 class="">{{phoneModalData.memberName}}</h5>
+        <h5 class="">{{phoneModalData.phoneNumber}}</h5>
+      </div>
+    </div>
+  </div>
+</ng-template>

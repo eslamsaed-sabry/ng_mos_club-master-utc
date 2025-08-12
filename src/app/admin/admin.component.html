@@ -1,0 +1,25 @@
+<app-loader></app-loader>
+<nav (mouseenter)="onHover('enable')" class="main-nav" (mouseleave)="onHover('disable')"
+  [ngClass]="{ 'isOpened': isOpened, 'isClosed': !isOpened, 'onHover': isHovered }">
+  <app-navigation></app-navigation>
+  <div class="mos-logo">
+    @if (isOpened) {
+      <img src="assets/images/mos-logo-white-bg.png" class="mos-white-sm">
+    }
+    @if (isOpened) {
+      <img src="assets/images/mos-logo-dark-bg.png" class="mos-dark-sm">
+    }
+    @if (!isOpened) {
+      <img src="assets/images/logo-only-sidenav.png">
+    }
+  </div>
+</nav>
+<div class="main">
+  <header>
+    <app-header></app-header>
+  </header>
+  <div class="wrapper p-md-4 p-2">
+    <router-outlet></router-outlet>
+  </div>
+  <app-member-attendance-notification></app-member-attendance-notification>
+</div>

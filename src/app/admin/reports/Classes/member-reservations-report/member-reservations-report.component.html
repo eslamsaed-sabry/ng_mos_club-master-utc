@@ -1,0 +1,67 @@
+<app-reports-page-header [permissions]="['memberReservationsReport', 'tsb_Print', 'Export']"
+  [reportName]="'reports.membersAttendanceOnClasses' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-classes-report-filter [filters]="filters"
+    [nameOfReport]="classesReportsName.MEMBER_RESERVATIONS_ON_CLASSES_REPORT"></app-classes-report-filter>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container">
+          <div class="table-responsive" id="receipts">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.phone' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'reports.table.january' | translate}}</th>
+                  <th>{{'reports.table.february' | translate}}</th>
+                  <th>{{'reports.table.march' | translate}}</th>
+                  <th>{{'reports.table.april' | translate}}</th>
+                  <th>{{'reports.table.may' | translate}}</th>
+                  <th>{{'reports.table.june' | translate}}</th>
+                  <th>{{'reports.table.july' | translate}}</th>
+                  <th>{{'reports.table.august' | translate}}</th>
+                  <th>{{'reports.table.september' | translate}}</th>
+                  <th>{{'reports.table.october' | translate}}</th>
+                  <th>{{'reports.table.november' | translate}}</th>
+                  <th>{{'reports.table.december' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of reports; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.memberContractNo }}</td>
+                    <td>{{el.memberPhone}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.januaryCount1}}</td>
+                    <td>{{el.februaryCount2}}</td>
+                    <td>{{el.marchCount3}}</td>
+                    <td>{{el.aprilCount4}}</td>
+                    <td>{{el.mayCount5}}</td>
+                    <td>{{el.juneCount6}}</td>
+                    <td>{{el.julyCount7}}</td>
+                    <td>{{el.augustCount8}}</td>
+                    <td>{{el.septemberCount9}}</td>
+                    <td>{{el.octoberCount10}}</td>
+                    <td>{{el.novemberCount11}}</td>
+                    <td>{{el.decemberCount12}}</td>
+                  </tr>
+                }
+                @if (reports&&reports.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

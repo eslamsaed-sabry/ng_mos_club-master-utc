@@ -1,0 +1,48 @@
+<app-reports-page-header [reportName]="'reports.birthdaysRep'|translate"
+  [permissions]="['birthdaysReport', 'tsb_Print', 'Export']" [isResult]="isResult" (onAction)="getAction($event)">
+</app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-birthdays-report-filters [filters]="filters"></app-birthdays-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <div class="reports-tabs-container2">
+          <div class="table-responsive">
+            <!-- <h5 class="mo-font-bold">
+            {{'reports.birthdaysRep' | translate}}
+          </h5> -->
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{'members.contractNo' | translate}}</th>
+                <th>{{'members.gender' | translate}}</th>
+                <th>{{'members.phone' | translate}}</th>
+                <th>{{'members.memberName' | translate}}</th>
+                <th>{{'reports.table.birthday' | translate}}</th>
+                <th>{{'reports.table.age' | translate}}</th>
+                <th>{{'members.salesPerson' | translate}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (el of birthdays; track el) {
+                <tr>
+                  <td>{{el.applicationNo}}</td>
+                  <td>{{el.gender | gender}}</td>
+                  <td>{{el.phoneNo}}</td>
+                  <td>{{el.nameAR}}</td>
+                  <td>{{el.birthDate | date: 'mediumDate'}}</td>
+                  <td>{{el.age}}</td>
+                  <td>{{el.salesName}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+</div>

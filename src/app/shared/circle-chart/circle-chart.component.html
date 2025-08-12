@@ -1,0 +1,5 @@
+@if (theme$ | async; as THEME) {
+  <apx-chart [series]="chartOptions.series!" [title]="chartOptions.title!" [subtitle]="chartOptions.subtitle!"
+    [fill]="chartOptions.fill!" [chart]="chartOptions.chart!" [labels]="chartOptions.labels!"
+  [plotOptions]="chartOptions.plotOptions!" [theme]="THEME"></apx-chart>
+}

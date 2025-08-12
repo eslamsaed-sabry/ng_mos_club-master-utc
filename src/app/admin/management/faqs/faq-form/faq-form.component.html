@@ -1,0 +1,27 @@
+<h5 mat-dialog-title class="mo-font-bold mo-mb-4">{{'management.FAQDetails' | translate}}</h5>
+<form (ngSubmit)="submit(faqForm)" #faqForm="ngForm">
+
+    <div mat-dialog-content>
+        <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'management.question' | translate}}</mat-label>
+            <input matInput [(ngModel)]="faq.question" name="question" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'management.answer' | translate}}</mat-label>
+            <textarea rows="7" matInput [(ngModel)]="faq.answer" name="answer" required></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'management.viewOrder' | translate}}</mat-label>
+            <input matInput [(ngModel)]="faq.viewOrder" name="viewOrder" type="number">
+        </mat-form-field>
+
+    </div>
+
+    <div class="mo-text-end mo-mt-2" mat-dialog-actions>
+        <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' |
+            translate}}</button>
+        <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+    </div>
+</form>

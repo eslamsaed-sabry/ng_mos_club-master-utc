@@ -1,0 +1,93 @@
+<mat-drawer-container class="example-container" autosize>
+
+  <div class="page-title" [ngClass]="{'drawer-opened': drawer.opened}">
+    <h4 class="mo-font-bold mo-m-0"> {{'navigation.reminders' | translate}}
+      @if (filters.id) {
+        <button mat-button color="primary" (click)="reset()">{{'members.clearAll' |
+        translate}}</button>
+      }
+    </h4>
+
+    <div class="actions">
+      <button class="mo-mx-2" (click)="drawer.toggle()" mat-raised-button color="default">
+        <mat-icon>{{drawer.opened ? 'filter_alt_off' : 'filter_alt'}}</mat-icon>
+        {{drawer.opened ? ('members.hide' | translate) : ('members.show' | translate)}}
+        {{'members.filters' | translate}}
+      </button>
+    </div>
+  </div>
+
+  <mat-drawer #drawer [mode]="width < 600 ? 'over':'side'" [dir]="'ltr'" [position]="'end'">
+    <div class="filters-drawer">
+      <div class="inner">
+        <h4 class="mo-font-bold mo-mb-3"> {{'members.filters' | translate}}</h4>
+        <app-reminders-filters [filters]="filters" (onFilter)="applyFilter()"></app-reminders-filters>
+      </div>
+    </div>
+  </mat-drawer>
+
+  <div [ngClass]="{'drawer-opened': drawer.opened}">
+    <div class="table-responsive card p-3">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="reminderDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.reminderDate' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.reminderDate | date:'MMM d, y, h:mm a' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="memberName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.memberName' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="mo-flex">
+              <a class="view-profile-btn mo-my-1 mo-py-1" routerLink="/admin/member-profile/{{row.memberId}}" mat-button
+                color="primary">
+                <small>{{ row.memberName }}</small>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="notes">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.notes' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.notes }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdToUsername">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.to' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.createdToUsername }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.createdBy' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.username }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="dismiss">
+          <th mat-header-cell *matHeaderCellDef>{{'members.dismiss' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            @if (!row.isDismissed) {
+              <button (click)="dismissReminder(row)" mat-icon-button>
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+        </tr>
+      </table>
+
+      <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+        [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+      </mat-paginator>
+    </div>
+
+
+  </div>
+</mat-drawer-container>

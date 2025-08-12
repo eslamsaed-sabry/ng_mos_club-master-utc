@@ -1,0 +1,149 @@
+@if (trainersOrDoctors$ | async; as DATA) {
+  <mat-drawer-container class="example-container" autosize>
+    <div class="page-title" [ngStyle]="{'margin-right': drawer.opened ? '15px' : 0}">
+      <h4 class="mo-font-bold mo-m-0"> {{('navigation.'+scheduleTypeName) | translate}}</h4>
+      <div class="actions">
+        <button class="mo-me-2" (click)="drawer.toggle()" mat-raised-button color="default">
+          <mat-icon>{{drawer.opened ? 'filter_alt_off' : 'filter_alt'}}</mat-icon>
+          {{drawer.opened ? 'Hide' : 'Show'}} {{'members.filters' | translate}}
+        </button>
+        <!-- <button color="primary" (click)="addReminder()" class="mo-me-2" *appRole="['reminders', 'tsb_Add']"
+        mat-raised-button>
+        <mat-icon>notification_add</mat-icon> {{'members.addReminder' | translate}}
+      </button> -->
+      <button class="mo-me-2" color="primary" (click)="showSlotForm('add')" mat-raised-button>
+        <mat-icon>add_alarm</mat-icon> {{'members.addSlot' | translate}}
+      </button>
+      <button color="warn" (click)="openDeleteSlotsModal()" mat-raised-button>
+        <mat-icon>add_alarm</mat-icon> {{'members.deleteSlots' | translate}}
+      </button>
+    </div>
+  </div>
+  <mat-drawer #drawer [mode]="width < 600 ? 'over':'side'" [dir]="'ltr'" [position]="'end'">
+    <div class="filters-drawer">
+      <div class="inner">
+        <h4 class="mo-font-bold"> {{'members.filters' | translate}}</h4>
+        <app-schedule-filters [filters]="filters" [trainersOrDoctors]="trainersOrDoctors"
+        [scheduleTypeName]="scheduleTypeName" (onFilter)="getSchedule()"></app-schedule-filters>
+      </div>
+    </div>
+  </mat-drawer>
+  <div [ngStyle]="{'margin-right': drawer.opened ? '15px' : 0}">
+    @if (showSchedule) {
+      <ejs-schedule #scheduleObj (actionComplete)="onNavigation()" (eventRendered)="onEventRendered($event)"
+        (cellClick)="onPopupOpen($event)" (eventClick)="onPopupOpen($event)" width="100%"
+        height="900" [eventSettings]="eventSettings" [(currentView)]="currentView"
+        [enableRtl]="currentLang === 'ar'? true : false" [views]="views" [group]="group">
+        <e-resources>
+          <e-resource field="OwnerId" title="Owner" name="Owners" [dataSource]="trainersOrDoctors"
+            [allowMultiple]="allowMultipleOwner" textField='OwnerText' idField='Id' colorField='OwnerColor'>
+          </e-resource>
+        </e-resources>
+        <!-- Header template -->
+        <ng-template #quickInfoTemplatesHeader let-data>
+          <div>
+            <div class="e-popup-header" [ngStyle]="{'background-color':data.colorHex}">
+              <div class="e-header-icon-wrapper">
+                <!-- <button class="btns del-btn" (click)="deleteEvent(data)" title="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button class="btns edit-btn" (click)="$event.preventDefault();onEdit(data)" title="Edit">
+                <mat-icon>edit</mat-icon>
+              </button> -->
+              <button class="btns close-btn" (click)="closePopUp()" title="Close">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+            <h6 class="mo-font-bold mo-text-white p-3 mo-m-0">
+              @if (data.contextTypeId === 1) {
+                <span>{{'members.reminder' | translate}}</span>
+              }
+              ({{data.happeningDate | date:'MMM d, y, h:mm a'}})
+            </h6>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #quickInfoTemplatesContent let-data>
+        <ul class="mo-p-0">
+          @if (data.contextTypeId != 5) {
+            <li class="mo-flex mo-justify-between mo-w-full mo-items-center mo-mb-1">
+              <strong>{{data.memberName}}</strong>
+              <a mat-button color="primary" target="_blank"
+                [routerLink]="['/admin/member-profile/', data.memberId]">{{'members.view' | translate}}
+              {{'members.profile' | translate}}</a>
+            </li>
+          }
+          <li class="mo-mb-1">
+            <p class="white-space-pre-line">{{data.summary}}</p>
+          </li>
+          @if (data.contextTypeId === 5) {
+            <li class="mo-flex mo-justify-between mo-w-full mo-items-center mo-mb-1">
+              <button mat-button color="primary" (click)="showSlotForm('edit', undefined, data)">{{'members.edit' |
+              translate}}</button>
+              <button mat-button color="accent" (click)="cancelSlot(data.contextId)">{{'members.cancel' |
+              translate}}</button>
+              <button mat-button color="warn" (click)="deleteSlot(data.contextId)">{{'members.delete' |
+              translate}}</button>
+              <button mat-button (click)="showSlotMembers(data)">{{'classSchedule.showMembers' |
+              translate}}</button>
+            </li>
+          }
+          @if (data.contextTypeId === 1) {
+            <li class="mo-flex mo-justify-end mo-w-full" (click)="dismiss(data.contextId)"
+              >
+              <button mat-flat-button color="accent">{{'members.dismiss' | translate}}</button>
+            </li>
+          }
+        </ul>
+      </ng-template>
+    </ejs-schedule>
+  }
+</div>
+</mat-drawer-container>
+}
+
+<ng-template #deleteSlotsModal>
+  <h5 mat-dialog-title class="mo-font-bold mo-my-2">{{'members.deleteSlots' | translate}}</h5>
+  <form (ngSubmit)="deleteSlots(slotForm)" #slotForm="ngForm">
+
+    <div mat-dialog-content class="mo-pt-0">
+
+      <div class="row">
+
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'classSchedule.startDate' | translate}}</mat-label>
+            <input matInput type="datetime-local" [(ngModel)]="deleteAvailableSlots.fromDate" name="startDate" required>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12">
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'classSchedule.endDate' | translate}}</mat-label>
+            <input matInput type="datetime-local" [(ngModel)]="deleteAvailableSlots.toDate" name="endDate" required>
+          </mat-form-field>
+        </div>
+
+
+        <div class="col-12">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.createdTo' | translate}}</mat-label>
+            <mat-select [(ngModel)]="deleteAvailableSlots.trainerId" name="trainerId" required>
+              @for (el of trainersOrDoctors; track el) {
+                <mat-option [value]="el.id">{{el.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      </div>
+    </div>
+    <div mat-dialog-actions class="mo-justify-end">
+      <button mat-button type="button" (click)="dialog.closeAll()">{{'members.cancel' | translate}}</button>
+      <button mat-raised-button color="primary" type="submit" (click)="dialog.closeAll()">
+        {{'members.save' | translate}}
+      </button>
+    </div>
+  </form>
+
+</ng-template>

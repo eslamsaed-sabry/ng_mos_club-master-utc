@@ -1,0 +1,84 @@
+<mat-drawer-container class="example-container" autosize>
+
+  <div class="page-title" [ngStyle]="{'margin-right': drawer.opened ? '15px' : 0}">
+    <h4 class="mo-font-bold mo-m-0"> {{'members.membersAtGym' | translate}} </h4>
+
+    <div class="actions">
+
+      <button class="mo-mx-2" (click)="drawer.toggle()" mat-raised-button color="default">
+        <mat-icon>{{drawer.opened ? 'filter_alt_off' : 'filter_alt'}}</mat-icon>
+        {{drawer.opened ? 'Hide' : 'Show'}} {{'members.filters' | translate}}
+      </button>
+
+      <button color="primary" (click)="onCheckOut(checkoutAllMsg)" mat-raised-button>
+        <mat-icon>logout</mat-icon> {{'members.checkOutAll' | translate}}
+      </button>
+    </div>
+  </div>
+
+  <mat-drawer #drawer [mode]="width < 600 ? 'over':'side'" [dir]="'ltr'" [position]="'end'">
+    <div class="filters-drawer">
+      <div class="inner">
+        <h4 class="mo-font-bold">{{'members.filters' | translate}}</h4>
+        <app-checked-in-members-filters [filters]="filters" (onFilter)="getCheckedInMembers()">
+        </app-checked-in-members-filters>
+      </div>
+    </div>
+  </mat-drawer>
+
+  <div [ngStyle]="{'margin-right': drawer.opened ? '15px' : 0}">
+    <div class="table-responsive card p-3">
+      <table mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="attendanceDateAsString">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.attDate' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.attendanceDate | date:'MMM d, y, h:mm a'}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="contractNo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.contractNo' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.contractNo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.phone' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.phoneNumber }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="englishName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.memberName' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.englishName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="package">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.package' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.package }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="userName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.username' | translate}}</th>
+          <td mat-cell *matCellDef="let row">{{ row.userName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="checkout">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'staff.checkOut' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button (click)="onCheckOut(checkoutMsg,row)"><mat-icon>logout</mat-icon></button>
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <!-- Row shown when there is no matching data. -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+        </tr>
+      </table>
+
+      <mat-paginator (page)="onPaginationChange($event)" [pageSize]="perPage" [pageIndex]="page"
+        [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+      </mat-paginator>
+    </div>
+  </div>
+</mat-drawer-container>

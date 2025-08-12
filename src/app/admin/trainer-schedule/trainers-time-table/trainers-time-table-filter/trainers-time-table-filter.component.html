@@ -1,0 +1,34 @@
+<form class="filters-container" #callFiltersForm="ngForm" [dir]="currentLang === 'ar' ? 'rtl': 'ltr'">
+
+
+  <mat-form-field appearance="outline" class="mo-w-full">
+    <mat-label>{{'reports.table.fromDate' | translate}}</mat-label>
+    <input matInput [matDatepicker]="fromDatePicker" [(ngModel)]="filters.fromDate" name="fromDate">
+    <mat-datepicker-toggle matIconSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #fromDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="mo-w-full">
+    <mat-label>{{'reports.table.toDate' | translate}}</mat-label>
+    <input matInput [matDatepicker]="toDatePicker" [(ngModel)]="filters.toDate" name="toDate">
+    <mat-datepicker-toggle matIconSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #toDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field class="mo-w-full" appearance="outline">
+    <mat-label>{{'members.trainer' | translate}}</mat-label>
+    <mat-select [(ngModel)]="filters.employeeId" name="employeeId">
+      @for (el of trainers; track el) {
+        <mat-option [value]="el.id">{{el.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="mo-my-3">
+    <button class="mo-font-bold mo-w-full mo-mb-2" (click)="onFilter.emit()" mat-raised-button color="primary"
+    type="button">{{'members.search' | translate}}</button>
+    <button class="mo-font-bold mo-w-full" (click)="clearFilter()" mat-button type="button">{{'members.clearAll' |
+    translate}}</button>
+  </div>
+
+</form>

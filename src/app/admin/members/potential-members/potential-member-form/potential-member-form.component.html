@@ -1,0 +1,178 @@
+<h5 class="mo-font-bold mo-my-2" mat-dialog-title>{{'members.potMember' | translate}}</h5>
+<form (ngSubmit)="submit(memberForm)" #memberForm="ngForm">
+
+  <div mat-dialog-content>
+    <div class="row">
+
+      <div class="col-12" *appRole="['potMembers', 'dtp_Date']">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'members.joiningDate' | translate}}</mat-label>
+          <input matInput type="datetime-local" [(ngModel)]="member.joiningDate" name="joiningDate"
+            [required]="requiredFields.includes('joiningDate')">
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4 col-12">
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.countryCode'|translate}}</mat-label>
+            <mat-select (selectionChange)="common.validatePhoneNumber(member.phoneNo,member.phoneFormatId,countryCodes)"
+              [(ngModel)]="member.phoneFormatId" name="phoneFormatId" required>
+              @for (c of countryCodes; track c) {
+                <mat-option [value]="c.id">{{c.displayName}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-8 col-12 mo-relative">
+          <mat-form-field appearance="outline" class="mo-w-full">
+            <mat-label>{{'members.phone' | translate}}</mat-label>
+            <input matInput [(ngModel)]="member.phoneNo" autocomplete="disableitPlease" (keyup)="searchAhead('phone')"
+              name="phoneNo" required
+              (blur)="common.validatePhoneNumber(member.phoneNo,member.phoneFormatId,countryCodes)" />
+              @if (phoneTypeAheadLoading) {
+                <mat-spinner matSuffix [diameter]="20"></mat-spinner>
+              }
+            </mat-form-field>
+            @if (showPhoneTypeAheadList) {
+              <ul class="type-ahead-list">
+                @for (m of members; track m) {
+                  <li (click)="onSelectMember(m)">
+                    @if (!m.isPossibleMember) {
+                      <mat-icon matTooltip="Already a member" class="mo-text-error-500">block_flipped
+                      </mat-icon>
+                    }
+                    @if (m.isPossibleMember) {
+                      <mat-icon matTooltip="Potential member" class="text-success">check_circle_outline
+                      </mat-icon>
+                    }
+                    <span class="mo-px-2">{{m.nameEng}} ({{m.nameAR}})</span>
+                    <strong>({{m.phoneNo}})</strong>
+                  </li>
+                }
+              </ul>
+            }
+          </div>
+
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.englishName' | translate}}</mat-label>
+              <input matInput [(ngModel)]="member.nameEng" (blur)="member.nameAR = member.nameEng" name="nameEng"
+                required />
+              </mat-form-field>
+            </div>
+
+            <!-- <div class="col-12">
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.arabicName' | translate}}</mat-label>
+              <input matInput [(ngModel)]="member.nameAR" name="nameAR" [required]="requiredFields.includes('nameAR')" />
+            </mat-form-field>
+          </div> -->
+
+          <div class="col-12">
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.gender' | translate}}</mat-label>
+              <mat-select [(ngModel)]="member.gender" name="gender" required>
+                <mat-option [value]="gender.MALE">{{'members.male' | translate}}</mat-option>
+                <mat-option [value]="gender.FEMALE">{{'members.female' | translate}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.salesPerson' | translate}}</mat-label>
+              <mat-select [(ngModel)]="member.salesPersonId" name="salesPersonId"
+                [required]="requiredFields.includes('salesPersonId')">
+                @for (sale of sales; track sale) {
+                  <mat-option [value]="sale.id">{{sale.name}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-12">
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.sourceOfK' | translate}}</mat-label>
+              <mat-select [(ngModel)]="member.sourceOfKnowledgeId" (selectionChange)="onSelectSource()"
+                name="sourceOfKnowledgeId" [required]="requiredFields.includes('source')">
+                <mat-option [value]="null">{{'reports.table.none' | translate}}</mat-option>
+                @for (el of sources; track el) {
+                  <mat-option [value]="el.id">{{el.name}}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          @if (showSearch) {
+            <div class="col-12 mo-mb-4">
+              <app-advanced-search [searchKeyword]="member.referralMemberName || ''" [autoPredict]="true" [config]="config"
+              (selectedMember)="getSelectedMember($event)"></app-advanced-search>
+            </div>
+          }
+
+          <div class="col-12">
+            <mat-form-field class="mo-w-full" appearance="outline">
+              <mat-label>{{'members.email' | translate}}</mat-label>
+              <input matInput [(ngModel)]="member.email" name="email" [required]="requiredFields.includes('email')" />
+            </mat-form-field>
+          </div>
+
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="mo-w-full">
+              <mat-label>{{'members.nationalId' | translate}}</mat-label>
+              <input matInput [(ngModel)]="member.nationalId" [required]="isNotValid" name="nationalId"
+                [required]="requiredFields.includes('nationalId')" (blur)="validateNationalID()" />
+              </mat-form-field>
+            </div>
+
+            <div class="col-12">
+              <mat-form-field class="mo-w-full" appearance="outline" (click)="birthDatePicker.open()">
+                <mat-label>{{'members.birthDate' | translate}}</mat-label>
+                <input matInput [matDatepicker]="birthDatePicker" [(ngModel)]="member.birthDate" name="birthDate"
+                  [required]="requiredFields.includes('birthDate')" />
+                  <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+                  <mat-datepicker #birthDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.address' | translate}}</mat-label>
+                  <input matInput [(ngModel)]="member.address" name="address" [required]="requiredFields.includes('address')" />
+                </mat-form-field>
+              </div>
+
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="mo-w-full">
+                  <mat-label>{{'members.guestCardNo' | translate}}</mat-label>
+                  <input matInput [(ngModel)]="member.guestCardNumber" name="guestCardNumber"
+                    [required]="requiredFields.includes('guestCardNumber')" />
+                  </mat-form-field>
+                </div>
+
+                <div class="col-12">
+                  <mat-form-field appearance="outline" class="mo-w-full">
+                    <mat-label>{{'members.comment' | translate}}</mat-label>
+                    <input matInput [(ngModel)]="member.comment" name="comment" [required]="requiredFields.includes('comment')" />
+                  </mat-form-field>
+                </div>
+                <div class="col-12 mo-flex">
+                  <label class="mo-font-bold mo-px-2">{{'members.highPotential' | translate}} </label>
+                  <div mat-icon-button matTooltip="High Potential" color="default" [(ngModel)]="member.isHighPotential"
+                    (click)="toggleHighPotential(member)">
+                    @if (!member.isHighPotential) {
+                      <mat-icon class="mo-m-0">star_border</mat-icon>
+                    }
+                    @if (member.isHighPotential) {
+                      <mat-icon class="mo-m-0 mo-text-warning-500">star</mat-icon>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div mat-dialog-actions class="mo-justify-end">
+              <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+              <button mat-raised-button color="primary" type="submit"> {{'members.save' | translate}} </button>
+            </div>
+          </form>

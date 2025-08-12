@@ -1,0 +1,33 @@
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+mat-drawer-container {
+  min-height: 100vh;
+}
+
+mat-drawer {
+  width: 310px;
+  overflow: hidden;
+  padding: 10px;
+
+  @media (max-width:600px) {
+    width: 200px;
+  }
+}
+
+.filters-drawer {
+  overflow-x: hidden;
+}
+
+::ng-deep {
+  .mat-drawer-opened+.mat-drawer-content {
+    padding: 0 20px !important;
+  }
+}
+
+.view-profile-btn {
+  width: auto;
+  height: auto;
+}

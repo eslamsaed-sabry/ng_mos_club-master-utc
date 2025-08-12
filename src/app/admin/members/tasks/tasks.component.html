@@ -1,0 +1,276 @@
+<mat-drawer-container class="example-container" autosize>
+
+  <div class="page-title" [ngClass]="{'drawer-opened': drawer.opened}">
+    <h4 class="mo-font-bold mo-m-0">
+      {{'navigation.tasks' | translate}}
+      @if (filters && filters.memberId) {
+        <span>
+          ({{filters.memberName}})
+        </span>
+      }
+      @if (filters && filters.memberId) {
+        <div>
+          <small><button mat-button color="primary" (click)="showAll()">{{'extra.showAllTasks' |
+          translate}}</button></small>
+        </div>
+      }
+    </h4>
+
+    <div class="actions">
+      <mat-checkbox class="mo-mx-2" (change)="getTasks()" [(ngModel)]="filters.notAccomplishedOnly"
+        name="notAccomplishedOnly">
+        <strong> {{'extra.notAccomplishedOnly' |translate}}</strong>
+      </mat-checkbox>
+
+      <button class="mo-mx-2" color="primary" (click)="onOpenTasksForm('addNew')" mat-raised-button
+        *appRole="['tasks','tsb_Add']">
+        <mat-icon>add</mat-icon> {{'extra.addTask' | translate}}
+      </button>
+
+      <button class="mo-mx-2" (click)="drawer.toggle()" mat-raised-button color="default">
+        <mat-icon>{{drawer.opened ? 'filter_alt_off' : 'filter_alt'}}</mat-icon>
+        {{drawer.opened ? ('members.hide' | translate) : ('members.show' | translate)}}
+        {{'members.filters' | translate}}
+      </button>
+    </div>
+  </div>
+
+  <mat-drawer #drawer [mode]="width < 600 ? 'over':'side'" [dir]="'ltr'" [position]="'end'">
+    <div class="filters-drawer">
+      <div class="inner">
+        <h4 class="mo-font-bold"> {{'members.filters' | translate}}</h4>
+        <app-tasks-filters [filters]="filters" (onFilter)="applyFilter()"></app-tasks-filters>
+      </div>
+    </div>
+  </mat-drawer>
+
+  <div [ngClass]="{'drawer-opened': drawer.opened}">
+    <div class="table-responsive card p-3">
+      <table mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="creationDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.creationDate' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <span [ngClass]="{'mo-text-warning-500': row.isOverwrite}">{{ row.creationDate | date:'MMM d, y, h:mm a'
+            }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="memberName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.memberName' | translate}}
+          </th>
+          <td mat-cell *matCellDef="let row">
+            <div class="mo-flex">
+              <a class="view-profile-btn mo-my-1 mo-py-1" (click)="goToMemberProfile(row)" mat-button color="primary">
+                <small>{{row.memberName}}</small>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="phoneNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.phone' | translate}}</th>
+          <td mat-cell *matCellDef="let row" class="cursor-pointer" (click)="openPhonePopup(row)">
+            <span [ngClass]="{'mo-text-warning-500': row.isOverwrite}"> {{'reports.table.phoneStars' |
+            translate}}</span>
+          </td>
+
+        </ng-container>
+
+        <ng-container matColumnDef="gender">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.gender' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <span [ngClass]="{'mo-text-warning-500': row.isOverwrite}">{{ row.gender | gender }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="source">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.source' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <span [ngClass]="{'mo-text-warning-500': row.isOverwrite}">{{ row.source }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="memberSalesPerson">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'extra.memberSalesPerson' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <span [ngClass]="{'mo-text-warning-500': row.isOverwrite}">{{ row.memberSalesPerson}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="employeeName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.taskSalesPerson' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <span [ngClass]="{'mo-text-warning-500': row.isOverwrite}">{{ row.employeeName}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="notes">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.notes' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <span [ngClass]="{'mo-text-warning-500': row.isOverwrite}">{{ row.notes}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdByName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.createdBy' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <span [ngClass]="{'mo-text-warning-500': row.isOverwrite}">{{ row.createdByName}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="lastCall">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.lastCall' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <span [ngClass]="{'mo-text-warning-500': row.isOverwrite}">
+            {{ row.lastCall | date:'MMM d, y, h:mm a'}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="statusName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.status' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            <span [ngClass]="{'text-success': row.isAccomplished}">{{ row.statusName}}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="accomplish">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'extra.accomplish' | translate}}</th>
+          <td mat-cell *matCellDef="let row">
+            @if (!row.isAccomplished) {
+              <button mat-icon-button matTooltip="Mark as accomplish" color="default"
+                (click)="onAccomplished(row)"><mat-icon class="mo-m-0 ">check</mat-icon></button>
+              }
+            </td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              <mat-icon>settings</mat-icon>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="actionMenu">
+                <mat-icon>more_horiz</mat-icon>
+              </button>
+
+              <mat-menu #actionMenu="matMenu" class="action-menu">
+
+                <button mat-menu-item (click)="getCalls(row)">
+                  <mat-icon> add_call</mat-icon> {{'members.addCall' | translate}}
+                </button>
+
+                <button (click)="onOpenTasksForm('add', row)" mat-menu-item *appRole="['tasks','tsb_Add']">
+                  <mat-icon>add</mat-icon> {{'extra.addTask' | translate}}
+                </button>
+
+                @if (!row.isAccomplished) {
+                  <button (click)="accomplishTask(row)" mat-menu-item>
+                    <mat-icon>security_update_good</mat-icon> {{'extra.accomplish' | translate}}
+                  </button>
+                }
+
+                @if (row.isAccomplished) {
+                  <button (click)="unAccomplishTask(row)" mat-menu-item>
+                    <mat-icon>system_update</mat-icon> {{'extra.unAccomplish' | translate}}
+                  </button>
+                }
+
+                <button mat-menu-item (click)="onAttachments(row)" *appRole="['attachments','Show']">
+                  <mat-icon> attach_file</mat-icon> {{'members.attachments' | translate}}
+                </button>
+
+                <button (click)="viewMemberHistory(row)" mat-menu-item>
+                  <mat-icon>history_toggle_off</mat-icon> {{'members.showHis' | translate}}
+                </button>
+
+                <button mat-menu-item (click)="getNotes(row)">
+                  <mat-icon>notes</mat-icon> {{'members.notes' | translate}}
+                </button>
+
+                <button (click)="deleteTask(row)" mat-menu-item class="mo-text-error-500"
+                  *appRole="['tasks','tsb_Remove']">
+                  <mat-icon>delete</mat-icon> {{'members.delete' | translate}}
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+          </tr>
+        </table>
+
+        <mat-paginator (page)="onPaginationChange($event)" [pageSize]="filters.takeCount" [pageIndex]="page"
+          [length]="totalElements" [pageSizeOptions]="[10, 25, 100]">
+        </mat-paginator>
+      </div>
+    </div>
+  </mat-drawer-container>
+
+  <ng-template #callsModal>
+    <div class="p-4">
+      <h4 class="mo-font-bold">{{'members.calls' | translate}}</h4>
+      <app-member-calls (refresh)="getCalls(task, false)" [member]="member" [calls]="calls"></app-member-calls>
+    </div>
+  </ng-template>
+
+  <ng-template #attachmentsModal>
+    <div class="p-4">
+      <div class="mo-flex mo-flex-wrap mo-items-center mo-justify-between">
+        <h4 class="mo-font-bold">{{'members.attachmentsFor' | translate}} {{member.nameAR }}
+          ({{member.nameEng}})
+        </h4>
+        <button *appRole="['attachments','tsb_Add']" (click)="addAttachment(member)" mat-raised-button color="primary">
+          <mat-icon>attachment</mat-icon>
+          {{'staff.addAttachment' | translate}}
+        </button>
+      </div>
+      <app-attachments #attachmentsComp [staff]="member" [contextTypeId]="contextTypeId"></app-attachments>
+    </div>
+  </ng-template>
+
+  <ng-template #historyModal>
+    <div class="p-4">
+      <h4 class="mo-font-bold">{{'members.salesHistory' | translate}}</h4>
+      <ul class="list-group">
+        @for (el of memberHistory; track el) {
+          <li class="list-group-item mo-flex mo-items-center">
+            <mat-icon>arrow_right</mat-icon> <span>{{ el }}</span>
+          </li>
+        }
+        @if (memberHistory.length === 0) {
+          <li class="mo-text-center">
+            {{'members.noHis' | translate}}
+          </li>
+        }
+      </ul>
+    </div>
+  </ng-template>
+
+  <ng-template #notesModal>
+    <div class="p-4">
+      <h4 class="mo-font-bold">{{'members.notes' | translate}}</h4>
+      <app-member-notes [notes]="notes" (refresh)="getNotes(task, false)" [member]="member"></app-member-notes>
+    </div>
+  </ng-template>
+
+
+  <ng-template #phoneModal>
+    <div class="p-4">
+      <div class="row">
+        <div class="col-md-5">
+          <h5 class="mo-font-bold">{{'reports.table.name' | translate}} : </h5>
+          <h5 class="mo-font-bold">{{'members.phone' | translate}} : </h5>
+        </div>
+        <div class="col-md-7">
+          <h5 class="">{{phoneModalData.memberName}}</h5>
+          <h5 class="">{{phoneModalData.phoneNumber}}</h5>
+        </div>
+      </div>
+    </div>
+  </ng-template>

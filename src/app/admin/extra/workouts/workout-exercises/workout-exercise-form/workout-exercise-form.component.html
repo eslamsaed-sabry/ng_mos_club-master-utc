@@ -1,0 +1,59 @@
+<h5 class="mo-font-bold" mat-dialog-title>{{'extra.exercise' | translate}}</h5>
+<form (ngSubmit)="submit(memberBookForm)" #memberBookForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'management.workOutType' | translate}}</mat-label>
+      <mat-select [(ngModel)]="exercise.workoutTypeId" (selectionChange)="getExercises()" name="workoutTypeId" required>
+        @for (w of workoutTypes; track w) {
+          <mat-option [value]="w.id">{{w.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'extra.exercise' | translate}}</mat-label>
+      <mat-select [(ngModel)]="exercise.exerciseId" name="exerciseId" required>
+        @for (e of exercises; track e) {
+          <mat-option [value]="e.id">{{e.exerciseName}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'extra.sets' | translate}}</mat-label>
+      <input matInput type="number" [(ngModel)]="exercise.sets" name="sets">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'extra.reps' | translate}}</mat-label>
+      <input matInput type="text" [(ngModel)]="exercise.reps" name="reps">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'extra.rest' | translate}}</mat-label>
+      <input matInput type="number" [(ngModel)]="exercise.rest" name="rest">
+    </mat-form-field>
+
+    <div class="mo-w-full mo-mb-2">
+      <label>{{'extra.restType' | translate}}</label>
+      <mat-radio-group [(ngModel)]="exercise.isSeconds" name="isSeconds">
+        <mat-radio-button [value]="true">{{'extra.seconds' | translate}}</mat-radio-button>
+        <mat-radio-button [value]="false">{{'extra.minutes' | translate}}</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'members.notes' | translate}}</mat-label>
+      <textarea matInput [(ngModel)]="exercise.notes" name="notes"></textarea>
+    </mat-form-field>
+
+  </div>
+
+  <div class="mo-text-end mo-mt-2" mat-dialog-actions>
+    <button class="mo-mx-2" (click)="dismiss()" mat-button type="button">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button type="submit" color="primary">{{'members.save' | translate}}</button>
+  </div>
+</form>

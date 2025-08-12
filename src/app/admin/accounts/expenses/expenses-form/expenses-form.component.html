@@ -1,0 +1,65 @@
+<h5 mat-dialog-title>{{'navigation.expenses' | translate}}
+  @if (data.type=='add') {
+    <div class="mo-font-bold mo-text-center">
+      <label class="fs-6">{{'common.yourCurrentBranch' | translate}}{{branchName}}</label>
+    </div>
+  }
+</h5>
+
+<form (ngSubmit)="submit(expensesForm)" #expensesForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field appearance="outline" class="mo-w-full">
+      <mat-label>{{'accounts.expensesDate' | translate}}</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="expenses.actionDate" name="actionDate" required>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.type' | translate}}</mat-label>
+      <mat-select [(ngModel)]="expenses.typeId" name="type" required>
+        @for (e of expensesTypes; track e) {
+          <mat-option [value]="e.id">{{e.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="mo-w-full" appearance="outline">
+      <mat-label>{{'reports.table.amountCash' | translate}}</mat-label>
+      <input matInput [(ngModel)]="expenses.price" name="amountCash" (blur)="onInputAmountPaidCash('amountCash',$event)"
+        [required]="isCashed" />
+      </mat-form-field>
+
+      <mat-form-field class="mo-w-full" appearance="outline">
+        <mat-label>{{'reports.table.amountVisa' | translate}}</mat-label>
+        <input matInput [(ngModel)]="expenses.amountVisa" name="amountVisa"
+          (blur)="onInputAmountPaidCash('amountVisa',$event)" [required]="!isCashed" />
+        </mat-form-field>
+
+        @if (expenses.amountVisa>0) {
+          <mat-form-field class="mo-w-full" appearance="outline">
+            <mat-label>{{'members.visaType' | translate}}</mat-label>
+            <mat-select [(ngModel)]="expenses.visaTypeId" name="visaTypeId" required>
+              @for (v of visaTypes; track v) {
+                <mat-option [value]="v.id">{{v.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+
+        <mat-form-field class="mo-w-full" appearance="outline">
+          <mat-label>{{'reports.table.description' | translate}}</mat-label>
+          <textarea matInput [(ngModel)]="expenses.description" name="description" required></textarea>
+        </mat-form-field>
+
+      </div>
+
+
+      <div mat-dialog-actions class="mo-justify-end">
+        <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+        <button mat-raised-button color="primary" type="submit">
+          {{'members.save' | translate}}
+        </button>
+      </div>
+
+    </form>

@@ -1,0 +1,50 @@
+<h5 mat-dialog-title>{{'management.percentageData' | translate}}</h5>
+@if (percentages.staffMemberName) {
+  <h6 class="mo-font-bold mo-text-center">({{percentages.staffMemberName}})</h6>
+}
+
+<form (ngSubmit)="submit(PercentageForm)" #PercentageForm="ngForm">
+
+  <div mat-dialog-content>
+
+    <mat-form-field class="mo-w-full" appearance="outline" (click)="monthPicker.open()">
+      <mat-label>{{'reports.table.month' | translate}}</mat-label>
+      <input matInput [matDatepicker]="monthPicker" [(ngModel)]="percentages.fullDate" [disabled]="data.type === 'edit'"
+        name="fullDate" required />
+        <mat-datepicker-toggle matSuffix [for]="monthPicker"></mat-datepicker-toggle>
+        <mat-datepicker #monthPicker startView="year"></mat-datepicker>
+      </mat-form-field>
+
+
+      <ul class="ranges-list">
+        @for (r of percentages.percentages; track r; let i = $index) {
+          <li>
+            <div><small class="mo-text-muted">{{'management.range' | translate}}</small><strong
+          class="mo-px-2">{{r.range}}</strong></div>
+          <div>
+            <mat-form-field class="mo-w-full">
+              <mat-label>{{'management.newPercentage' | translate}}</mat-label>
+              <input matInput [(ngModel)]="r.duePercentage" [name]="'duePercentage' + i" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="mo-w-full">
+              <mat-label>{{'management.renewPercentage' | translate}}</mat-label>
+              <input matInput [(ngModel)]="r.renewDuePercentage" [name]="'renewDuePercentage' + i" />
+            </mat-form-field>
+          </div>
+        </li>
+      }
+    </ul>
+
+  </div>
+
+
+  <div mat-dialog-actions class="mo-justify-end">
+    <button mat-button type="button" (click)="dismiss()">{{'members.cancel' | translate}}</button>
+    <button mat-raised-button color="primary" type="submit">
+      {{'members.save' | translate}}
+    </button>
+  </div>
+
+</form>

@@ -1,0 +1,144 @@
+<div class="mo-mt-3 mo-mb-0 page-title">
+  @if (!hideSearch) {
+    <mat-form-field appearance="outline">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput (keyup)="applyFilter($event)" [placeholder]="'members.search' | translate" #input>
+    </mat-form-field>
+  }
+
+  <div class="actions">
+
+  </div>
+</div>
+
+<div class="card p-3">
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="memberApplicationNo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.contractNo' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.memberApplicationNo }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="memberCode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'staff.code' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.memberCode }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="memberPhone">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'receiptPrint.memPhone' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.memberPhone }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="memberName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'receiptPrint.memName' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.memberName}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="gender">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.gender' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.gender | gender}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="packageName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.package' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.packageName }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.amount' | translate}}</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.amount}}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dueDateAsString">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.dueDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.dueDateAsString }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="paymentDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.settlementDate' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.settlementDateAsString }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'reports.table.status' | translate}}</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="badge" [ngClass]="{'mo-bg-error-500' : !row.isPaid, 'mo-bg-success-500' : row.isPaid}">
+          {{ row.status }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="salesPersonName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'members.salesPerson' | translate}}</th>
+        <td mat-cell *matCellDef="let row">{{ row.salesPersonName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          <mat-icon>settings</mat-icon>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-button (click)="$event.stopPropagation()" [matMenuTriggerFor]="debtsActionMenu">
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+
+          <mat-menu #debtsActionMenu="matMenu" class="action-menu">
+
+            @if (!row.isPaid) {
+              <button [appRoleAttr]="['debts','PayOff']" mat-menu-item
+                (click)="editInstallment(row, 'payoff')"><mat-icon>payment</mat-icon> {{'reports.payOff' |
+              translate}}</button>
+            }
+
+            @if (row.isPaid) {
+              <button [appRoleAttr]="['debts','Revert']" mat-menu-item
+                (click)="onRevert(row)"><mat-icon>undo</mat-icon> {{'reports.revert' | translate}}</button>
+              }
+
+              @if (row.isPaid) {
+                <button mat-menu-item (click)="getReceiptType(row)"><mat-icon>print</mat-icon>
+              {{'reports.print' | translate}}</button>
+            }
+
+            @if (!row.isPaid) {
+              <button mat-menu-item [appRoleAttr]="['debts','ChangeDueDate']"
+                (click)="editInstallment(row, 'editInstallment')">
+                <mat-icon>edit_note</mat-icon>
+                {{'members.changeDueDate' | translate}}
+              </button>
+            }
+
+            @if (row.isPaid) {
+              <button mat-menu-item [appRoleAttr]="['debts','ChangeSettlementDate']"
+                (click)="editInstallment(row, 'settlementDate')">
+                <mat-icon>edit_note</mat-icon> {{'members.changeSettlementDate' | translate}}
+              </button>
+            }
+
+            @if (!row.isPaid) {
+              <button [appRoleAttr]="['debts','tsb_Remove']" mat-menu-item class="mo-text-error-500"
+                (click)="onDeleteInstallment(row)"><mat-icon>delete_sweep</mat-icon> {{'staff.delete' |
+              translate}}</button>
+            }
+          </mat-menu>
+        </td>
+      </ng-container>
+
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [ngClass]="{'selected-row':selectedId == row.id}">
+      </tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="9">{{'members.noData' | translate}}</td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+  </div>
+</div>

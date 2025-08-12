@@ -1,0 +1,186 @@
+<form (ngSubmit)="submit(configForm)" #configForm="ngForm">
+  <div class="page-title">
+    <h4 class="mo-font-bold mo-m-0"> {{'navigation.gymSettings' | translate}} </h4>
+
+    <div class="actions">
+      <button (click)="openWhatsappDialog()" color="primary" type="button" class="mo-me-5" mat-button>
+        <mat-icon><img width="25" src="assets/images/whatsapp-ico.svg" alt=""></mat-icon>
+        {{'staff.connectWhatsapp' | translate}}
+      </button>
+      <button color="primary" type="submit" mat-raised-button>
+        <mat-icon>save</mat-icon> {{'members.save' | translate}}
+      </button>
+    </div>
+  </div>
+
+  <div class="row !mo-mb-3">
+    <div class="col-md-4 col-12">
+      <div class="card p-3 mo-text-center">
+        <label>{{'administration.allowMultiMembers' | translate}}</label>
+        <mat-radio-group class="d-block" [(ngModel)]="gymSetting.AllowMultipleMembersBySamePhone"
+          name="allowMultiMembers">
+          <mat-radio-button [value]="'1'">
+            {{'administration.allow' | translate}}
+          </mat-radio-button>
+          <mat-radio-button [value]="'0'">
+            {{'administration.doNotAllow' | translate}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-12">
+      <div class="card p-3 mo-text-center">
+        <label>{{'administration.allowMultiGym' | translate}}</label>
+        <mat-radio-group class="d-block" [(ngModel)]="gymSetting.AllowMultipleGymAttendancePerDay"
+          name="allowMultiGym">
+          <mat-radio-button [value]="'1'">
+            {{'administration.allow' | translate}}
+          </mat-radio-button>
+          <mat-radio-button [value]="'0'">
+            {{'administration.doNotAllow' | translate}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+
+    <div class="col-md-4 col-12">
+      <div class="card p-3 mo-text-center">
+        <label>{{'administration.autoGetNext' | translate}}</label>
+        <mat-radio-group class="d-block" [(ngModel)]="gymSetting.AutoGetNextMemberContractNo"
+          name="autoGetNext">
+          <mat-radio-button [value]="'1'">
+            {{'administration.allow' | translate}}
+          </mat-radio-button>
+          <mat-radio-button [value]="'0'">
+            {{'administration.doNotAllow' | translate}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mo-px-3 mo-pt-3">
+
+    <div class="row">
+      <div class="setting-opt col-md-4 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'administration.receiptType' | translate}}</mat-label>
+          <mat-select [(ngModel)]="gymSetting.ReceiptType" name="receiptType">
+            @for (t of receiptTypes; track t) {
+              <mat-option [value]="t.value">{{t.label | translate}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="setting-opt col-md-4 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'administration.dbBackup' | translate}}</mat-label>
+          <input matInput [(ngModel)]="gymSetting.DatabaseBackupPath" name="dbBackup" type="text">
+        </mat-form-field>
+      </div>
+
+      <div class="setting-opt col-md-4 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'administration.salesComm' | translate}}</mat-label>
+          <input matInput [(ngModel)]="gymSetting.SalesCommissionStartDay" name="salesComm" type="number">
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="setting-opt col-md-4 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'administration.aboutDesc' | translate}}</mat-label>
+          <textarea matInput [(ngModel)]="gymSetting.AboutDescription" name="aboutDesc"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="setting-opt col-md-4 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'administration.gymAdd' | translate}}</mat-label>
+          <textarea matInput [(ngModel)]="gymSetting.GymAddress" name="gymAdd"></textarea>
+        </mat-form-field>
+      </div>
+
+      <div class="setting-opt col-md-4 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'administration.gymPhone' | translate}}</mat-label>
+          <textarea matInput [(ngModel)]="gymSetting.GymPhoneNumbers" name="gymPhone"></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="setting-opt col-md-4 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'administration.contactUsMap' | translate}}</mat-label>
+          <input matInput type="text" [(ngModel)]="gymSetting.ContactUsMapLocation" name="contactUsMap">
+        </mat-form-field>
+      </div>
+
+      <div class="setting-opt col-md-4 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'administration.defaultGender' | translate}}</mat-label>
+          <mat-select [(ngModel)]="gymSetting.DefaultGender" name="defaultGender">
+            <mat-option [value]="'-1'">{{'members.all' | translate}}</mat-option>
+            <mat-option [value]="genders.MALE">{{'members.male' | translate}}</mat-option>
+            <mat-option [value]="genders.FEMALE">{{'members.female' | translate}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="setting-opt col-md-4 col-12">
+        <mat-form-field appearance="outline" class="mo-w-full">
+          <mat-label>{{'administration.lockersCount' | translate}}</mat-label>
+          <input matInput [(ngModel)]="gymSetting.LockersCount" name="lockersCount" type="number">
+        </mat-form-field>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row !mo-my-3">
+
+    <div class="col-md-6 col-12">
+      <div class="card p-3">
+        <div class="setting-opt">
+          <label class="mo-pe-4">{{'administration.contactImage' | translate}}</label>
+          <input name="ContactUsImagePath" type="file" (change)="uploadImage($event)">
+          <img class="img-fluid mo-mt-2" [src]="proxyUrl + gymSetting.ContactUsImagePath" alt="">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-12">
+      <div class="card p-3">
+        <div class="setting-opt">
+          <label class="mo-pe-4">{{'administration.aboutImage' | translate}}</label>
+          <input name="AboutImagePath" type="file" (change)="uploadImage($event)">
+          <img class="img-fluid mo-mt-2" [src]="proxyUrl + gymSetting.AboutImagePath" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+<ng-template #whatsappQRModalRef>
+  <h5 matDialogTitle>{{'staff.whatsappQr' | translate}}</h5>
+  <div matDialogContent>
+    @if(startWhatsapp$ | async) {
+      @defer(when signalR.whatsappQRSignal()) {
+      <qrcode [qrdata]="signalR.whatsappQRSignal()!" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+      } @placeholder {
+      <div class="mo-text-center !mo-mt-5">
+        <app-spinner [width]="'20px'" [height]="'20px'"></app-spinner>
+        <p>{{'common.whatsappWarning' | translate}}</p>
+      </div>
+    }
+  }
+</div>
+<div matDialogActions>
+  <button mat-flat-button color="primary" matDialogClose>{{'common.close' | translate}}</button>
+</div>
+</ng-template>

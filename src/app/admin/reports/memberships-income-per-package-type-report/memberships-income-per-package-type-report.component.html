@@ -1,0 +1,161 @@
+<app-reports-page-header [permissions]="['membershipsIncomePerPackageType', 'tsb_Print', 'Export']"
+  [reportName]="'reports.membershipsIncomePerPackageType' | translate" [isResult]="isResult"
+(onAction)="getAction($event)"></app-reports-page-header>
+
+<div class="row printable-report">
+  <div class="col-xl-3 col-md-4 col-12 print-filter">
+    <app-memberships-income-per-package-type-report-filters
+    [filters]="filters"></app-memberships-income-per-package-type-report-filters>
+  </div>
+  <div class="col-xl-9 col-md-8 col-12 report-bg">
+    @if (isResult) {
+      <div>
+        <!-- <app-report-tabs [tabs]="tabs"></app-report-tabs> -->
+        <div id="memberships" class="table-responsive">
+          <h5 class="mo-font-bold">
+            {{'members.memberships' | translate}}
+          </h5>
+          <mat-accordion multi>
+            @for (group of groupedMembership; track group) {
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <ul class="mo-flex mo-gap-5 mo-w-full">
+                      <li class="mo-min-w-[40%]">
+                        {{'reports.table.packageName' | translate}}: <strong
+                      class="mo-ps-1">{{group.packageTypeName}}</strong>
+                    </li>
+                    <li class="mo-ms-auto">
+                      {{'members.membershipsCount' | translate}}: <strong
+                    class="mo-ps-1">{{group.memberships.length}}</strong>
+                  </li>
+                </ul>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>{{'members.paymentDate' | translate}}</th>
+                  <th>{{'members.contractNo' | translate}}</th>
+                  <th>{{'members.memberName' | translate}}</th>
+                  <th>{{'members.gender' | translate}}</th>
+                  <th>{{'members.packageName' | translate}}</th>
+                  <th>{{'reports.table.receiptNo' | translate}}</th>
+                  <th>{{'reports.table.totalPrice' | translate}}</th>
+                  <th>{{'reports.table.amountCash' | translate}}</th>
+                  <th>{{'reports.table.amountVisa' | translate}}</th>
+                  <th>{{'members.salesPerson' | translate}}</th>
+                  <th>{{'members.username' | translate}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (el of group.memberships; track el) {
+                  <tr matTooltipPosition="left">
+                    <td>{{el.paymentDate | date:'MMM d, y, h:mm a'}}</td>
+                    <td>{{el.memberApplicationNo}}</td>
+                    <td>{{el.memberName}}</td>
+                    <td>{{el.gender | gender}}</td>
+                    <td>{{el.periodName}}</td>
+                    <td>{{el.receiptNo}}</td>
+                    <td>{{el.price}}</td>
+                    <td>{{el.amountPaidCash}}</td>
+                    <td>{{el.amountPaidVisa}}</td>
+                    <td>{{el.salesPersonName}}</td>
+                    <td>{{el.userName}}</td>
+                  </tr>
+                }
+                @if (group && group.memberships.length === 0) {
+                  <tr>
+                    <td colspan="11">{{'members.noData' | translate}}</td>
+                  </tr>
+                }
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="7"></td>
+                  <td>{{calcTotal(group.memberships, 'amountPaidCash')}}</td>
+                  <td>{{calcTotal(group.memberships, 'amountPaidVisa')}}</td>
+                  <td colspan="2"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </mat-expansion-panel>
+        }
+      </mat-accordion>
+    </div>
+    <div id="monitoringMemberships" class="table-responsive">
+      <h5 class="mo-font-bold">
+        {{'reports.table.monitoringMembership' | translate}}
+      </h5>
+      <mat-accordion multi>
+        @for (group of groupedMonitoringMembership; track group) {
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <ul class="mo-flex mo-gap-5 mo-w-full">
+                  <li class="mo-min-w-[40%]">
+                    {{'reports.table.packageName' | translate}}: <strong
+                  class="mo-ps-1">{{group.packageTypeName}}</strong>
+                </li>
+                <li class="mo-ms-auto">
+                  {{'members.membershipsCount' | translate}}: <strong
+                class="mo-ps-1">{{group.monitoringMemberships.length}}</strong>
+              </li>
+            </ul>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>{{'members.paymentDate' | translate}}</th>
+              <th>{{'members.contractNo' | translate}}</th>
+              <th>{{'members.memberName' | translate}}</th>
+              <th>{{'members.gender' | translate}}</th>
+              <th>{{'members.packageName' | translate}}</th>
+              <th>{{'reports.table.receiptNo' | translate}}</th>
+              <th>{{'reports.table.totalPrice' | translate}}</th>
+              <th>{{'reports.table.amountCash' | translate}}</th>
+              <th>{{'reports.table.amountVisa' | translate}}</th>
+              <th>{{'reports.table.coach' | translate}}</th>
+              <th>{{'members.username' | translate}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (el of group.monitoringMemberships; track el) {
+              <tr matTooltipPosition="left">
+                <td>{{el.paymentDate | date:'MMM d, y, h:mm a'}}</td>
+                <td>{{el.memberContractNo}}</td>
+                <td>{{el.memberName}}</td>
+                <td>{{el.gender | gender}}</td>
+                <td>{{el.packageName}}</td>
+                <td>{{el.receiptNo}}</td>
+                <td>{{el.price}}</td>
+                <td>{{el.amountPaid}}</td>
+                <td>{{el.amountPaidVisa}}</td>
+                <td>{{el.coachName}}</td>
+                <td>{{el.username}}</td>
+              </tr>
+            }
+            @if (group && group.monitoringMemberships.length === 0) {
+              <tr>
+                <td colspan="11">{{'members.noData' | translate}}</td>
+              </tr>
+            }
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7"></td>
+              <td>{{calcTotal(group.monitoringMemberships, 'amountPaid')}}</td>
+              <td>{{calcTotal(group.monitoringMemberships, 'amountPaidVisa')}}</td>
+              <td colspan="2"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </mat-expansion-panel>
+    }
+  </mat-accordion>
+</div>
+</div>
+}
+</div>
+</div>
