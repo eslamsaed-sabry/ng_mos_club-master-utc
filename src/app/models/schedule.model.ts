@@ -268,6 +268,8 @@ export interface IBookingListMember {
   remainingSessionsAsText: string,
   invitationId: number | null,
   otherEntityId: number | null,
+  bookingStatusName: string,
+  bookingStatus: number,
 }
 
 

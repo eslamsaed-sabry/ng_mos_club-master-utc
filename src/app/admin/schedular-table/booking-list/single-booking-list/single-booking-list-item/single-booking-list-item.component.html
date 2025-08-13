@@ -12,6 +12,10 @@
     <li>
       {{item.memberPhone}}
     </li>
+    <li  [ngClass]="{
+    'mo-border-red-500 mo-border mo-px-2 mo-mx-auto mo-text-error-500': [4, 5, 6].includes(item.bookingStatus)}">
+      {{item.bookingStatusName}}
+    </li>
     <li>
       {{item.package}}
     </li>
@@ -51,7 +55,7 @@
     <button *appRole="['classSchedule', 'Book']" (click)="openMembershipDialog()"
       mat-menu-item>{{'members.linkMembership' | translate}}</button>
     }
-    <button (click)="removeMemberFromClass(item)" mat-menu-item>{{'classSchedule.deleteClass' | translate}}</button>
+    <button (click)="removeMemberFromClass(item)" mat-menu-item>{{'classSchedule.cancelClass' | translate}}</button>
   </mat-menu>
 
 </div>
